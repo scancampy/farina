@@ -13,6 +13,12 @@ class Dashboard extends CI_Controller {
 
 	public function login() {
 		$data = array();
+		if($this->input->post('btnlogin')) {
+			$username = $this->input->post('username');
+			$password = $this->input->post('password');
+
+			print_r($this->admin_model->login($username, $password));
+		}
 		$this->load->view('admin/v_login');
 	}
 }
