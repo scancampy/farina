@@ -16,9 +16,19 @@ class Dashboard extends CI_Controller {
 		if($this->input->post('btnlogin')) {
 			$username = $this->input->post('username');
 			$password = $this->input->post('password');
+			$user = $this->admin_model->login($username, $password);
 
-			print_r($this->admin_model->login($username, $password));
+			if($user) {
+				$this->session->set_userdata('user', $user);
+			} else {
+				$this->session->set_flashdata('notiferror', 'true');
+				redirect('admin/dashboard/login');
+			}
 		}
-		$this->load->view('admin/v_login');
+
+		if($this->session->flashdata('notif')) {
+			$data['notiferror'] = 'error';
+		}
+		$this->load->view('admin/v_login', $data);
 	}
 }

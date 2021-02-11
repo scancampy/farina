@@ -8,6 +8,13 @@ class Admin_model extends CI_Model {
 		if($q->num_rows()> 0) {
 			$rq = $q->row();
 			if(password_verify($password, $rq->password)) {
+				//sukses
+				$data = array(
+				        'last_login' => date('Y-m-d H:i:s')
+				);
+
+				$this->db->where('username', $username);
+				$this->db->update('admin', $data);
 				return $rq;
 			} else {
 				return false;
