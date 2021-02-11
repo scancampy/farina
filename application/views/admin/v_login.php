@@ -29,11 +29,11 @@
       <p class="login-box-msg">Sign in to start your session</p>
 
       <form action="<?php echo base_url('admin/dashboard/login'); ?>" method="post">
-        <?php if(isset($notiferror)) {
+        <?php if(isset($notiferror)) { ?>
           <div class="alert alert-primary" role="alert">
   Invalid login!
 </div>
-      } ?>
+     <?php } ?>
         <div class="input-group mb-3">
           <input type="text" class="form-control" name="username" placeholder="Username">
           <div class="input-group-append">
