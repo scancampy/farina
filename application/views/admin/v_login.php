@@ -30,7 +30,7 @@
 
       <form action="<?php echo base_url('admin/dashboard/login'); ?>" method="post">
         <?php if(isset($notiferror)) { ?>
-          <div class="alert alert-primary" role="alert">
+          <div class="alert alert-danger" role="alert">
   Invalid login!
 </div>
      <?php } ?>
