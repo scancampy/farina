@@ -10,8 +10,16 @@ class Dashboard extends CI_Controller {
 			redirect('admin/dashboard/login');
 		}
 
-		echo 'dashboard';
+		$data['name'] = $this->session->userdata('user')->name;
+		$data['title'] = "Dashboard";
 
+		$this->load->view('admin/v_dashboard', $data);
+
+	}
+
+	public function signout() {
+		$this->session->sess_destroy();
+		redirect('admin/dashboard/login');
 	}
 
 	public function login() {
