@@ -42,7 +42,7 @@ $(document).ready( function() {
 		// Remove
 		$removeBtn.on( 'click', function() {
 
-			if ( getValue() > 0 ) {
+			if ( getValue() > 1 ) {
 				$input.val( getValue() - 1 );
 			}
 

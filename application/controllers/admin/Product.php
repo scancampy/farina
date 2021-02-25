@@ -97,6 +97,42 @@ class Product extends CI_Controller {
       			 }
       		}
 
+      		// count variant
+      		$variants = $this->input->post('variant');
+      		foreach ($variants as $key => $value) {
+      			if($value != '') {
+	      			$filename = "";
+	      			if(!empty($_FILES['fotovariant']['name'][$key])){
+				      			 	// Define new $_FILES array - $_FILES['file']
+				          $_FILES['file']['name'] = $_FILES['fotovariant']['name'][$key];
+				          $_FILES['file']['type'] = $_FILES['fotovariant']['type'][$key];
+				          $_FILES['file']['tmp_name'] = $_FILES['fotovariant']['tmp_name'][$key];
+				          $_FILES['file']['error'] = $_FILES['fotovariant']['error'][$key];
+				          $_FILES['file']['size'] = $_FILES['fotovariant']['size'][$key];
+
+
+				          // Set preference
+				          $config['upload_path'] = './img/variant/'; 
+				          $config['allowed_types'] = 'jpg|jpeg|png|gif';
+				          $config['max_size'] = '10000'; // max_size in kb
+				          $config['encrypt_name'] = true;
+				          $config['file_name'] = $_FILES['fotovariant']['name'][$key];
+				 
+				          //Load upload library
+				          $this->load->library('upload',$config); 
+
+				           // File upload
+				          if($this->upload->do_upload('file')){
+				            // Get data about the file
+				            $uploadData = $this->upload->data();
+				            $filename = $uploadData['file_name'];			         
+				           }
+	      			 }
+
+	      			 $this->product_model->addVariant($lastid,$variants[$key], $filename);
+      			}
+      		}
+
 			redirect('admin/product/master');
 		}
 
@@ -144,6 +180,24 @@ class Product extends CI_Controller {
 			});
 		';
 
+		// handle add variant
+		$data['js'] .= '
+		$("#btnAddVariant").on("click", function() {
+			var newVariant = "<div class=\"row mt-1\">" +
+                "<div class=\"col-md-6\">" + 
+                  "<div class=\"input-group\">" +
+                    "<div class=\"custom-file\">" +
+                      "<input type=\"file\" class=\"form-control\"  name=\"fotovariant[]\">" + 
+                    "</div>" +
+                  "</div>" +
+                "</div>" +
+                "<div class=\"col-md-6\">" +
+                  "<input type=\"text\" class=\"form-control\" name=\"variant[]\"  placeholder=\"Write Variant Name here...\">" +
+                "</div>" +
+              "</div>";
+             $("#containerVariant").append(newVariant);
+		});
+		';
 		// handle edit
 		$data['js'] .= '
 		$("#btnaddproduct").on("click", function() {
@@ -165,6 +219,7 @@ class Product extends CI_Controller {
 					              "</div>";
 			$("#containerFoto").html(newPhoto);
 			$("#uploadedFoto").html("");
+			$("#containerVariant").html("");
 		});
 
 		$(".prodedit").on("click", function() {
@@ -176,6 +231,14 @@ class Product extends CI_Controller {
 				for(var i=0; i< obj.datafoto.length; i++) {
 					var filename = obj.datafoto[i].filename;
 					$("#uploadedFoto").append("<div class=\"col-md-3 \"><img class=\"img-fluid rounded img-thumbnail \" style=\"object-fit: cover; height:200px;\" src=\"'.base_url('img/product/').'" + filename + "\"/></div>");
+				}
+
+				$("#variantContainer").html("");
+				for(var i=0; i < obj.datavariant.length; i++) {
+					var filename = obj.datavariant[i].filename;
+					$("#variantContainer").append("<div class=\"col-md-3\">" + 
+					"<img style=\"width:100%;\" src=\"'.base_url('img/variant/').'" + filename + "\" />" + 
+					"<input type=\"text\" class=\"form-control\" name=\"currentvariant[]\" value=\"" + obj.datavariant[i].name + "\" /></div>");
 				}
 				
 				$("#name").val(obj.data[0].name);
@@ -306,7 +369,8 @@ class Product extends CI_Controller {
 		if($this->input->post('sentid')) {
 			$q = $this->product_model->getProduct(null, $this->input->post('sentid'));
 			$f = $this->product_model->getImageProduct(null,  $this->input->post('sentid')); 
-			echo json_encode(array('result' => 'success', 'data' => $q, 'datafoto' => $f));
+			$v = $this->product_model->getVariant(null,$this->input->post('sentid'));
+			echo json_encode(array('result' => 'success', 'data' => $q, 'datafoto' => $f, 'datavariant' => $v));
 		} else {
 			echo json_encode(array('result' => 'failed'));
 		}

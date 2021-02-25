@@ -179,6 +179,29 @@
             </div>
           </div>
 
+          <div class="form-group">
+            <div class="d-flex justify-content-between">
+              <label for="fotoproduct">Variant</label>
+              <a href="#" class="btn m-1   btn-xs btn-info" id="btnAddVariant"><i class="nav-icon fas fa-plus"></i> Add More Variant</a>
+            </div>
+            <div id="variantContainer" class="row mb-2"></div>
+            <div id="containerVariant">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input type="file" class="form-control"  name="fotovariant[]">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" name="variant[]"  placeholder="Write Variant Name here...">
+                </div>
+              </div>
+              
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="submit" value="submit" name="btnSubmit" class="btn btn-primary">Save changes</button>

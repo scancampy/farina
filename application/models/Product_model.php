@@ -72,6 +72,29 @@ class Product_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
+	public function addVariant($product_id,$name, $filename) {
+		$data = array('product_id' => $product_id, 'name' => $name, 'filename' => $filename);
+		$this->db->insert('variant', $data);
+		return true;
+	}
+
+	public function getVariant($where = null, $product_id=null, $id=null) {
+		if($product_id != null) {
+			$this->db->where('product_id', $product_id);
+		}
+
+		if($id != null) {
+			$this->db->where('id', $id);
+		}
+
+		if($where != null) {
+			$this->db->where($where);
+		}
+
+		$q = $this->db->get('variant');
+		return $q->result();
+	}	
+
 	public function editProduct($id, $name, $in_stock, $brand_id, $short_desc, $description, $weight, $product_unit_id, $price) {
 		if($in_stock == null) {
 			$in_stock = 0;
@@ -90,11 +113,14 @@ class Product_model extends CI_Model {
 		return $id;
 	}
 
-	public function getProduct($where = null, $id = null) {
+	public function getProduct($where = null, $id = null, $limit = null, $offset = null) {
 		if($where != null) {
 			$this->db->where($where);
 		}
 		$this->db->order_by('name');
+		if($limit != null) {
+			$this->db->limit($limit, $offset);
+		}
 		$this->db->select('product.*, brand.name as brandname');
 		$this->db->join('brand', 'brand.id = product.brand_id');
 
@@ -104,7 +130,9 @@ class Product_model extends CI_Model {
 			$q = $this->db->get('product');
 		}
 
-		return $q->result();
+
+
+		return  $q->result();
 	}
 
 	public function addImageProduct($id, $filename) {
