@@ -72,7 +72,11 @@
 								<div class="page__content">
 
 									<!-- PRODUCT CHECKOUT : begin -->
-									<form class="product-checkout lsvr-form" method="post" action="<?php echo base_url('member/signup'); ?>">
+									<form class="product-checkout lsvr-form" method="post" action="<?php 
+
+									echo base_url('member/signup');
+
+									if($_GET['refcode']) { echo '?refcode='.$_GET['refcode']; } ?>">
 
 										<!-- VALIDATION ERROR MESSAGE : begin -->
 										<?php if(@$error != '') { ?>

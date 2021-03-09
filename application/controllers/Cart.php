@@ -5,6 +5,9 @@ class Cart extends CI_Controller {
 	public function index()
 	{
 		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Cart';
+
 		$this->load->helper('cookie');
 
 		if($this->input->post('btnsubmit')) {

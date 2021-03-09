@@ -5,6 +5,8 @@ class Product extends CI_Controller {
 	public function index()
 	{
 		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Product';
 		$limit = 12;
 		$offset = 0;
 
@@ -80,6 +82,9 @@ class Product extends CI_Controller {
 	public function detail($id) {
 		$realid = (int) $id;
 		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Product Detail';
+
 		$data['js'] = '';
 		$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0), $id);
 		$data['variant'] = $this->product_model->getVariant(array('is_active' => 1, 'is_deleted' => 0),$id);

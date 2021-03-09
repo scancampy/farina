@@ -137,6 +137,8 @@
 		<script src="<?php echo base_url('assets/js/jquery-3.5.1.min.js'); ?>" type="text/javascript"></script>
 		<script src="<?php echo base_url('assets/js/third-party-scripts.min.js'); ?>" type="text/javascript"></script>
 		<script src="<?php echo base_url('assets/js/scripts.js'); ?>" type="text/javascript"></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
 		<!-- SCRIPTS : end -->
 		<script type="text/javascript">
 			$(document).ready(function() {

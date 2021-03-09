@@ -24,5 +24,10 @@ class Admin_model extends CI_Model {
 		}
 	}
 
+	public function getSetting() {
+		$q = $this->db->get_where('setting', array('id' => 1));
+		return $q->row();
+	}
+
 }
 ?>

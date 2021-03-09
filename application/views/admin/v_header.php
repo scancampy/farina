@@ -15,7 +15,8 @@
   <!-- DataTables -->
   <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'); ?>">
   <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
-
+<!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css'); ?>">
 
   <!-- summernote -->
   <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/summernote/summernote-bs4.css'); ?>">
@@ -122,6 +123,51 @@
               </li>
             </ul>
           </li>
+
+          <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == 'article') {  echo 'menu-open'; } ?>">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-newspaper   "></i>
+              <p>
+                Beauty Article
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" >
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/article/master'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'master' && $this->uri->segment(2) == 'article') { echo 'active';  } ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Master Article</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/article/category'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'category' && $this->uri->segment(2) == 'article') { echo 'active';  } ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Master Article Category</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a href="<?php echo base_url('admin/events'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'events') { echo 'active';  } ?>">
+              <i class="nav-icon fas fa-calendar-day"></i>
+              <p>
+                Events
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="<?php echo base_url('admin/voucher'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'voucher') { echo 'active';  } ?>">
+              <i class="nav-icon fas fa-ticket-alt"></i>
+              <p>
+                Voucher
+              </p>
+            </a>
+          </li>
+
+
+
           
         </ul>
       </nav>

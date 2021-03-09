@@ -20,6 +20,11 @@
 <script src="<?php echo base_url('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'); ?>"></script>
 <script src="<?php echo base_url('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js'); ?>"></script>
 <script src="<?php echo base_url('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js'); ?>"></script>
+<!-- date-range-picker -->
+<script src="<?php echo base_url('adminlte/plugins/daterangepicker/daterangepicker.js'); ?>"></script>
+<script src="<?php echo base_url('adminlte/plugins/moment/moment.min.js'); ?>"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="<?php echo base_url('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'); ?>"></script>
 <!-- Summernote -->
 <script src="<?php echo base_url('adminlte/plugins/summernote/summernote-bs4.min.js'); ?>"></script>
 <!-- SweetAlert2 -->

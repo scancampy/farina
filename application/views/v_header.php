@@ -4,14 +4,16 @@
 
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Product Detail | BeautySpot - HTML Template for Beauty Salons</title>
+        <title><?php echo $title.' - '.$setting->website_name; ?></title>
         <link rel="shortcut icon" href="images/favicon.ico">
 
         <!-- STYLESHEETS : begin -->
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/general.css'); ?>"><!-- Default styles generated from assets/scss/general.scss (do not edit) -->
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/color-schemes/default.css'); ?>"><!-- Default color scheme generated from assets/scss/color-schemes/default.scss (change to other pre-defined or custom color scheme) -->
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url('style.css'); ?>"><!-- Place your own CSS into this file -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 		<!-- STYLESHEETS : end -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
 
 	</head>
 	<body>
@@ -43,7 +45,7 @@
 								<div class="header-title-tagline">
 
 									<div class="header-title">
-										<a href="index.html" class="header-title__link">BeautySpot</a>
+										<a href="<?php echo base_url(''); ?>" class="header-title__link"><?php echo $setting->website_name; ?></a>
 									</div>
 
 									<p class="header-tagline">
@@ -63,7 +65,7 @@
 							<ul class="header-menu__list" role="menu">
 
 								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item header-menu__item--has-children">
+								<li class="header-menu__item <?php if ($this->uri->segment(1) == '') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
 										<a href="<?php echo base_url(''); ?>" class="header-menu__item-link">Home</a>
@@ -77,27 +79,27 @@
 								
 
 								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item  header-menu__item--current">
+								<li class="header-menu__item <?php if ($this->uri->segment(1) == 'product') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
-										<a href="#" class="header-menu__item-link">Products</a>
+										<a href="<?php echo base_url('product'); ?>" class="header-menu__item-link">Products</a>
 									</span>
 
 								</li>
 								<!-- MENU ITEM : end -->
 
 								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item">
+								<li class="header-menu__item <?php if ($this->uri->segment(1) == 'article') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
-										<a href="#" class="header-menu__item-link">Beauty Article</a>
+										<a href="<?php echo base_url('article'); ?>" class="header-menu__item-link">Beauty Article</a>
 									</span>
 
 								</li>
 								<!-- MENU ITEM : end -->
 
 								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item">
+								<li class="header-menu__item <?php if ($this->uri->segment(1) == 'event') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
 										<a href="#" class="header-menu__item-link">Event</a>
@@ -107,7 +109,7 @@
 								<!-- MENU ITEM : end -->
 
 								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item">
+								<li class="header-menu__item <?php if ($this->uri->segment(1) == 'community') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
 										<a href="#" class="header-menu__item-link">Community</a>
@@ -117,7 +119,7 @@
 								<!-- MENU ITEM : end -->
 
 								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item header-menu__item--has-children">
+								<li class="header-menu__item header-menu__item--has-children <?php if ($this->uri->segment(1) == 'member') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
 										<a href="blog-archive.html" class="header-menu__item-link">User Menu</a>
@@ -159,7 +161,7 @@
 								<!-- MENU ITEM : end -->
 
 								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item">
+								<li class="header-menu__item <?php if ($this->uri->segment(2) == 'contact') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
 										<a href="contact.html" class="header-menu__item-link">Contact</a>
