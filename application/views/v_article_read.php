@@ -23,7 +23,7 @@
 										<a href="<?php echo base_url('article'); ?>" class="breadcrumbs__link">Article</a>
 									</li>
 									<li class="breadcrumbs__item">
-										<a href="<?php echo base_url('article/read/'.$article[0]->title.'/'.url_title($article[0]->title)); ?>" class="breadcrumbs__link">Read</a>
+										<a href="<?php echo base_url('article/read/'.$article[0]->id.'/'.url_title($article[0]->title)); ?>" class="breadcrumbs__link">Read</a>
 									</li>
 
 								</ul>

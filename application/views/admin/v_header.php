@@ -166,6 +166,30 @@
             </a>
           </li>
 
+          <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == 'setting') {  echo 'menu-open'; } ?>">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-cogs   "></i>
+              <p>
+                Web Setting
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" >
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/setting/slides'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'slides' && $this->uri->segment(2) == 'setting') { echo 'active';  } ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Master Slides</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/setting/web'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'web' && $this->uri->segment(2) == 'setting') { echo 'active';  } ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Setting</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
 
 
           

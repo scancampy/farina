@@ -17,7 +17,7 @@
 										<div class="widget lsvr-text-widget">
 											<div class="widget__inner">
 
-												<h3 class="widget__title">About BeautySpot</h3>
+												<h3 class="widget__title">About <?php echo $setting->website_name; ?></h3>
 												<div class="widget__content">
 
 													<p>BeautySpot is an ideal HTML template for beauty salons, hairdressers, wellness or spa websites.

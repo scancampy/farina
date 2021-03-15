@@ -57,3 +57,62 @@ either add "fancy-link" or "fancy-link2" class to a text link where you want to 
 .variantobj {
 	cursor: pointer;
 }
+
+.uk-timeline .uk-timeline-item .uk-card {
+	max-height: 300px;
+	 box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius:5px;
+  margin-left:40px;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.uk-timeline .uk-timeline-item {
+    display: flex;
+    position: relative;
+}
+
+.uk-timeline .uk-timeline-item::before {
+    background: #dadee4;
+    content: "";
+    height: 100%;
+    left: 19px;
+    position: absolute;
+    top: 20px;
+    width: 2px;
+		z-index: -1;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-icon .uk-badge {
+	margin-top: 20px;
+	background-color: #ff007c;
+	height: 40px;
+	width: 40px;
+	color: white;
+	display: flex !important;
+	text-align: center;
+	justify-content: center;
+	flex-direction: column;
+	display: inline-block;
+	border-radius:50%;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-content {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 0 0 0 1rem;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-content .uk-card .uk-card-body {
+	display: flex !important;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-content .uk-card .uk-card-body .uk-img {
+	width: 150px;
+	margin-right: 20px;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-content .uk-card .uk-card-body h4 {
+	margin:0px;
+}

@@ -127,7 +127,7 @@
               <div class="form-group">
                 <label for="eventdate">Event Date</label>
                  <div class="input-group date" id="eventdate" data-target-input="nearest">
-                    <input type="text" class="form-control datetimepicker-input" id="eventdate" name="eventdate" data-target="#eventdate"/>
+                    <input type="text" class="form-control datetimepicker-input eventdate" id="eventdate" name="eventdate" data-target="#eventdate"/>
                     <div class="input-group-append" data-target="#eventdate" data-toggle="datetimepicker">
                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
@@ -139,7 +139,7 @@
                     <label>Event Time</label>
 
                     <div class="input-group date" id="timepicker" data-target-input="nearest">
-                      <input type="text" name="eventtime" class="form-control datetimepicker-input" data-target="#timepicker">
+                      <input type="text" name="eventtime" class="form-control eventtime datetimepicker-input" data-target="#timepicker">
                       <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
                           <div class="input-group-text"><i class="far fa-clock"></i></div>
                       </div>
@@ -157,7 +157,7 @@
           <div class="form-group">
             <label for="icon">Icon</label>
             <input type="text" class="form-control" id="icon" name="icon" required >
-            <small id="emailHelp" class="form-text text-muted">Search icon <a href="https://fontawesome.com/icons?d=gallery&p=2&m=free">here</a></small>
+            <small id="emailHelp" class="form-text text-muted">Search icon <a href="https://fontawesome.com/icons?d=gallery&p=2&m=free" target="_blank">here</a></small>
           </div>
 
           <div class="form-group">

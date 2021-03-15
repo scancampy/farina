@@ -18,37 +18,33 @@ class Event_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	public function addYoutube($article_id, $youtube) {
-		$q = $this->db->get_where('article_media', array('article_id' => $article_id));
+	public function addYoutube($id, $youtube) {
+		$q = $this->db->get_where('event_media', array('event_id' => $id));
 		$next = $q->num_rows() + 1;
-		$data = array('article_id' => $article_id, 'media_type' => 'youtube', 'youtube_link' => $youtube, 'display_order' => $next);
-		$this->db->insert('article_media', $data);
+		$data = array('event_id' => $id, 'media_type' => 'youtube', 'youtube_link' => $youtube, 'display_order' => $next);
+		$this->db->insert('event_media', $data);
 	}	
 
-	public function editArticle($id, $title,  $short_desc, $content, $is_published, $category_id, $article_type) {
-		if($is_published == null) {
-			$is_published = 0;
-		}
-		
-		$data = array('title' => $title,
-					  'is_published' => $is_published, 
-					  'category_id' => $category_id, 
+	public function editEvent($id, $name,  $short_desc, $content, $event_date, $event_time, $icon, $need_registration, $host) {
+		$data = array('name' => $name,
+					  'need_registration' => $need_registration, 
+					  'icon' => $icon, 
+					  'host' => $host, 
 					  'short_desc' => $short_desc,
 					  'content' => $content,
-					  'article_type' => $article_type);
+					  'event_date' => $event_date.' '.$event_time.':00'
+					);
 		$this->db->where('id',$id);
-		$this->db->update('article',$data);
+		$this->db->update('event',$data);
 
-		//echo $this->db->last_query();
-		//die();
 		return $id;
 	}
 
-	public function getEvent($where = null, $id = null, $limit = null, $offset = null) {
+	public function getEvent($where = null, $id = null, $limit = null, $offset = null, $order_type = 'desc') {
 		if($where != null) {
 			$this->db->where($where);
 		}
-		$this->db->order_by('event_date', 'desc');
+		$this->db->order_by('event_date', $order_type);
 		if($limit != null) {
 			$this->db->limit($limit, $offset);
 		}
@@ -88,10 +84,10 @@ class Event_model extends CI_Model {
 
 	}
 
-	public function delArticle($id) {
+	public function delEvent($id) {
 		$data = array('is_deleted' => 1);
 		$this->db->where('id',$id);
-		$this->db->update('article', $data);
+		$this->db->update('event', $data);
 		return true;
 	}
 }

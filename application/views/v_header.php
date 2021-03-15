@@ -102,7 +102,7 @@
 								<li class="header-menu__item <?php if ($this->uri->segment(1) == 'event') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
-										<a href="#" class="header-menu__item-link">Event</a>
+										<a href="<?php echo base_url('event'); ?>" class="header-menu__item-link">Event</a>
 									</span>
 
 								</li>
@@ -332,9 +332,10 @@
 											<a href="<?php echo base_url('cart'); ?>"
 												class="header-cart__button">
 												<span class="header-cart__button-icon" aria-hidden="true"></span>
-												<?php if(count($product) >0) { ?>
+												<?php if(isset($product)) {
+												if($product!='') { ?>
 												<span class="header-cart__button-info"><?php echo count($product); ?></span>
-											<?php } ?>
+											<?php } } ?>
 											</a>
 
 										</div>

@@ -33,14 +33,16 @@ class Events extends CI_Controller {
 		if($this->input->post('btnSubmit')) {
 
 			if($this->input->post('hiddenid')) {
-				$lastid = $this->event_model->editArticle(
+				$lastid = $this->event_model->editEvent(
 					$this->input->post('hiddenid'),
-					$this->input->post('title'),  
+					$this->input->post('name'),  
 					$this->input->post('short_desc'), 
 					$this->input->post('content'), 
-					$this->input->post('is_published'), 
-					$this->input->post('category_id'),
-					$this->input->post('article_type'));
+					$this->input->post('eventdate'), 
+					$this->input->post('eventtime'), 					
+					$this->input->post('icon'), 
+					$this->input->post('need_registration'), 
+					$this->input->post('host'));
 				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data updated successfully!'));
 			} else {
 				$lastid = $this->event_model->addEvent(
@@ -95,7 +97,7 @@ class Events extends CI_Controller {
       		$youtube = $this->input->post('youtube');
       		foreach ($youtube as $key => $value) {
       			if($value != '') {
-	      			$this->article_model->addYoutube($lastid,$value);
+	      			$this->event_model->addYoutube($lastid,$value);
 	      		}
       		}
 
@@ -192,13 +194,13 @@ class Events extends CI_Controller {
 			$("#containerMedia").html("");
 		});
 
-		// TODO: implement this
+
 		$(".eventedit").on("click", function() {
 			var id = $(this).attr("eventid");
 
 			$("#containerMedia").html("");
 
-			$.post("'.base_url('admin/event/jsongetevent').'", { sentid: id}, function(data){ 
+			$.post("'.base_url('admin/events/jsongetevent').'", { sentid: id}, function(data){ 
 				
 				var obj = JSON.parse(data);
 
@@ -206,29 +208,28 @@ class Events extends CI_Controller {
 				for(var i=0; i< obj.datafoto.length; i++) {
 					if(obj.datafoto[i].media_type == "photo") {
 						var filename = obj.datafoto[i].filename;
-					$("#mediaContainer").append("<div class=\"col-md-3 \"><img class=\"img-fluid rounded img-thumbnail \" style=\"object-fit: cover; height:200px;\" src=\"'.base_url('img/article/').'" + filename + "\"/></div>");
+					$("#mediaContainer").append("<div class=\"col-md-3 \"><img class=\"img-fluid rounded img-thumbnail \" style=\"object-fit: cover; height:200px;\" src=\"'.base_url('img/events/').'" + filename + "\"/></div>");
 					} else {
 $("#mediaContainer").append("<div class=\"col-md-3 \">" + obj.datafoto[i].youtube_link + "</div>");
 					}					
 				}
 				
-				$("#title").val(obj.data[0].title);
+				$("#name").val(obj.data[0].name);
 				$("#hiddenid").val(obj.data[0].id);
-				$("#category_id").val(obj.data[0].category_id);
+				$("#host").val(obj.data[0].host);
+				$("#icon").val(obj.data[0].icon);
 				$("#short_desc").val(obj.data[0].short_desc);
 				
-				if(obj.data[0].is_published == 1) {
-					$("#is_published").prop( "checked", true );
+				if(obj.data[0].need_registration == 1) {
+					$("#member_registration").prop( "checked", true );
 				} else {
-					$("#is_published").prop( "checked", false );
+					$("#no_registration").prop( "checked", false );
 				}
-
-				if(obj.data[0].article_type == "normal") {
-					$("#normal_type").prop( "checked", true );
-				} else {
-					$("#exclusive_type").prop( "checked", true );
-				}
-				$("#modalAddArticle").modal();
+				var dt = obj.data[0].event_date
+				$(".eventdate").val(dt.substring(0, 10));
+				$(".eventtime").val(dt.substring(11, 16));
+				
+				$("#modalAddEvent").modal();
 				$(".textarea").summernote("code", obj.data[0].content);
 			});			
 		});';
@@ -239,11 +240,11 @@ $("#mediaContainer").append("<div class=\"col-md-3 \">" + obj.datafoto[i].youtub
 	}
 
 
-	public function delarticle($id) {
-		$this->article_model->delArticle($id);
+	public function delevent($id) {
+		$this->event_model->delEvent($id);
 		$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data deleted successfully!'));
 
-		redirect('admin/article/master');
+		redirect('admin/events');
 	}
 
 	// JSON
