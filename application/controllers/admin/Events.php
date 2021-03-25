@@ -195,7 +195,7 @@ class Events extends CI_Controller {
 		});
 
 
-		$(".eventedit").on("click", function() {
+		$("body").on("click",".eventedit", function() {
 			var id = $(this).attr("eventid");
 
 			$("#containerMedia").html("");

@@ -180,7 +180,7 @@ class Article extends CI_Controller {
 			$("#containerMedia").html("");
 		});
 
-		$(".articleedit").on("click", function() {
+		$("body").on("click",".articleedit", function() {
 			var id = $(this).attr("articleid");
 
 			$("#containerMedia").html("");
@@ -279,7 +279,7 @@ $("#mediaContainer").append("<div class=\"col-md-3 \">" + obj.datafoto[i].youtub
 			$("#name").val("");
 		});
 
-		$(".categoryedit").on("click", function() {
+		$("body").on("click",".categoryedit", function() {
 			var id = $(this).attr("categoryid");
 			$.post("'.base_url('admin/article/jsongetcategory').'", { sentid: id}, function(data){ 
 				var obj = JSON.parse(data);

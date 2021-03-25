@@ -126,7 +126,7 @@ class Voucher extends CI_Controller {
 			$(".textarea").summernote("code", "");
 		});
 
-		$(".voudedit").on("click", function() {
+		$("body").on("click",".voudedit", function() {
 			var id = $(this).attr("vouid");
 
 			$.post("'.base_url('admin/voucher/jsongetvoucher').'", { sentid: id}, function(data){ 

@@ -126,6 +126,10 @@ class Product extends CI_Controller {
 				            // Get data about the file
 				            $uploadData = $this->upload->data();
 				            $filename = $uploadData['file_name'];			         
+				           } else {
+				           	$error = array('error' => $this->upload->display_errors());
+
+                       // print_r($error); die();
 				           }
 	      			 }
 
@@ -222,7 +226,7 @@ class Product extends CI_Controller {
 			$("#containerVariant").html("");
 		});
 
-		$(".prodedit").on("click", function() {
+		$("body").on("click", ".prodedit", function() {
 			var id = $(this).attr("prodid");
 
 			$.post("'.base_url('admin/product/jsongetproduct').'", { sentid: id}, function(data){ 

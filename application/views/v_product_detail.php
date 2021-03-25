@@ -145,12 +145,17 @@
 												<span attrid="<?php echo $value->id; ?>" class="post__gallery-featured-link variantobj <?php if($key == 0) { echo 'selectedvariant'; } ?> " style="width: 75px; height: 75px; 
 												margin-left:10%;
 												display: inline-block;
+												overflow: hidden;
 												background: url(<?php echo base_url('img/variant/'.$value->filename); ?>);
 												border-radius: 50%; background-size: cover;
 												background-repeat:no-repeat;
 												background-position: center center;
 												border:2px solid #ecf0f1; margin-right: 20px;" >
-												<img src="<?php echo base_url('img/variant/'.$value->filename); ?>"  alt="<?php echo $value->name; ?>" style="display: none;">
+												<?php if($value->filename != '') { ?>
+												<img src="<?php echo base_url('img/variant/'.$value->filename); ?>"  alt="<?php echo $value->name; ?>" >
+											<?php } else { ?>
+												<img src="<?php echo base_url('image_not_available.png'); ?>""  alt="<?php echo $value->name; ?>" >
+											<?php } ?>
 												</span>
 												<p style="text-align: center; font-size:10pt;"><?php echo $value->name; ?></p>
 

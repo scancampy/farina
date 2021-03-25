@@ -121,7 +121,7 @@ class Setting extends CI_Controller {
 			$("#currentimage").hide();
 		});
 
-		$(".slideedit").on("click", function() {
+		$("body").on("click",".slideedit", function() {
 			var id = $(this).attr("slideid");
 
 			$.post("'.base_url('admin/setting/jsongetslide').'", { sentid: id}, function(data){ 
