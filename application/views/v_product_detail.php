@@ -108,9 +108,28 @@
 
 									<!-- POST INTRO : begin -->
 									<div class="post__intro">
-
 										<p><?php echo $product[0]->description; ?></p>
+										
 
+									</div>
+									<div  class="post__content">
+										<table>
+										    <thead>
+										        <tr>
+										            <th colspan="2">Keterangan</th>
+										        </tr>
+										    </thead>
+										    <tbody>
+										        <tr>
+										            <td>Ukuran</td>
+										            <td><?php echo $product[0]->weight.' '.$product[0]->unit_name; ?></td>
+										        </tr>
+										        <tr>
+										            <td>Brand</td>
+										            <td><a href="<?php echo base_url('product?brand='.$product[0]->brand_id); ?>"><?php echo $product[0]->brandname; ?></a></td>
+										        </tr>
+										    </tbody>
+										</table>
 									</div>
 									<!-- POST INTRO : end -->
 
@@ -134,6 +153,7 @@
 												<img src="<?php echo base_url('img/variant/'.$value->filename); ?>"  alt="<?php echo $value->name; ?>" style="display: none;">
 												</span>
 												<p style="text-align: center; font-size:10pt;"><?php echo $value->name; ?></p>
+
 											</div>
 										<?php } ?>	
 										</div>

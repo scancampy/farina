@@ -124,6 +124,9 @@ class Product_model extends CI_Model {
 		$this->db->select('product.*, brand.name as brandname');
 		$this->db->join('brand', 'brand.id = product.brand_id');
 
+		$this->db->select('product_unit.unit_name');
+		$this->db->join('product_unit', 'product_unit.id = product.product_unit_id');
+
 		if($id != null) {
 			$q = $this->db->get_where('product', array('product.id' => $id));
 		} else {
