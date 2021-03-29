@@ -113,11 +113,11 @@ class Product_model extends CI_Model {
 		return $id;
 	}
 
-	public function getProduct($where = null, $id = null, $limit = null, $offset = null) {
+	public function getProduct($where = null, $id = null, $limit = null, $offset = null, $orderType = 'asc') {
 		if($where != null) {
 			$this->db->where($where);
 		}
-		$this->db->order_by('name');
+		$this->db->order_by('name', $orderType);
 		if($limit != null) {
 			$this->db->limit($limit, $offset);
 		}

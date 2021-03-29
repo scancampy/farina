@@ -116,3 +116,22 @@ either add "fancy-link" or "fancy-link2" class to a text link where you want to 
 .uk-timeline .uk-timeline-item .uk-timeline-content .uk-card .uk-card-body h4 {
 	margin:0px;
 }
+
+.header__inner {
+    background-color: rgba(255,143,179,0.7) !important;
+    background-image: linear-gradient(to bottom, rgba(247,143,179,1.0), rgba(255,184,184,0.4)) !important;
+}
+
+.product_image {
+	 height: 200px;
+  background-position: center center;
+  background-repeat: no-repeat;
+   background-size: cover;
+}
+
+.parent_product_image:hover {
+	transform: scale(1.2);
+}
+.product_image:hover {
+  transform: scale(1.2);
+}
