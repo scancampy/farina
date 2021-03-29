@@ -137,15 +137,23 @@ class Product extends CI_Controller {
       			}
       		}
 
-			redirect('admin/product/master');
+      		$addurl = '';
+      		if($this->input->get('brand_id_filter')) { $addurl = '?brand_id_filter='.$this->input->get('brand_id_filter'); }
+
+			redirect('admin/product/master'.$addurl);
 		}
 
 		$data['name'] = $this->session->userdata('user')->name;
 		$data['title'] = "Master Product";
 		$data['unit'] = $this->product_model->getUnit();
 		$data['brand'] = $this->product_model->getBrand(array('is_deleted' => 0));
-		$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0));
 
+		$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0));
+		if($this->input->get('brand_id_filter')) {
+			if($this->input->get('brand_id_filter') != '-') {
+				$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0, 'brand_id' => $this->input->get('brand_id_filter')));
+			} 
+		}
 		//summernote
 		$data['js'] .= ' $(".textarea").summernote({
 						  height: 200,
@@ -164,7 +172,10 @@ class Product extends CI_Controller {
 						  fontSizes: ["8", "9", "10", "11", "12", "14", "16", "18", "24", "36", "48" , "64", "82", "150"]
 						});';
 
-
+		// handle select brand
+		$data['js'] .= '$("select#brand_id_filter").on("change", function() {
+						$("#formcategory").submit();
+					   });';
 
 		// handle data table
 		$data['js'] .= ' $("#tablebrand").DataTable({

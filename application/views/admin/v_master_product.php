@@ -27,8 +27,17 @@
             <div class="card">
               <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3">Manage Products Data</h3>
-                <div class="ml-auto p-3">
-                  <a href="#" data-toggle="modal" data-target="#modalAddProduct" id="btnaddproduct" class="btn btn-primary btn-xs"><i class="nav-icon fas fa-plus"></i> Add New Product</a>
+                <div class="ml-auto p-3 d-flex" >
+                  <form method="get" id="formcategory" class=" mr-2" action="<?php echo base_url('admin/product/master'); ?>">
+                    <select class="form-control" name="brand_id_filter" id="brand_id_filter">
+                      <option value="-">All Brand</option>
+                      <?php foreach ($brand as $key => $value) { ?>
+                        <option value="<?php echo $value->id; ?>" <?php if($this->input->get('brand_id_filter') == $value->id) { echo 'selected'; } ?>><?php echo $value->name; ?></option>
+                      <?php } ?>
+                    </select>
+                  </form>
+
+                  <a href="#" data-toggle="modal" data-target="#modalAddProduct" id="btnaddproduct" class="btn btn-primary btn-xs pt-2 pl-2 pr-2" ><i class="nav-icon fas fa-plus"></i> Add New Product</a>
                 </div>
               </div>
               <!-- /.card-header -->
@@ -87,7 +96,7 @@
   <div class="modal fade " id="modalAddProduct" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <form action="<?php echo base_url('admin/product/master'); ?>" method="post" enctype="multipart/form-data">
+      <form action="<?php echo base_url('admin/product/master'); ?><?php if($this->input->get('brand_id_filter')) { echo '?brand_id_filter='.$this->input->get('brand_id_filter'); } ?>" method="post" enctype="multipart/form-data">
         <div class="modal-header">
           <h5 class="modal-title">Add Product</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
