@@ -120,6 +120,7 @@ class Product extends CI_Controller {
 				 
 				          //Load upload library
 				          $this->load->library('upload',$config); 
+				          $this->upload->initialize($config);
 
 				           // File upload
 				          if($this->upload->do_upload('file')){
@@ -129,7 +130,7 @@ class Product extends CI_Controller {
 				           } else {
 				           	$error = array('error' => $this->upload->display_errors());
 
-                       // print_r($error); die();
+                      print_r($error); die();
 				           }
 	      			 }
 
@@ -235,6 +236,20 @@ class Product extends CI_Controller {
 			$("#containerFoto").html(newPhoto);
 			$("#uploadedFoto").html("");
 			$("#containerVariant").html("");
+			$("#variantContainer").html("");
+			var newVariant = "<div class=\"row mt-1\">" +
+                "<div class=\"col-md-6\">" + 
+                  "<div class=\"input-group\">" +
+                    "<div class=\"custom-file\">" +
+                      "<input type=\"file\" class=\"form-control\"  name=\"fotovariant[]\">" + 
+                    "</div>" +
+                  "</div>" +
+                "</div>" +
+                "<div class=\"col-md-6\">" +
+                  "<input type=\"text\" class=\"form-control\" name=\"variant[]\"  placeholder=\"Write Variant Name here...\">" +
+                "</div>" +
+              "</div>";
+             $("#containerVariant").html(newVariant);
 		});
 
 		$("body").on("click", ".prodedit", function() {

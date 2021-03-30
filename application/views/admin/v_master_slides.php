@@ -51,7 +51,14 @@
                       <td><?php echo $key+1; ?></td>
                       <td><?php echo $value->title; ?></td>
                       <td><img src="<?php echo base_url('img/slides/'.$value->filename); ?>" style="width: 200px;" /></td>
-                      <td><?php echo $value->display_order; ?></td>    
+                      <td><?php echo $value->display_order; ?> 
+                      <?php if($key != 0) { ?>
+                      <a href="<?php echo base_url('admin/setting/slidesup/'.$value->id); ?>"><span class="nav-icon fas fa-chevron-up"></span></a> 
+                    <?php } ?>
+                     <?php if($key != count($slides)-1) { ?>
+                      <a href="<?php echo base_url('admin/setting/slidesdown/'.$value->id); ?>"><span class="nav-icon fas fa-chevron-down"></span></a>
+                    <?php } ?>
+                    </td>    
                       <td class="d-flex justify-content-end">
                         <a href="#" slideid="<?php echo $value->id; ?>" class="btn btn-xs btn-primary mr-1 slideedit"><i class="nav-icon fas fa-edit"></i> Edit</a> 
                         <a href="<?php echo base_url('admin/setting/delslide/'.$value->id); ?>" onclick="return confirm('Are you sure want to delete <?php echo $value->title; ?>?');" class="btn btn-xs btn-danger m-0"><i class="nav-icon fas fa-trash"></i> Delete</a></td>

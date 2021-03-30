@@ -43,19 +43,63 @@ class Admin_model extends CI_Model {
 		return $q->result();
 	}
 
+	public function editSlideDown($id) {
+		$result = $this->getSlides(array('id' => $id));
+
+		if(count($result) >0) {
+			$currentOrder = $result[0]->display_order;
+			$data = array('display_order' => $currentOrder);
+			$this->db->where('display_order',$currentOrder+1);
+			$this->db->update('slider',$data);
+
+			$data = array('display_order' => $currentOrder+1);
+			$this->db->where('id',$id);
+			$this->db->update('slider',$data);
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function editSlideUp($id) {
+		$result = $this->getSlides(array('id' => $id));
+
+		if(count($result) >0) {
+			$currentOrder = $result[0]->display_order;
+			$data = array('display_order' => $currentOrder);
+			$this->db->where('display_order',$currentOrder-1);
+			$this->db->update('slider',$data);
+
+			$data = array('display_order' => $currentOrder-1);
+			$this->db->where('id',$id);
+			$this->db->update('slider',$data);
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public function addSlide($title, $short_desc, $url = null, $filename, $url_caption = null) {
+		$this->db->order_by('display_order', 'desc');
 		$q = $this->db->get_where('slider', array('is_deleted' => 0));
-		$next = $q->num_rows() + 1;
-		
-		$data = array('title' => $title,
+
+		if($q->num_rows() > 0) {
+			$hq = $q->row();
+			$next = $hq->display_order + 1;	
+			$data = array('title' => $title,
 					  'short_desc' => $short_desc,
 					  'url'		 => $url,
 					  'filename'	 => $filename, 
 					  'url_caption'	 => $url_caption,
 					  'display_order' => $next);
-		$this->db->insert('slider', $data);
+			$this->db->insert('slider', $data);
 
-		return $voucher_code;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public function editSlide($id,$title, $short_desc, $url = null, $filename=null, $url_caption = null) {		
@@ -74,11 +118,17 @@ class Admin_model extends CI_Model {
 	}
 
 	public function delSlide($id) {
-		$data = array('is_deleted' => 1);
-		$this->db->where('id',$id);
-		$this->db->update('slider', $data);
-		return true;
-	}
+		$result = $this->getSlides(array('id' => $id));
 
+		if(count($result) >0) {
+			$this->db->query('UPDATE slider SET display_order = display_order-1 WHERE display_order > '.$result[0]->display_order.'  AND is_deleted = 0;');
+			$data = array('is_deleted' => 1);
+			$this->db->where('id',$id);
+			$this->db->update('slider', $data);
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 ?>

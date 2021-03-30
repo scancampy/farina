@@ -2,6 +2,30 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Setting extends CI_Controller {
+	public function slidesdown($id) {
+		if($this->admin_model->editSlideDown($id)) {
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Slide display order have been adjusted!'));
+
+			redirect('admin/setting/slides');
+		} else {
+			$this->session->set_flashdata('notif', array('type' => 'failed', 'msg' => 'Unable to adjust slides display order!'));
+
+			redirect('admin/setting/slides');
+		}
+	}
+
+	public function slidesup($id) {
+		if($this->admin_model->editSlideUp($id)) {
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Slide display order have been adjusted!'));
+
+			redirect('admin/setting/slides');
+		} else {
+			$this->session->set_flashdata('notif', array('type' => 'failed', 'msg' => 'Unable to adjust slides display order!'));
+
+			redirect('admin/setting/slides');
+		}
+	}
+
 	public function slides() {
 		$data = array();
 		$data['js'] = '';

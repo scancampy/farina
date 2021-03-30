@@ -1,4 +1,4 @@
-<!-- FOOTER : begin -->
+	<!-- FOOTER : begin -->
 			<footer id="footer">
 				<div class="footer__inner">
 
@@ -40,29 +40,15 @@
 										<div class="widget lsvr-image-grid-widget">
 											<div class="widget__inner">
 
-												<h3 class="widget__title">We Endorse These Brands</h3>
+												<h3 class="widget__title">Quick Links</h3>
 												<div class="widget__content">
-
-													<div class="lsvr-images-widget__grid lsvr-grid lsvr-grid--4-cols lsvr-grid--sm-2-cols">
-
-														<div class="lsvr-grid__col">
-															<p><img src="<?php echo base_url('images/brand_01.png'); ?>" alt="Brand 1"></p>
-														</div>
-
-														<div class="lsvr-grid__col">
-															<p><img src="<?php echo base_url('images/brand_02.png'); ?>" alt="Brand 2"></p>
-														</div>
-
-														<div class="lsvr-grid__col">
-															<p><img src="<?php echo base_url('images/brand_03.png'); ?>" alt="Brand 3"></p>
-														</div>
-
-														<div class="lsvr-grid__col">
-															<p><img src="<?php echo base_url('images/brand_04.png'); ?>" alt="Brand 4"></p>
-														</div>
-
-													</div>
-
+													<ul>
+														<li><a href="#">How to register</a></li>
+														<li><a href="#">How to make transaction</a></li>
+														<li><a href="#">VIP Benefit</a></li>
+														<li><a href="#">S&K</a></li>
+														<li><a href="#">FAQ</a></li>
+													</ul>
 												</div>
 
 											</div>
