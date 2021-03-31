@@ -2,6 +2,28 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member_model extends CI_Model {
+	public function login($email, $password) {
+		$q = $this->db->get_where('member', array('email' => $username, 'status' => 'active', 'is_deleted' => 0));
+
+		if($q->num_rows()> 0) {
+			$rq = $q->row();
+			if(password_verify($password, $rq->password)) {
+				//sukses
+				$data = array(
+				        'last_login' => date('Y-m-d H:i:s')
+				);
+
+				$this->db->where('username', $username);
+				$this->db->update('member', $data);
+				return $rq;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
 	public function signup($first_name, $last_name, $password, $email, $parent_member_id=null) {
 		$this->load->helper('string');
 		$id = password_hash(time(), PASSWORD_DEFAULT);

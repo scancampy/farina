@@ -8,7 +8,7 @@
 				<div class="lsvr-container">
 					<div class="page-header__content">
 
-						<h1 class="page-header__title">Sign Up</h1>
+						<h1 class="page-header__title">Sign In</h1>
 
 						<!-- BREADCRUMBS : begin -->
 						<div class="breadcrumbs">
@@ -24,7 +24,7 @@
 									</li>
 
 									<li class="breadcrumbs__item">
-										<a href="<?php echo base_url('member/signup'); ?>" class="breadcrumbs__link">Sign Up</a>
+										<a href="<?php echo base_url('member/signin'); ?>" class="breadcrumbs__link">Sign In</a>
 									</li>
 
 								</ul>
@@ -72,11 +72,7 @@
 								<div class="page__content">
 
 									<!-- PRODUCT CHECKOUT : begin -->
-									<form class="product-checkout lsvr-form" method="post" action="<?php 
-
-									echo base_url('member/signup');
-
-									if(isset($_GET['refcode'])) { echo '?refcode='.$_GET['refcode']; } ?>">
+									<form class="product-checkout lsvr-form" method="post" action="<?php echo base_url('member/signin'); ?>">
 
 										<!-- VALIDATION ERROR MESSAGE : begin -->
 										<?php if(@$error != '') { ?>
@@ -86,38 +82,6 @@
 											<p><?php echo $error; ?></p>
 										</div>
 									<?php  } ?>
-										<!-- VALIDATION ERROR MESSAGE : begin -->
-
-										<!-- GRID : begin -->
-										<div class="lsvr-grid lsvr-grid--2-cols lsvr-grid--sm-1-cols">
-
-											<!-- GRID COL : begin -->
-											<div class="lsvr-grid__col">
-
-									            <p class="lsvr-form__field">
-									                <label class="lsvr-form__field-label" for="order-billing-first-name">First Name*</label>
-									                <input class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
-									                	type="text" value="<?php echo set_value('first_name'); ?>" required autofocus name="first_name" id="first_name">
-									            </p>
-
-									        </div>
-									        <!-- GRID COL : end -->
-
-											<!-- GRID COL : begin -->
-											<div class="lsvr-grid__col">
-
-									            <p class="lsvr-form__field">
-									                <label class="lsvr-form__field-label" for="order-billing-last-name">Last Name</label>
-									                <input class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
-									                	type="text" value="<?php echo set_value('last_name'); ?>" name="last_name" id="last_name">
-									            </p>
-
-									        </div>
-									        <!-- GRID COL : end -->
-
-								        </div>
-								        <!-- GRID : end -->
-
 										<!-- GRID : begin -->
 										<div class="lsvr-grid lsvr-grid--1-cols lsvr-grid--sm-1-cols">
 
@@ -127,7 +91,7 @@
 									            <p class="lsvr-form__field">
 									                <label class="lsvr-form__field-label" for="order-billing-email">Your Email*</label>
 									                <input class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--email lsvr-form__field-input--required"
-									                	type="text" value="<?php echo set_value('email'); ?>" name="email" id="email">
+									                	type="text" value="" name="email" id="email">
 									            </p>
 
 									        </div>
@@ -148,38 +112,17 @@
 									                <input class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
 									                	type="password" name="password" id="password">
 									            </p>
+									            <p>Forgot your password? Recover <a href="<?php echo base_url('member/recover'); ?>">here</a>
 
 									        </div>
 									        <!-- GRID COL : end -->
 
-											<!-- GRID COL : begin -->
-											<div class="lsvr-grid__col">
-
-									            <p class="lsvr-form__field">
-									                <label class="lsvr-form__field-label" for="order-billing-city">Repeat Password*</label>
-									                <input class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
-									                	type="password" name="repeat_password" id="repeat_password">
-									            </p>
-
-									        </div>
-									        <!-- GRID COL : end -->
+											
 
 								        </div>
 								        <!-- GRID : end -->
 
 									
-
-
-								        <!-- SHIPPING CHECKBOX : begin -->
-								        <p class="lsvr-form__field">
-								        	<label for="order-shipping-checkbox" class="lsvr-form__field-label lsvr-form__field-label--checkbox">
-								        		<input type="checkbox" value="true" class="lsvr-form__field-input lsvr-form__field-input--checkbox"
-								        			name="check_aggreement" id="check_aggreement"
-								        			
-								        			data-toggle-element="order-form-shipping-fields">
-								        		<span>Saya setuju dengan <a href="#" target="_blank">syarat dan ketentuan</a></span>
-								        	</label>
-							        	</p>
 
 
 								    
@@ -188,9 +131,9 @@
 
 											<!-- FOOTER CHECKOUT : begin -->
 											<p class="product-order__footer-checkout">
-												<button type="submit" name="btnsubmit" value="submit" class="product-order__footer-checkout-btn lsvr-button">Sign Up</button>
+												<button type="submit" name="btnsubmit" value="submit" class="product-order__footer-checkout-btn lsvr-button">Sign In</button>
 											</p>
-											<p>Already have account? Click <a href="<?php echo base_url('member/signin'); ?>">here</a> to sign in </p>
+											<p>Don't have account? Register <a href="<?php echo base_url('member/signup'); ?>">here</a>
 											<!-- FOOTER CHECKOUT : end -->
 
 										</div>

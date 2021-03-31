@@ -4,7 +4,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Member extends CI_Controller {
 	public function index()
 	{
-		// TODO: implement Member home
+		if(!$this->session->userdata('member')) {
+			redirect('member/signin');
+		} else {
+			echo 'render dashboard';
+		}
+	}
+
+	public function signin() {
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Sign In';
+
+		if($this->input->post('btnsubmit')) {
+			$result = $this->member_model->login($this->input->post('email'), $this->input->post('password'));
+
+			if($result) {
+				$this->session->set_userdata('member', $result);
+				redirect('member');
+			} else {
+				// TODO: bikin notif error
+			}
+		}
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_sign_in',$data);
+		$this->load->view('v_footer', $data);
 	}
 
 	public function signup() {
