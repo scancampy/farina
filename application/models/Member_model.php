@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member_model extends CI_Model {
 	public function login($email, $password) {
-		$q = $this->db->get_where('member', array('email' => $username, 'status' => 'active', 'is_deleted' => 0));
+		$q = $this->db->get_where('member', array('email' => $email, 'status' => 'active', 'is_deleted' => 0));
 
 		if($q->num_rows()> 0) {
 			$rq = $q->row();
@@ -13,7 +13,7 @@ class Member_model extends CI_Model {
 				        'last_login' => date('Y-m-d H:i:s')
 				);
 
-				$this->db->where('username', $username);
+				$this->db->where('email', $email);
 				$this->db->update('member', $data);
 				return $rq;
 			} else {

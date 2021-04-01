@@ -122,9 +122,9 @@
 								<li class="header-menu__item header-menu__item--has-children <?php if ($this->uri->segment(1) == 'member') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
-										<a href="<?php echo base_url('member'); ?>" class="header-menu__item-link">User Menu</a>
+										<a href="<?php echo base_url('member'); ?>" class="header-menu__item-link">Member Menu</a>
 									</span>
-
+									<?php if($this->session->userdata('member')) { ?>
 									<button type="button" class="header-menu__submenu-toggle" title="Expand submenu">
 										<span class="header-menu__submenu-toggle-icon" aria-hidden="true"></span>
 									</button>
@@ -152,10 +152,11 @@
 										</li>
 
 										<li class="header-menu__item">
-											<a href="faq-archive.html" class="header-menu__item-link" role="menuitem">Sign Out</a>
+											<a href="<?php echo base_url('member/signout'); ?>" class="header-menu__item-link" role="menuitem">Sign Out</a>
 										</li>
 
 									</ul>
+								<?php } ?>
 
 								</li>
 								<!-- MENU ITEM : end -->

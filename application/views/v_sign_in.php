@@ -50,22 +50,14 @@
 							<?php if($this->session->flashdata('notif')) { 
 								$notif = $this->session->flashdata('notif');
 								?>
-							<div class="page product-post-page product-post-archive">
-								<div class="page__content">
-									
-
-									<div class="lsvr-alert-message <?php if($notif['type'] == 'success') { echo 'lsvr-alert-message--success'; } else { echo 'lsvr-alert-message--failed'; } ?>">
-										<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
-										<h3 class="lsvr-alert-message__title">Registration Success</h3>
-										<p><?php echo $notif['msg']; ?></p>
-									</div>
-
-									<p>
-										<a href="<?php echo base_url('member/signin'); ?>" class="lsvr-button">Kembali ke Sign In</a>
-									</p>
-								</div>
+							<div class="lsvr-alert-message lsvr-alert-message--warning">
+								<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+								<h3 class="lsvr-alert-message__title">Warning Message</h3>
+								<p><?php echo $notif['msg']; ?>	</p>
 							</div>
-						    <?php } else { ?>
+						    <?php } ?>
+
+						   
 
 							<!-- PAGE : begin -->
 							<div class="page product-post-page product-post-order product-post-order--checkout">
@@ -145,7 +137,6 @@
 								</div>
 							</div>
 							<!-- PAGE : end -->
-						<?php } ?>
 
 						</div>
 					</main>

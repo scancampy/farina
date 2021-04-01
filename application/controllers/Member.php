@@ -7,8 +7,19 @@ class Member extends CI_Controller {
 		if(!$this->session->userdata('member')) {
 			redirect('member/signin');
 		} else {
-			echo 'render dashboard';
+			$data = array();
+			$data['setting'] = $this->admin_model->getSetting();
+			$data['title'] = 'Member Dashboard';
+
+			$this->load->view('v_header', $data);
+			$this->load->view('v_dashboard',$data);
+			$this->load->view('v_footer', $data);
 		}
+	}
+
+	public function signout() {
+		$this->session->unset_userdata('member');
+		redirect('member');
 	}
 
 	public function signin() {
@@ -24,6 +35,8 @@ class Member extends CI_Controller {
 				redirect('member');
 			} else {
 				// TODO: bikin notif error
+				$this->session->set_flashdata('notif', array('result' => 'failed', 'msg' => 'Username or password is incorrect. Please try again.'));
+				redirect('member/signin');
 			}
 		}
 
@@ -69,4 +82,14 @@ class Member extends CI_Controller {
 		$this->load->view('v_sign_up',$data);
 		$this->load->view('v_footer', $data);
 	}
+
+	public function profile() {
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Profile';
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_sign_in',$data);
+		$this->load->view('v_footer', $data);
+	} 
 }
