@@ -132,7 +132,7 @@
 									<ul class="header-menu__submenu">
 
 										<li class="header-menu__item">
-											<a href="blog-archive.html" class="header-menu__item-link" role="menuitem">My Profile</a>
+											<a href="<?php echo base_url('member/profile'); ?>" class="header-menu__item-link" role="menuitem">My Profile</a>
 										</li>
 
 										<li class="header-menu__item">

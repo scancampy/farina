@@ -79,6 +79,18 @@ class Cart extends CI_Controller {
 			//die();
 		}
 
+		if($this->input->post('btnApply')) {
+			$code =  $this->input->post('voucher_code');
+			$user = $this->session->userdata('member');
+			if($this->voucher_model->checkVouhcerUsed($user->id, $code)) {
+				echo 'available must check if voucher exist';
+				// TODO: check public voucher
+				$this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),$code);
+			} else {
+				echo 'used';
+			}
+		}
+
 		$data['product'] = array();
 		$data['photo'] = array();
 		$data['qty'] = array();

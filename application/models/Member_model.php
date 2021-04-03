@@ -2,6 +2,19 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member_model extends CI_Model {
+	public function getMember($email = null, $where = null) {
+		if($email != null) {
+			$this->db->where('email', $email);
+		}
+
+		if($where!=null) {
+			$this->db->where($where);
+		}
+
+		$q = $this->db->get('member');
+		return $q->result();
+	}
+
 	public function login($email, $password) {
 		$q = $this->db->get_where('member', array('email' => $email, 'status' => 'active', 'is_deleted' => 0));
 
@@ -59,6 +72,12 @@ class Member_model extends CI_Model {
 			return true;
 		}
 		
+	}
+
+	public function editProfile($email, $first_name, $last_name) {
+		$data = array('first_name' => $first_name, 'last_name' => $last_name);
+		$this->db->where('email', $email);
+		$this->db->update('member', $data);
 	}
 
 }

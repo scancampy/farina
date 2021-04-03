@@ -2,6 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Member extends CI_Controller {
+
+	// contsturcot check session
+
 	public function index()
 	{
 		if(!$this->session->userdata('member')) {
@@ -87,9 +90,28 @@ class Member extends CI_Controller {
 		$data = array();
 		$data['setting'] = $this->admin_model->getSetting();
 		$data['title'] = 'Profile';
+		$user = $this->session->userdata('member');
+		$data['profile'] = $this->member_model->getMember($user->email);	
+
+		$this->load->library('form_validation');
+		$this->form_validation->set_error_delimiters('<li>', '</li>');
+
+		$this->form_validation->set_rules('first_name', 'First name', 'trim|required|min_length[3]|max_length[100]');
+		
+
+        if ($this->form_validation->run() == FALSE)
+        {
+        	$data['error'] = validation_errors();
+        } else {
+			if($this->input->post('btnsubmit')) {
+				$this->member_model->editProfile($user->email, $this->input->post('first_name'), $this->input->post('last_name'));
+				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Profil berhasil diperbaharui.'));
+				redirect('member/profile');
+			} 
+		}
 
 		$this->load->view('v_header', $data);
-		$this->load->view('v_sign_in',$data);
+		$this->load->view('v_profile',$data);
 		$this->load->view('v_footer', $data);
 	} 
 }

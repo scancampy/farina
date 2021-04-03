@@ -52,7 +52,7 @@
 											<div class="page__content">
 
 												<!-- PRODUCT CART : begin -->
-												<form class="product-cart" method="post" action="product-checkout.html">
+												<form class="product-cart" method="post" action="<?php echo base_url('cart'); ?>">
 
 
 													<!-- CART LIST : begin -->
@@ -182,8 +182,8 @@
 
 														<!-- CART COUPON : begin -->
 														<p class="product-cart__coupon">
-															<input type="text" class="product-cart__coupon-input" placeholder="Coupon Code">
-															<button type="button" class="product-cart__coupon-btn lsvr-button lsvr-button--type-2">Apply Coupon</button>
+															<input type="text" style="text-transform:uppercase" maxlength="20" class="product-cart__coupon-input" placeholder="Voucher Code" name="voucher_code">
+															<button type="submit" value="apply" class="product-cart__coupon-btn lsvr-button lsvr-button--type-2" name="btnApply">Apply Voucher</button>
 														</p>
 														<!-- CART COUPON : end -->
 

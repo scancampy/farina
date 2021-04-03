@@ -2,6 +2,18 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Voucher_model extends CI_Model {
+	public function checkVouhcerUsed($member_id, $voucher_code) {
+		$q = $this->db->get_where('voucher_used', array('member_id' => $member_id, 'voucher_code' => $voucher_code));
+
+		if($q->num_rows() > 0) {
+			//terpakai
+			return false;
+		} else {
+			// available
+			return true;
+		}
+	}
+
 	public function getVoucher($where =  null, $voucher_code = null) {
 		if($where != null) {
 			$this->db->where($where);
