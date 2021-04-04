@@ -25,6 +25,8 @@ class Voucher_model extends CI_Model {
 			$q = $this->db->get('voucher');
 		}
 
+		//echo $this->db->last_query();
+	//	die();
 		return $q->result();
 	}
 

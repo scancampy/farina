@@ -43,7 +43,17 @@
 								<!-- MAIN : begin -->
 								<main id="main">
 									<div class="main__inner">
-
+										<?php if($this->session->flashdata('notif')) { 
+								$notif = $this->session->flashdata('notif');
+								?>
+								<?php if($notif['result'] == 'voucher_na') {  ?>
+							<div class="lsvr-alert-message lsvr-alert-message--warning">
+								<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+								<h3 class="lsvr-alert-message__title">Warning Message</h3>
+								<p><?php echo $notif['msg']; ?></p>
+							</div>
+							<?php } 
+							 }  ?>
 
 										<!-- PAGE : begin -->
 										<div class="page product-post-page product-post-order product-post-order--cart">
@@ -180,20 +190,58 @@
 													<!-- CART SUMMARY : begin -->
 													<div class="product-cart__summary">
 
-														<!-- CART COUPON : begin -->
-														<p class="product-cart__coupon">
-															<input type="text" style="text-transform:uppercase" maxlength="20" class="product-cart__coupon-input" placeholder="Voucher Code" name="voucher_code">
-															<button type="submit" value="apply" class="product-cart__coupon-btn lsvr-button lsvr-button--type-2" name="btnApply">Apply Voucher</button>
-														</p>
-														<!-- CART COUPON : end -->
+<?php if(isset($voucher)) {
+	if($total < $voucher[0]->min_order) { ?>
+<div class="lsvr-alert-message lsvr-alert-message--warning">
+	<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+	<h3 class="lsvr-alert-message__title">Warning Message</h3>
+	<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucher[0]->min_order, 0, ",","."); ?></strong></p>
+
+	<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+</div>
+<?php } else { ?>
+<div class="lsvr-alert-message lsvr-alert-message--success">
+	<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+	<h3 class="lsvr-alert-message__title"><strong><?php echo $voucher[0]->voucher_code; ?></strong> Voucher Applied</h3>
+	<p><strong><?php echo $voucher[0]->title; ?></strong><br/>Anda mendapatkan potongan sebesar <?php
+	if($voucher[0]->discount_value > 0) { echo 'Rp. '.number_format($voucher[0]->discount_value, 0, ",","."); 
+		$diskon = $voucher[0]->discount_value;
+	} else { echo $voucher[0]->discount_percentage.'%'; $diskon = $total * ($voucher[0]->discount_percentage/100);; }
+	?></p>
+	<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+</div>
+<?php	} 
+} ?>
+
+<?php if(!isset($voucher)) { ?>
+
+<!-- CART COUPON : begin -->
+<p class="product-cart__coupon">
+	<input type="text" style="text-transform:uppercase" maxlength="20" class="product-cart__coupon-input" placeholder="Voucher Code" name="voucher_code">
+	<button type="submit" value="apply" class="product-cart__coupon-btn lsvr-button lsvr-button--type-2" name="btnApply">Apply Voucher</button>
+</p>
+<!-- CART COUPON : end -->
+<?php } ?>
 
 														<!-- CART TOTAL : begin -->
 														<p class="product-cart__total">
 															<span class="product-cart__total-label">Total</span>
-															<strong class="product-cart__total-price" id="totalidr">Rp. <?php  echo number_format($total, 0, ",","."); ?></strong>
+															<strong style="display: block;" class="product-cart__total-price" id="totalidr">Rp. <?php  echo number_format($total, 0, ",","."); ?></strong>
+															<br/>
+															<?php if(isset($diskon)) { ?>
+															<span class="product-cart__total-label">Diskon Voucher</span>
+															<strong style="display: block;     " class="product-cart__total-price" id="totalidr">- Rp. <?php  echo number_format($diskon, 0, ",","."); ?></strong>
+<br/>
+															<span style="margin-bottom: 20px;" class="product-cart__total-label">Total setelah Diskon</span>
+															<strong style="    border: 1px solid #ff007c; color: #ff007c; margin-top: 20px;
+    padding: 10px; " class="product-cart__total-price" id="totalidr">Rp. <?php  echo number_format($total-$diskon, 0, ",","."); ?></strong>
+														
+														<?php } ?>
+
 														</p>
 														<!-- CART TOTAL : end -->
 
+														
 													</div>
 													<!-- CART SUMMARY : end -->
 <!-- FOOTER BACK : end -->

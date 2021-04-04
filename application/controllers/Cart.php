@@ -79,22 +79,69 @@ class Cart extends CI_Controller {
 			//die();
 		}
 
+		if($this->input->post('btnCancelVoucher')) {
+			delete_cookie('voucher');
+			redirect('cart'); 
+		}
+
 		if($this->input->post('btnApply')) {
 			$code =  $this->input->post('voucher_code');
 			$user = $this->session->userdata('member');
-			if($this->voucher_model->checkVouhcerUsed($user->id, $code)) {
-				echo 'available must check if voucher exist';
-				// TODO: check public voucher
-				$this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),$code);
+
+			if(isset($user)) {
+				// kalau user sudah login
+				if($this->voucher_model->checkVouhcerUsed($user->id, $code)) {
+					$q = $this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),$code);
+
+					if(count($q) >0 ) {
+						// ada voucher
+						$data['voucher'] = $q;
+					} else {
+						// voucher tidak ada
+						$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher not valid'));
+						redirect('cart');
+					}
+				} else {				
+					$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher have been used'));
+					redirect('cart');
+				}
 			} else {
-				echo 'used';
-			}
+				// user belum login
+				$q = $this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),$code);
+
+				if(count($q) >0 ) {
+					// ada voucher
+					$data['voucher'] = $q;
+					$cookie = array(
+		                'name'   => 'voucher',
+		                'value'  => $code,
+		                'expire' =>  86500,
+		                'secure' => false
+		            );
+		            //print_r($product);
+		            set_cookie($cookie); 
+				} else {
+					// voucher tidak ada
+					$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher not valid'));
+					redirect('cart');
+				}
+			}			
 		}
 
 		$data['product'] = array();
 		$data['photo'] = array();
 		$data['qty'] = array();
 		$data['variant'] = array();
+
+		if(get_cookie('voucher') != null) {
+			$q = $this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),get_cookie('voucher'));
+
+			if(count($q) >0 ) {
+				// ada voucher
+				$data['voucher'] = $q;
+			}
+		}
+
 		if(unserialize(get_cookie('product')) != null) {
 			$product = unserialize(get_cookie('product'));
 			foreach ($product as $key => $value) {
@@ -154,6 +201,7 @@ class Cart extends CI_Controller {
 				$.post('".base_url('cart/updatecart')."', { newid:id,newqty:qty }, function(data) {
 					//alert(data);
 					$('#totalidr').html(formatRupiah(data, 'Rp. '));
+					location.reload();
 				});
 			});	
 
