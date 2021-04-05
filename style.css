@@ -135,3 +135,26 @@ either add "fancy-link" or "fancy-link2" class to a text link where you want to 
 .product_image:hover {
   transform: scale(1.2);
 }
+
+.mycard {
+	border:1px solid #ecf0f1;
+	border-radius: 3px;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.mycard .header {
+	display: flex;
+}
+
+.mycard .header .propic {
+	border-radius: 50%;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+}
+
+.mycard .proname, .likes, .comment, .content {
+	margin: 10px;
+}

@@ -112,7 +112,7 @@
 								<li class="header-menu__item <?php if ($this->uri->segment(1) == 'community') { ?> header-menu__item--current <?php } ?>">
 
 									<span class="header-menu__item-link-wrapper">
-										<a href="#" class="header-menu__item-link">Community</a>
+										<a href="<?php echo base_url('community'); ?>" class="header-menu__item-link">Community</a>
 									</span>
 
 								</li>
