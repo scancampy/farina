@@ -11,6 +11,11 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/general.css'); ?>"><!-- Default styles generated from assets/scss/general.scss (do not edit) -->
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/color-schemes/default.css'); ?>"><!-- Default color scheme generated from assets/scss/color-schemes/default.scss (change to other pre-defined or custom color scheme) -->
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url('style.css'); ?>"><!-- Place your own CSS into this file -->
+
+		<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 		<!-- STYLESHEETS : end -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">

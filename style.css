@@ -141,6 +141,7 @@ either add "fancy-link" or "fancy-link2" class to a text link where you want to 
 	border-radius: 3px;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
+    margin-bottom: 20px;
 }
 
 .mycard .header {
@@ -157,4 +158,8 @@ either add "fancy-link" or "fancy-link2" class to a text link where you want to 
 
 .mycard .proname, .likes, .comment, .content {
 	margin: 10px;
+}
+
+.mycard .likesbutton:hover {
+	cursor: pointer;
 }

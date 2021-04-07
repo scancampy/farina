@@ -29,7 +29,79 @@
 									<a href="<?php echo base_url('community/newpost'); ?>" class="lsvr-button lsvr-button--small"><i class="fas fa-paper-plane"></i> New Post</a>
 								</p>
 							</div>
+							<?php foreach ($post as $key => $value) { ?>
+								<div class="mycard">
+								<div class="header">
+									<div class="propic" style="text-align: center;">
+										<i class="fa fa-user"></i>
+									</div>
+									<div class="proname">
+										<strong><?php echo $value->first_name; ?></strong><br/>
+										<?php echo $value->member_type; ?>
+									</div>									
+								</div>
+								<div class="body">
 
+									
+								<!-- LSVR SLIDE LIST : begin -->
+								<?php if(count($photo[$key]) >0 ) { ?>
+								<section class="lsvr-slide-list"><!-- To enable autoplay add: data-autoplay="5" -->
+									
+								    <div class="lsvr-slide-list__bg">
+								        <div class="lsvr-slide-list__inner">
+								        	<div class="lsvr-slide-list__list">
+								        		<?php foreach ($photo[$key] as $key2 => $value2) { ?>
+								        			<!-- SLIDE : begin -->
+								        		<div class="lsvr-slide-list__item">
+			                            			<div class="lsvr-slide-list__item-bg" style="background-image: url( 'img/post/<?php echo $value2->filename; ?>' );">
+			                            			</div>
+			                        			</div>
+			                        			<!-- SLIDE : end -->
+								        		<?php } ?>
+			                    			</div>
+							        	</div>
+							    	</div>
+
+							    	<!-- SLIDE LIST NAV : begin -->
+							    	<div class="lsvr-slide-list__nav">
+							    		<button type="button" class="lsvr-slide-list__nav-button lsvr-slide-list__nav-button--prev">
+							    			<span class="lsvr-slide-list__nav-button-icon" aria-hidden="true"></span>
+							    		</button>
+							    		<button type="button" class="lsvr-slide-list__nav-button lsvr-slide-list__nav-button--next">
+							    			<span class="lsvr-slide-list__nav-button-icon" aria-hidden="true"></span>
+							    		</button>
+							    	</div>
+							    	<!-- SLIDE LIST NAV : end -->
+
+								</section>
+							<?php } ?>
+								<!-- LSVR SLIDE LIST : end -->
+								<div class="likes">
+										<?php if($likes[$key] == true) { ?>
+										<span class="likesbutton" likeid="<?php echo $value->id; ?>" style="color: #ff007c;"><i class="fas fa-heart"></i></span>
+										<?php } else { ?>
+											<span class="likesbutton" likeid="<?php echo $value->id; ?>"><i class="fas fa-heart"></i></span>
+										<?php } ?>
+										<br/>
+										<strong>3 likes</strong>
+									</div>
+									<div class="content">
+										<p><?php echo nl2br($value->content); ?></p>
+										<p style="margin-bottom: 0px;">05 April 2021</p>
+									</div>
+									<div class="comment">
+										<div><strong>yourname</strong> tes kirim pesan...</div>
+										<div><strong>yourname</strong> tes kirim pesan...</div>
+										<div><strong>yourname</strong> tes kirim pesan...</div>
+									</div>
+
+								</div>
+								<div class="footer">
+									<input type="text" name="txtcomment" placeholder="Tulis komentar" />
+								</div>
+							</div>
+						   <?php	} ?>
+ 
 							<div class="mycard">
 								<div class="header">
 									<div class="propic">
