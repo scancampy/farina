@@ -46,6 +46,27 @@ class Feed_model extends CI_Model {
 		$this->db->insert('feed_media', $data);
 	}
 
+	public function editLikes($id, $member_id) {
+		$q = $this->db->get_where('feed_likes', array('feed_id' => $id, 'member_id' => $member_id));
+		if($q->num_rows() > 0) {
+			// dislike
+			$hq = $q->row();
+			$this->db->where('id', $hq->id);
+			$this->db->delete('feed_likes');
+			return false;
+		} else {
+			$data = array('feed_id' => $id, 'member_id' => $member_id);
+			$this->db->insert('feed_likes', $data);
+
+			return true;
+		}
+	}
+
+	public function getLikes($id) {
+		$q = $this->db->get_where('feed_likes', array('feed_id' => $id));
+		return $q->num_rows(); 
+	}
+
 	public function checkLike($id, $member_id) {
 		$q = $this->db->get_where('feed_likes', array('member_id' => $member_id, 'feed_id' => $id));
 

@@ -10,7 +10,11 @@ class Welcome extends CI_Controller {
 		$data['slides'] = $this->admin_model->getSlides(array('is_deleted' => 0));
 		$data['event'] = $this->event_model->getEvent(array('is_deleted' => 0, 'event_date >= ' => date('Y-m-d')),null,null,null, 'asc');
 
-		$data['photo'] = $this->event_model->getImageEvent(null, $data['event'][0]->id);
+		if(count($data['event']) > 0) {
+			$data['photo'] = $this->event_model->getImageEvent(null, $data['event'][0]->id);
+		}
+
+		
 
 		$data['article'] = $this->article_model->getArticle(array('article.is_deleted' => 0), null, 3);
 

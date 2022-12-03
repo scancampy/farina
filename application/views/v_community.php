@@ -83,11 +83,15 @@
 											<span class="likesbutton" likeid="<?php echo $value->id; ?>"><i class="fas fa-heart"></i></span>
 										<?php } ?>
 										<br/>
-										<strong>3 likes</strong>
+										<span class="numlikes">
+										<?php if($numlikes[$key] >0) { ?>
+										<strong><?php echo $numlikes[$key]; ?> likes</strong>
+										<?php } ?>
+										</span>
 									</div>
 									<div class="content">
 										<p><?php echo nl2br($value->content); ?></p>
-										<p style="margin-bottom: 0px;">05 April 2021</p>
+										<p style="margin-bottom: 0px;"><?php echo strftime("%d %B %Y", strtotime($value->feed_date)); ?></p>
 									</div>
 									<div class="comment">
 										<div><strong>yourname</strong> tes kirim pesan...</div>

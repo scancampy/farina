@@ -520,6 +520,7 @@
 						                    </div>
 						                    <!-- TESTIMONIALS HEADER : end -->
 
+<?php if(count($event) >0) { ?>
     <!-- TESTIMONIAL LIST : begin -->
     <div class="lsvr-testimonials__list-wrapper">
     	<div class="lsvr-container">
@@ -586,6 +587,7 @@
 			        				</div>
 								</section>
 								<!-- LSVR TESTIMONIALS : end -->
+							<?php } ?>
 
 								<!-- LSVR CTA : begin -->
 								<section class="lsvr-cta lsvr-cta--has-button">

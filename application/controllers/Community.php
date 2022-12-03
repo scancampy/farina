@@ -26,6 +26,7 @@ class Community extends CI_Controller {
 		foreach ($data['post'] as $key => $value) {
 			$data['photo'][] = $this->feed_model->getImagePost(null, $value->id);
 			$data['likes'][] = $this->feed_model->checkLike($value->id, $user->id);
+			$data['numlikes'][] =$this->feed_model->getLikes($value->id);
 		}
 
 		if($this->session->flashdata('notif')) {
@@ -36,13 +37,43 @@ class Community extends CI_Controller {
 		}
 
 		$data['js'] = '$("body").on("click", ".likesbutton", function() {
-			alert("i like" + $(this).attr("likeid"));
+			var id = $(this).attr("likeid");
+			var likesdiv = $(this);
+			var numlikespan = $(this).parent().children(".numlikes");
+			$.post("'.base_url('community/likes').'", {likeid:id}, function(data) {
+				var obj = JSON.parse(data);
+				if(obj.data == true) {
+					likesdiv.attr("style", "color:#ff007c;");
+				} else {
+					likesdiv.attr("style", "color:#585858;");
+				}
+				if(obj.numlikes > 0) {
+					numlikespan.html("<strong>" + obj.numlikes + " likes</strong>");
+				} else {
+					numlikespan.html("");
+				}
+			});
 		});';
 		
 
 		$this->load->view('v_header', $data);
 		$this->load->view('v_community',$data);
 		$this->load->view('v_footer', $data);
+	}
+
+	public function likes() {
+		if($this->input->post('likeid')) {
+			$user = $this->session->userdata('member');
+			if($this->feed_model->editLikes($this->input->post('likeid'), $user->id)) {
+				$numlikes = $this->feed_model->getLikes($this->input->post('likeid'));
+				echo json_encode(array('result' => 'success', 'data' => true, 'numlikes' => $numlikes));
+			} else {
+				$numlikes = $this->feed_model->getLikes($this->input->post('likeid'));
+				echo json_encode(array('result' => 'success', 'data' => false, 'numlikes' => $numlikes));
+			}
+		} else {
+			echo json_encode(array('result' => 'failed'));
+		}
 	}
 
 	public function newpost() {
