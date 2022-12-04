@@ -54,19 +54,20 @@ class Product_model extends CI_Model {
 	}
 
 	// PRODUCT
-	public function addProduct($name, $in_stock, $brand_id, $short_desc, $description, $weight, $product_unit_id, $price) {
+	public function addProduct($name, $in_stock, $brand_id, $short_desc, $description, $weight, $product_unit_id, $price, $price_het) {
 		if($in_stock == null) {
 			$in_stock = 0;
 		}
 
 		$data = array('name' => $name,
-					  'in_stock' => $in_stock, 
-					  'brand_id' => $brand_id, 
-					  'short_desc' => $short_desc,
-					  'description' => $description,
-					  'weight' => $weight,
+					  'in_stock' 		=> $in_stock, 
+					  'brand_id' 		=> $brand_id, 
+					  'short_desc' 		=> $short_desc,
+					  'description' 	=> $description,
+					  'weight' 			=> $weight,
 					  'product_unit_id' => $product_unit_id, 
-					  'price' => $price);
+					  'price' 			=> $price,
+					  'price_het' 		=> $price_het);
 		
 		$this->db->insert('product',$data);
 		return $this->db->insert_id();
@@ -95,19 +96,20 @@ class Product_model extends CI_Model {
 		return $q->result();
 	}	
 
-	public function editProduct($id, $name, $in_stock, $brand_id, $short_desc, $description, $weight, $product_unit_id, $price) {
+	public function editProduct($id, $name, $in_stock, $brand_id, $short_desc, $description, $weight, $product_unit_id, $price, $price_het) {
 		if($in_stock == null) {
 			$in_stock = 0;
 		}
 		
-		$data = array('name' => $name,
-					  'in_stock' => $in_stock, 
-					  'brand_id' => $brand_id, 
-					  'short_desc' => $short_desc,
-					  'description' => $description,
-					  'weight' => $weight,
+		$data = array('name' 			=> $name,
+					  'in_stock' 		=> $in_stock, 
+					  'brand_id' 		=> $brand_id, 
+					  'short_desc' 		=> $short_desc,
+					  'description' 	=> $description,
+					  'weight' 			=> $weight,
 					  'product_unit_id' => $product_unit_id, 
-					  'price' => $price);
+					  'price' 			=> $price,
+					  'price_het' 		=> $price_het);
 		$this->db->where('id',$id);
 		$this->db->update('product',$data);
 		return $id;

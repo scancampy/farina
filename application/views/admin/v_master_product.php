@@ -50,6 +50,7 @@
                     <th>Brand</th>
                     <th>Availability</th>
                     <th>Price</th>
+                    <th>HET</th>
                     <th>Actions</th>
                   </tr>
                   </thead>
@@ -64,6 +65,7 @@
                          echo '<span class="badge badge-success">In stock</span>';
                       } ?></td>
                       <td>Rp. <?php echo number_format($value->price,0,',','.'); ?></td>
+                      <td>Rp. <?php echo number_format($value->price_het,0,',','.'); ?></td>
                       <td class="d-flex justify-content-end">
                         <a href="#" prodid="<?php echo $value->id; ?>" class="btn btn-xs btn-primary mr-1 prodedit"><i class="nav-icon fas fa-edit"></i> Edit</a> 
                         <a href="<?php echo base_url('admin/product/delproduct/'.$value->id); ?>" onclick="return confirm('Are you sure want to delete <?php echo $value->name; ?>?');" class="btn btn-xs btn-danger m-0"><i class="nav-icon fas fa-trash"></i> Delete</a></td>
@@ -78,6 +80,7 @@
                     <th>Brand</th>
                     <th>Availability</th>
                     <th>Price</th>
+                    <th>HET</th>
                     <th>Actions</th>
                   </tr>
                   </tfoot>
@@ -162,6 +165,16 @@
                 <span class="input-group-text">Rp</span>
               </div>
               <input type="number" min="1" class="form-control" id="price" name="price" required placeholder="">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="price_het">Price HET</label>
+            <div class="input-group ">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Rp</span>
+              </div>
+              <input type="number" min="1" class="form-control" id="price_het" name="price_het" required placeholder="">
             </div>
           </div>
 

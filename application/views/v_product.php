@@ -91,7 +91,9 @@
 													</p>
 
 													<!-- POST PRICE : begin -->
-													<p class="post__price">Rp. <?php echo number_format($value->price,0,",","."); ?></p>
+													<p class="post__price">Rp. <?php
+														if($value->price_het > $value->price) { echo '<strike>'.number_format($value->price_het,0,",",".").'</strike><br/>Rp. '.number_format($value->price,0,",","."); } else { echo number_format($value->price,0,",",".");}
+													  ?></p>
 													<!-- POST PRICE : end -->
 
 													<!-- POST BUY : begin -->

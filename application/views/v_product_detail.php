@@ -184,8 +184,12 @@
 
 										<!-- POST PRICE : begin -->
 										<p class="post__price">
-											<!--<span class="post__price-old" title="Old price">$29.99</span> -->
-											<strong class="post__price-current">Rp. <?php echo number_format($product[0]->price,0,",","."); ?></strong>
+											<?php if($product[0]->price_het > $product[0]->price) { ?>
+											<span class="post__price-old" title="Old price">Rp. <?php  echo number_format($product[0]->price_het,0,",","."); ?></span>
+											<strong class="post__price-current">Rp. <?php  echo number_format($product[0]->price,0,",","."); ?></strong>
+											<?php } else { ?>
+											<strong class="post__price-current">Rp. <?php  echo number_format($product[0]->price,0,",","."); ?></strong>
+											<?php } ?>
 										</p>
 										<!-- POST PRICE : end -->
 

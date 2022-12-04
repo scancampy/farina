@@ -46,7 +46,8 @@ class Product extends CI_Controller {
 					$this->input->post('description'), 
 					$this->input->post('weight'),
 					$this->input->post('product_unit_id'), 
-					$this->input->post('price'));
+					$this->input->post('price'),
+					$this->input->post('price_het'));
 				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data updated successfully!'));
 			} else {
 				$lastid = $this->product_model->addProduct(
@@ -57,7 +58,8 @@ class Product extends CI_Controller {
 					$this->input->post('description'), 
 					$this->input->post('weight'),
 					$this->input->post('product_unit_id'), 
-					$this->input->post('price'));
+					$this->input->post('price'),
+					$this->input->post('price_het'));
 				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data added successfully!'));
 			}
 			
@@ -225,6 +227,7 @@ class Product extends CI_Controller {
 			$("#product_unit_id").val("");
 			$("#weight").val("");
 			$("#price").val("");
+			$("#price_het").val("");
 			$("#in_stock").prop( "checked", false );
 			$("#modalAddProduct").modal();
 			$(".textarea").summernote("code", "");
@@ -278,6 +281,7 @@ class Product extends CI_Controller {
 				$("#product_unit_id").val(obj.data[0].product_unit_id);
 				$("#weight").val(obj.data[0].weight);
 				$("#price").val(obj.data[0].price);
+				$("#price_het").val(obj.data[0].price_het);
 				if(obj.data[0].in_stock == 1) {
 					$("#in_stock").prop( "checked", true );
 				} else {
