@@ -128,8 +128,14 @@
                             		<a href="<?php echo base_url('product?brand='.$value->brand_id); ?>" class="lsvr-posts__post-meta-link"><?php echo $value->brandname; ?></a>
                         		</span>
                 			</p>
-                			 <p class="post_price">Rp. <?php echo number_format($value->price,0,",","."); ?>
-                                </p>
+                			<p class="post__price">
+											<?php if($value->price_het > $value->price) { ?>
+											<span class="post__price-old" title="Old price">Rp. <strike><?php  echo number_format($value->price_het,0,",","."); ?></strike></span>
+											<strong class="post__price-current">Rp. <?php  echo number_format($value->price,0,",","."); ?></strong>
+											<?php } else { ?>
+											<strong class="post__price-current">Rp. <?php  echo number_format($value->price,0,",","."); ?></strong>
+											<?php } ?>
+										</p>
 
         				</header>
     				</div>
