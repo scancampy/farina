@@ -2,6 +2,15 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Setting extends CI_Controller {
+	public function __construct()
+	 {
+          parent::__construct();
+          // Your own constructor code
+          if(empty($this->session->userdata('user'))) {
+          	redirect('admin/dashboard/login');
+          }
+	 }
+	 
 	public function slidesdown($id) {
 		if($this->admin_model->editSlideDown($id)) {
 			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Slide display order have been adjusted!'));

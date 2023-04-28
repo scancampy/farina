@@ -2,10 +2,44 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product extends CI_Controller {
+	public function __construct()
+	 {
+          parent::__construct();
+          // Your own constructor code
+          if(empty($this->session->userdata('user'))) {
+          	redirect('admin/dashboard/login');
+          }
+	 }
+	 
+
 	public function index()
 	{
 		redirect('admin/dashboard');
 	}
+
+	private function _generateTree($array, $depth = 0, $selectedid = null) {
+  	if(empty($array)) { return; }
+  	$str = '';
+  	foreach ($array as $key => $value) {
+  		$labelName = '';
+  		for($i = 0; $i < $depth; $i++) {
+  			$labelName .= '-&nbsp;-&nbsp;';
+  		}
+
+  		$selstr = '';
+  		if($selectedid != null) {
+  			if($value->id == $selectedid) { $selstr = 'selected="selected"'; }
+  		}
+  		$str .= '<option value="'.$value->id.'" '.$selstr.'>'.$labelName.$value->name.'</option>';
+
+
+  		if(!empty($value->child)) {
+  			$newDepth = $depth+1;
+  			$str.= $this->_generateTree($value->child, $newDepth, $selectedid);
+  		}
+  	}
+  	return $str;
+  }
 
 	public function master() {
 		$data = array();
@@ -42,6 +76,7 @@ class Product extends CI_Controller {
 					$this->input->post('name'), 
 					$this->input->post('in_stock'),
 					$this->input->post('brand_id'), 
+					$this->input->post('cbo_category'),
 					$this->input->post('short_desc'),
 					$this->input->post('description'), 
 					$this->input->post('weight'),
@@ -54,6 +89,7 @@ class Product extends CI_Controller {
 					$this->input->post('name'), 
 					$this->input->post('in_stock'),
 					$this->input->post('brand_id'), 
+					$this->input->post('cbo_category'),
 					$this->input->post('short_desc'),
 					$this->input->post('description'), 
 					$this->input->post('weight'),
@@ -146,6 +182,9 @@ class Product extends CI_Controller {
 			redirect('admin/product/master'.$addurl);
 		}
 
+		$data['tree'] = $this->category_model->getCategoryTree(null);
+		$data['tree_html'] = $this->_generateTree($data['tree'],0);
+
 		$data['name'] = $this->session->userdata('user')->name;
 		$data['title'] = "Master Product";
 		$data['unit'] = $this->product_model->getUnit();
@@ -157,6 +196,15 @@ class Product extends CI_Controller {
 				$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0, 'brand_id' => $this->input->get('brand_id_filter')));
 			} 
 		}
+
+		// select2
+		$data['js'] .= '    
+		//Initialize Select2 Elements
+    $(".select2bs4").select2({
+      theme: "bootstrap4"
+    })
+';
+
 		//summernote
 		$data['js'] .= ' $(".textarea").summernote({
 						  height: 200,
@@ -273,6 +321,14 @@ class Product extends CI_Controller {
 					"<img style=\"width:100%;\" src=\"'.base_url('img/variant/').'" + filename + "\" />" + 
 					"<input type=\"text\" class=\"form-control\" name=\"currentvariant[]\" value=\"" + obj.datavariant[i].name + "\" /></div>");
 				}
+
+				// populate category
+				$.post("'.base_url('admin/product/jsongetcategory').'", { catid: obj.data[0].category_id }, function(data) {
+					$("#cbo_category").html(data);
+					$(".select2bs4").select2({
+			      theme: "bootstrap4"
+			    });
+				});
 				
 				$("#name").val(obj.data[0].name);
 				$("#hiddenid").val(obj.data[0].id);
@@ -408,6 +464,12 @@ class Product extends CI_Controller {
 		} else {
 			echo json_encode(array('result' => 'failed'));
 		}
+	}
+
+	public function jsongetcategory() {
+		$tree = $this->category_model->getCategoryTree(null);
+		$tree_html = $this->_generateTree($tree,0, $this->input->post('catid'));
+		echo $tree_html;
 	}
 
 }

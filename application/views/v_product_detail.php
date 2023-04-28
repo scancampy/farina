@@ -23,6 +23,15 @@
 													<a href="<?php echo base_url('product'); ?>" class="breadcrumbs__link">Product</a>
 												</li>
 
+												<?php
+												for($k = count($breadcrumb)-1; $k >=0; $k--) { 
+				echo '<li class="breadcrumbs__item">';
+				echo '<a href="'.base_url('product?category='.$breadcrumb[$k]->id).'" class="breadcrumbs__link">'.$breadcrumb[$k]->name.'</a>';
+				echo '</li>';
+							  
+							}
+												?>
+
 												<li class="breadcrumbs__item">
 													<a href="#" class="breadcrumbs__link"><?php echo $product[0]->name; ?></a>
 												</li>
@@ -60,6 +69,10 @@
 					<!-- POST : begin -->
 					<article class="post product-post">
 						<div class="post__inner">
+
+							<?php if($product[0]->price_het > $product[0]->price) { ?>
+									<div class="disc_circle_at_home"><?php echo number_format((($product[0]->price_het-$product[0]->price)/$product[0]->price_het)*100,0,'.','.').'%'; ?></div>
+							<?php	} ?>	
 
 							<div class="lsvr-grid">
 

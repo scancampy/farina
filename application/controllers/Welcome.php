@@ -18,7 +18,7 @@ class Welcome extends CI_Controller {
 
 		$data['article'] = $this->article_model->getArticle(array('article.is_deleted' => 0), null, 3);
 
-		$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0), null, 6, null, 'rand');
+		$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0), null, 6, null, 'RANDOM');
 		if(count($data['product']) >0 ) {
 			$data['photo_product'] = array();
 			foreach ($data['product'] as $key => $value) {

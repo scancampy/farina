@@ -48,6 +48,7 @@
                     <th>No</th>
                     <th>Product Name</th>
                     <th>Brand</th>
+                    <th>Category</th>
                     <th>Availability</th>
                     <th>Price</th>
                     <th>HET</th>
@@ -61,6 +62,7 @@
                       <td><?php echo $key+1; ?></td>
                       <td><?php echo $value->name; ?></td>
                       <td><?php echo $value->brandname; ?></td>
+                      <td><?php echo $value->categoryname; ?></td>
                       <td><?php if($value->in_stock ==0) { echo '<span class="badge badge-warning">Out of stock</span>'; } else {
                          echo '<span class="badge badge-success">In stock</span>';
                       } ?></td>
@@ -78,6 +80,7 @@
                     <th>No</th>
                     <th>Product Name</th>
                     <th>Brand</th>
+                    <th>Category</th>
                     <th>Availability</th>
                     <th>Price</th>
                     <th>HET</th>
@@ -121,6 +124,15 @@
               <?php } ?>
             </select>
           </div>
+
+          <div class="form-group">
+            <label for="brand_id">Category</label>
+            <select class="form-control select2bs4" name="cbo_category" id="cbo_category" style="width: 100%;">
+              <?php echo $tree_html; ?>
+            </select>
+          </div>
+
+          
 
           <div class="form-group">
             <label for="short_desc">Short Description</label>

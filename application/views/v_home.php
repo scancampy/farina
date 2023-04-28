@@ -103,7 +103,9 @@
 			<div class="lsvr-posts__item lsvr-grid__col">
 				<article class="lsvr-posts__post">
 					<div class="lsvr-posts__post-inner">
-
+    				<?php if($value->price_het > $value->price) { ?>
+											<div class="disc_circle_at_home" ><?php echo number_format((($value->price_het-$value->price)/$value->price_het)*100,0,'.','.').'%'; ?></div>
+									<?php	} ?>
 						<!-- POST ITEM THUMB : begin -->
 						<?php if(count($photo_product[$key])>0) { ?>
 						 <p class="lsvr-posts__post-thumbnail lsvr-posts__post-thumbnail post__thumbnail parent_product_image">
@@ -119,6 +121,8 @@
                         <!-- POST ITEM HEADER : begin -->
                         <header class="lsvr-posts__post-header">
 
+
+
                             <h3 class="lsvr-posts__post-title">
                                 <a href="<?php echo base_url('product/detail/'.$value->id.'/'.url_title($value->name)); ?>" class="lsvr-posts__post-title-link"><?php echo $value->name; ?></a>
                             </h3>
@@ -129,9 +133,10 @@
                         		</span>
                 			</p>
                 			<p class="post__price">
+                				
 											<?php if($value->price_het > $value->price) { ?>
-											<span class="post__price-old" title="Old price">Rp. <strike><?php  echo number_format($value->price_het,0,",","."); ?></strike></span>
-											<strong class="post__price-current">Rp. <?php  echo number_format($value->price,0,",","."); ?></strong>
+											<span class="post__price-old" title="Old price"><strike>Rp. <?php  echo number_format($value->price_het,0,",","."); ?></strike></span>
+											<strong class="post__price-current" style="color:#ff007c;">Rp. <?php  echo number_format($value->price,0,",","."); ?></strong>
 											<?php } else { ?>
 											<strong class="post__price-current">Rp. <?php  echo number_format($value->price,0,",","."); ?></strong>
 											<?php } ?>

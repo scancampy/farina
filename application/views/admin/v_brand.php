@@ -87,6 +87,11 @@
             <label for="name">Name</label>
             <input type="text" class="form-control" id="name" name="name" required placeholder="Enter brand name">
           </div>
+
+          <div class="form-group">
+            <label for="logo">Brand Logo</label>
+             <input type="file" class="form-control" name="logo" required accept="image/png, image/gif, image/jpeg" />
+          </div>
         </div>
         <div class="modal-footer">
           <button type="submit" value="submit" name="btnSubmit" class="btn btn-primary">Save changes</button>

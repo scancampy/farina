@@ -6,21 +6,62 @@
 		<div class="page-header">
 			<div class="page-header__inner">
 				<div class="lsvr-container">
+					<h1 class="page-header__title"><a href="<?php echo base_url('product'); ?>" style="text-decoration: none;
+    color: black;">Product</a></h1>
+						
+					<?php 
+					$cat ='';
+					if($this->input->get('category') != null) {
+						$cat = '?category='.$this->input->get('category');
+					} ?>
+					<form method="get" action="<?php echo base_url('product'.$cat); ?>" id="formcategory">
 					<div class="page-header__content" style="display: flex; justify-content:space-between; align-items:flex-end;">
 
-						<h1 class="page-header__title">Product</h1>
+						<?php if($this->input->get('category') != null) { ?>
+
+						<input type="hidden" name="category" value="<?php echo $current_cat[0]->id; ?>" />
+						<?php 
+							echo '<h3 class="page-header__title">';
+							for($k = count($breadcrumb)-1; $k >=0; $k--) { 
+							 echo '<a style="text-decoration: none;
+    color: black;" href="'.base_url('product?category='.$breadcrumb[$k]->id).'">'.$breadcrumb[$k]->name.'</a>';
+							 if($k != 0) {
+							 	echo ' > ';
+							 } 
+							} 
+							echo '</h3>';
+						 } else { ?><span>&nbsp;</span>
+						<?php } ?>
 						<div>
-							<form method="get" action="<?php echo base_url('product'); ?>" id="formcategory">
+							
 								<select name="brand" id="brand" >
 									<option value="all">All</option>
 									<?php foreach ($brand as $key => $value) { ?>
 										<option value="<?php echo $value->id; ?>" <?php if($this->input->get('brand') == $value->id) { echo 'selected'; } ?>><?php echo $value->name; ?></option>
 									<?php } ?>							
 								</select>
-							</form>
+							
 						</div>
 
 					</div>
+					<div class="category-container">
+						<?php foreach ($category as $key => $value) { ?>
+							<button type="submit" name="category" class="btncategory" value="<?php echo $value->id.'-'.$value->name; ?>"><?php echo $value->name; ?></button>
+						<?php } ?>
+					</div>
+					<?php if(!empty($this->input->get('brand') && $this->input->get('brand') != 'all')) { ?>
+						<br/>
+						<?php if($this->input->get('category') != null) { ?>
+							
+					<p>Menampilkan produk <strong style="color:#ff007c;"><?php echo $current_cat[0]->name; ?></strong> dari brand <strong style="color:#ff007c;"><?php echo $currentbrand[0]->name; ?></strong></p>
+						<?php } else { ?>
+					<p>Menampilkan produk dari brand <strong style="color:#ff007c;"><?php echo $currentbrand[0]->name; ?></strong></p>
+						<?php } ?>
+					<?php } else if($this->input->get('category') != null) { ?>
+						<br/>
+						<p>Menampilkan produk <strong style="color:#ff007c;"><?php echo $current_cat[0]->name; ?></strong></p>
+					<?php } ?>
+					</form>
 					
 				</div>
 			</div>
@@ -63,7 +104,9 @@
 											<!-- POST : begin -->
 											<article class="post product-post">
 												<div class="post__inner">
-
+													<?php if($value->price_het > $value->price) { ?>
+														<div class="disc_circle"><?php echo number_format((($value->price_het-$value->price)/$value->price_het)*100,0,'.','.').'%'; ?></div>
+												<?php	} ?>
 													<!-- POST THUMB : begin -->
 													<p class="post__thumbnail">
 														<a href="<?php echo base_url('product/detail/'.$value->id.'/'.url_title($value->name)); ?>" class="post__thumbnail-link">
@@ -91,8 +134,8 @@
 													</p>
 
 													<!-- POST PRICE : begin -->
-													<p class="post__price">Rp. <?php
-														if($value->price_het > $value->price) { echo '<strike>'.number_format($value->price_het,0,",",".").'</strike><br/>Rp. '.number_format($value->price,0,",","."); } else { echo number_format($value->price,0,",",".");}
+													<p class="post__price"><?php
+														if($value->price_het > $value->price) { echo '<strike>'.number_format($value->price_het,0,",",".").'</strike><br/><strong style="color:#ff007c;">Rp. '.number_format($value->price,0,",",".").'</strong>'; } else { echo '<strong>Rp. '.number_format($value->price,0,",",".").'</strong>';}
 													  ?></p>
 													<!-- POST PRICE : end -->
 

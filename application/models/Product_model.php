@@ -54,7 +54,7 @@ class Product_model extends CI_Model {
 	}
 
 	// PRODUCT
-	public function addProduct($name, $in_stock, $brand_id, $short_desc, $description, $weight, $product_unit_id, $price, $price_het) {
+	public function addProduct($name, $in_stock, $brand_id, $category_id, $short_desc, $description, $weight, $product_unit_id, $price, $price_het) {
 		if($in_stock == null) {
 			$in_stock = 0;
 		}
@@ -62,6 +62,7 @@ class Product_model extends CI_Model {
 		$data = array('name' => $name,
 					  'in_stock' 		=> $in_stock, 
 					  'brand_id' 		=> $brand_id, 
+					  'category_id'		=> $category_id,
 					  'short_desc' 		=> $short_desc,
 					  'description' 	=> $description,
 					  'weight' 			=> $weight,
@@ -96,7 +97,7 @@ class Product_model extends CI_Model {
 		return $q->result();
 	}	
 
-	public function editProduct($id, $name, $in_stock, $brand_id, $short_desc, $description, $weight, $product_unit_id, $price, $price_het) {
+	public function editProduct($id, $name, $in_stock, $brand_id, $category_id, $short_desc, $description, $weight, $product_unit_id, $price, $price_het) {
 		if($in_stock == null) {
 			$in_stock = 0;
 		}
@@ -104,6 +105,7 @@ class Product_model extends CI_Model {
 		$data = array('name' 			=> $name,
 					  'in_stock' 		=> $in_stock, 
 					  'brand_id' 		=> $brand_id, 
+					  'category_id' 	=> $category_id, 
 					  'short_desc' 		=> $short_desc,
 					  'description' 	=> $description,
 					  'weight' 			=> $weight,
@@ -126,6 +128,9 @@ class Product_model extends CI_Model {
 		$this->db->select('product.*, brand.name as brandname');
 		$this->db->join('brand', 'brand.id = product.brand_id');
 
+		$this->db->select('category.name as categoryname');
+		$this->db->join('category', 'category.id = product.category_id','left');
+
 		$this->db->select('product_unit.unit_name');
 		$this->db->join('product_unit', 'product_unit.id = product.product_unit_id');
 
@@ -135,6 +140,7 @@ class Product_model extends CI_Model {
 			$q = $this->db->get('product');
 		}
 
+		//echo $this->db->last_query();
 
 
 		return  $q->result();

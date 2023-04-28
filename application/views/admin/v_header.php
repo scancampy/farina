@@ -17,6 +17,9 @@
   <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
 <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css'); ?>">
+<!-- Select2 -->
+  <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/select2/css/select2.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
 
   <!-- summernote -->
   <link rel="stylesheet" href="<?php echo base_url('adminlte/plugins/summernote/summernote-bs4.css'); ?>">
@@ -100,7 +103,7 @@
             </a>
           </li>
 
-          <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == 'product') {  echo 'menu-open'; } ?>">
+          <li class="nav-item has-treeview <?php if ($this->uri->segment(2) == 'product' || $this->uri->segment(2) == 'category') {  echo 'menu-open'; } ?>">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tags"></i>
               <p>
@@ -119,6 +122,15 @@
                 <a href="<?php echo base_url('admin/product/brand'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'brand' && $this->uri->segment(2) == 'product') { echo 'active';  } ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Master Brand</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/category'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'category') { echo 'active';  } ?>">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>
+                    Category
+                  </p>
                 </a>
               </li>
             </ul>

@@ -2,6 +2,19 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product extends CI_Controller {
+	// function to recursively extract ids from nested child arrays
+	private function _traverseArrayForIds($array) {
+	    $ids = [];
+	    foreach ($array as $item) {
+	        $ids[] = $item->id;
+	        if (!empty($item->child)) {
+	            $childIds = traverseArrayForIds($item->child);
+	            $ids = array_merge($ids, $childIds);
+	        }
+	    }
+	    return $ids;
+	}
+
 	public function index()
 	{
 		$data = array();
@@ -10,22 +23,75 @@ class Product extends CI_Controller {
 		$limit = 12;
 		$offset = 0;
 
+
+		$data['category'] = $this->category_model->getCategory(null);
+		$cat =null;
+
+		if($this->input->get('category') != null) {
+			$explode = explode('-',$this->input->get('category'));
+			$cat = $this->category_model->getCategoryTree($explode[0]);
+
+			$data['category'] = $this->category_model->getCategory($explode[0]);
+			$data['breadcrumb'] = $this->category_model->getRoot($explode[0]);
+			//print_r($data['breadcrumb']);
+
+			$data['current_cat'] = $this->category_model->getCategoryById($explode[0]);
+
+			//print_r($cat);
+			// new array to store only ids
+			$newArray = [];
+			$newArray[] = $explode[0];
+
+			if(!empty($cat)) {
+				// iterate over original array
+				foreach ($cat as $item) {
+				    // extract id value and add it to new array
+				    $newArray[] = $item->id;
+				    
+				    // if item has children, recursively extract their ids and add to new array
+				    if (!empty($item->child)) {
+				        $childIds = $this->_traverseArrayForIds($item->child);
+				        $newArray = array_merge($newArray, $childIds);
+				    }
+				}
+			}
+		}
+
+
 		if($this->input->get('o') != null) {
 			$offset = (int) $this->input->get('o');
 		} 
 
+		$wherestr = '';
+		if($this->input->get('category') != null) {
+			$str = '';
+			foreach ($newArray as $value) {
+			  $str .= "'" . $value . "', ";
+			}
+			$str = rtrim($str, ', ');
+			$wherestr = ' product.category_id IN ('.$str.') AND product.is_deleted = 0';
+		}
+
 		if($this->input->get('brand') != null) {
 			if($this->input->get('brand') != 'all') {
-				$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0, 'product.brand_id' => $this->input->get('brand')), null, $limit, $offset);
-				$data['total'] = $this->product_model->getProduct(array('product.is_deleted' => 0, 'product.brand_id' => $this->input->get('brand')));
+
+				$data['currentbrand'] = $this->product_model->getBrand(array('id' => $this->input->get('brand'),'is_deleted' => 0));
+				if($wherestr != '') {
+					$wherestr = ' AND '.$wherestr;
+				}
+
+				$data['product'] = $this->product_model->getProduct('product.brand_id = "'.$this->input->get('brand').'" '.$wherestr, null, $limit, $offset);
+				$data['total'] = $this->product_model->getProduct('product.brand_id = "'.$this->input->get('brand').'" '.$wherestr);
 		
 			} else {
-				$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0),null, $limit, $offset);
-				$data['total'] = $this->product_model->getProduct(array('product.is_deleted' => 0));
+				//echo $wherestr;
+				$data['product'] = $this->product_model->getProduct($wherestr,null, $limit, $offset);
+				$data['total'] = $this->product_model->getProduct($wherestr);
 			}
 		} else {
-			$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0), null, $limit, $offset);
-			$data['total'] = $this->product_model->getProduct(array('product.is_deleted' => 0));
+
+			$data['product'] = $this->product_model->getProduct($wherestr, null, $limit, $offset);
+			$data['total'] = $this->product_model->getProduct($wherestr);
 		
 		}
 
@@ -38,11 +104,18 @@ class Product extends CI_Controller {
 
 		$this->load->library('pagination');
 
+		$producturl = 'product';
 		if($this->input->get('brand') != null) {
-			$config['base_url'] = base_url('product?brand='.$this->input->get('brand')); //http://example.com/index.php/test/page/';
-		} else {
-			$config['base_url'] = base_url('product'); //http://example.com/index.php/test/page/';
+			$producturl = '?brand='.$this->input->get('brand');
 		}
+
+		if($this->input->get('category') != null) {
+			$caturl = 'category='.$this->input->get('category');
+			if($producturl != 'product') { $producturl .= '&'.$caturl; } else  { $producturl .= '?'.$caturl; }			
+		}
+		
+		$config['base_url'] = base_url($producturl); //http://example.com/index.php/test/
+		
 		$config['page_query_string'] = TRUE;
 		$config['query_string_segment'] = 'o';
 
@@ -68,6 +141,7 @@ class Product extends CI_Controller {
 		$data['paging'] = $this->pagination->create_links();
 
 		$data['brand'] = $this->product_model->getBrand(array('is_deleted' => 0));
+
 		$data['js'] = "$('select#brand').on('change', function() {
 						$('#formcategory').submit();
 					   });";
@@ -87,6 +161,9 @@ class Product extends CI_Controller {
 
 		$data['js'] = '';
 		$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0), $id);
+		$data['breadcrumb'] = $this->category_model->getRoot($data['product'][0]->category_id);
+		
+
 		$data['variant'] = $this->product_model->getVariant(array('is_active' => 1, 'is_deleted' => 0),$id);
 		//$this->load->helper('cookie');
 		//delete_cookie('product');
