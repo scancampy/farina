@@ -221,7 +221,127 @@ class Cart extends CI_Controller {
 		$this->load->view('v_footer', $data);
 	}
 
+	public function checkout() {
+		if(!$this->session->userdata('member')) {
+			redirect('member/signin?b=cart');
+		}
 
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Checkout';
+
+		// curl raja ongkir untuk dapetin propinsi
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "GET",
+		  CURLOPT_HTTPHEADER => array(
+		    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+			// TODO: handle jika ada error di raja ongkir
+			// redirect ke halaman error aja
+		  echo "cURL Error #:" . $err;
+		} else {
+			$hasil = json_decode($response);
+			if($hasil->rajaongkir->status->code == 200) {
+				$data['propinsi'] = $hasil->rajaongkir->results;
+				
+
+			} else {
+				// redirect ke halaman error aja
+			}
+		}
+
+
+		// SUBMIT
+		if($this->input->post('btnsubmit')) {
+			print_r($_POST);
+			die();
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('firstname', 'Nama Depan', 'required');
+			$this->form_validation->set_rules('lastname', 'Nama Belakang', 'required');
+            $this->form_validation->set_rules('handphone', 'Handphone', 'required');
+            $this->form_validation->set_rules('address', 'Alamat', 'required');
+            $this->form_validation->set_rules('kodepos', 'Kode Pos', 'required');
+
+            if ($this->form_validation->run() == FALSE)
+            {
+                $data['warning'] = validation_errors();
+            }
+            else
+            {
+                die();
+            }
+
+		}
+
+		$data['js'] = '
+		$("#propinsi").on("change", function() {
+			$("#kota").attr("disabled", true);
+			$.post("'.base_url('cart/ajaxcity').'", {propid: $(this).val()}, function(data) {
+				$("#kota").attr("disabled", false);
+				var jsonobj = JSON.parse(data);
+				if(jsonobj.rajaongkir.status.code == 200) {
+					var result = jsonobj.rajaongkir.results;
+					var str = "<option value=\'-\'>[Pilih Kota/Kabupaten]</option>";
+					for(var i = 0; i < result.length; i++) {
+						str += "<option value=\'" + result[i].city_id + "\'>" + result[i].city_name + "</option>";
+					}
+					$("#kota").html(str);
+
+					
+				}
+			});
+		});
+		';
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_checkout',$data);
+		$this->load->view('v_footer', $data);
+	}
+
+	public function ajaxcity() {
+		$propid =  $this->input->post('propid');
+
+		// curl untuk dapetin list kota dari propinsi tertentu
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=".$propid,
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "GET",
+		  CURLOPT_HTTPHEADER => array(
+		    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		} else {
+		  echo $response;
+		}
+	}
 
 	public function updatecart() {
 		//echo 'te'.$this->input->post('removeid');

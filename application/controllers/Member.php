@@ -35,6 +35,12 @@ class Member extends CI_Controller {
 
 			if($result) {
 				$this->session->set_userdata('member', $result);
+				// cek jika ada link back ke checkout
+
+				if($this->input->get('b') == 'cart') {
+					redirect('cart/checkout');
+				}
+
 				redirect('member');
 			} else {
 				// TODO: bikin notif error

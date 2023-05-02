@@ -17,8 +17,20 @@ class Product_model extends CI_Model {
 		return $q->result();
 	}
 
-	public function editBrand($id, $name) {
-		$data = array('name' => $name);
+	public function getBrandNextId() {
+		$q = $this->db->query("SHOW TABLE STATUS LIKE 'brand'");
+		$row = $q->row();
+		return $row->Auto_increment;
+	}
+
+	public function editBrand($id, $name, $filename=null) {
+
+		if($filename == null) {
+			$data = array('name' => $name);
+		} else {
+			$data = array('name' => $name, 'logo_filename' => $filename);
+		}
+		
 		$this->db->where('id',$id);
 		$this->db->update('brand', $data);
 		return true;
@@ -31,8 +43,8 @@ class Product_model extends CI_Model {
 		return true;
 	}
 
-	public function addBrand($name) {
-		$data = array('name' => $name);
+	public function addBrand($name, $filename) {
+		$data = array('name' => $name, 'logo_filename' => $filename);
 		$this->db->insert('brand', $data);
 
 		return true;

@@ -24,6 +24,8 @@
 												</li>
 
 												<?php
+
+											//	print_r($breadcrumb);
 												for($k = count($breadcrumb)-1; $k >=0; $k--) { 
 				echo '<li class="breadcrumbs__item">';
 				echo '<a href="'.base_url('product?category='.$breadcrumb[$k]->id).'" class="breadcrumbs__link">'.$breadcrumb[$k]->name.'</a>';

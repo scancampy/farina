@@ -62,9 +62,15 @@
 							<!-- PAGE : begin -->
 							<div class="page product-post-page product-post-order product-post-order--checkout">
 								<div class="page__content">
-
 									<!-- PRODUCT CHECKOUT : begin -->
-									<form class="product-checkout lsvr-form" method="post" action="<?php echo base_url('member/signin'); ?>">
+									<form class="product-checkout lsvr-form" method="post" action="<?php 
+
+									if(!empty($_SERVER['QUERY_STRING'])) {
+										echo base_url('member/signin?'.$_SERVER['QUERY_STRING']); 
+									} else {
+										echo base_url('member/signin'); 
+									}
+									?>">
 
 										<!-- VALIDATION ERROR MESSAGE : begin -->
 										<?php if(@$error != '') { ?>

@@ -376,6 +376,18 @@ class Product extends CI_Controller {
 				        icon: "success",
 				        title: "'.$notif['msg'].'"
 				      });';
+			} else {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "error",
+				        title: "'.$notif['msg'].'"
+				      });';
 			}
 		}
 
@@ -383,13 +395,58 @@ class Product extends CI_Controller {
 		if($this->input->post('btnSubmit')) {
 
 			if($this->input->post('hiddenid')) {
-				$this->product_model->editBrand($this->input->post('hiddenid'), $this->input->post('name'));
-				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data updated successfully!'));
+
+				// gambar
+				$config['upload_path']          = './images/brand/';
+        $config['allowed_types']        = 'gif|jpg|png|jpeg';
+        $config['max_size']             = 10000;
+        $config['max_width']            = 10024;
+        $config['max_height']           = 7680;
+        $config['file_ext_tolower'] 		= TRUE;
+        $config['file_name']						= $this->input->post('hiddenid').'-'.url_title($this->input->post('name'),'-',TRUE).'.png';
+
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload('logo'))
+        {
+        	$this->product_model->editBrand($this->input->post('hiddenid'), $this->input->post('name'));
+				  $this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data updated successfully!'));
+        }
+        else
+        {
+        	$this->product_model->editBrand($this->input->post('hiddenid'), $this->input->post('name'),  $config['file_name']);
+				  $this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data updated successfully!'));
+        }
 
 			} else {
-				$this->product_model->addBrand($this->input->post('name'));	
-				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data added successfully!'));
+				// get latest increment
+				$nextid= $this->product_model->getBrandNextId();
+				
+				// gambar
+				$config['upload_path']          = './images/brand/';
+        $config['allowed_types']        = 'gif|jpg|png|jpeg';
+        $config['max_size']             = 10000;
+        $config['max_width']            = 10024;
+        $config['max_height']           = 7680;
+        $config['file_ext_tolower'] 		= TRUE;
+        $config['file_name']						= $nextid.'-'.url_title($this->input->post('name'),'-',TRUE).'.png';
 
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload('logo'))
+        {
+        	$this->session->set_flashdata('notif', array('type' => 'error', 'msg' => 'Upload logo failed: '.$this->upload->display_errors()));
+
+			
+					redirect('admin/product/brand');	
+        }
+        else
+        {
+        	$this->product_model->addBrand($this->input->post('name'), $config['file_name']);	
+				  $this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data added successfully!'));
+        }
 			}
 			
 			redirect('admin/product/brand');	

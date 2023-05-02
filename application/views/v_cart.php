@@ -100,7 +100,7 @@
 
 																<!-- ITEM TITLE : begin -->
 																<h4 class="product-cart__item-title">
-																	<a href="product-single.html" class="product-cart__item-title-link"><?php echo $value[0]->brandname.' '.$value[0]->name; ?></a>
+																	<a href="<?php echo base_url('product/detail/'.$value[0]->id.'/'.url_title($value[0]->name)); ?>" class="product-cart__item-title-link"><?php echo $value[0]->brandname.' '.$value[0]->name; ?></a>
 																</h4>
 
 																<?php if($variant[$key] != '') { ?>
@@ -257,13 +257,13 @@
 
 														<!-- FOOTER BACK : begin -->
 														<p class="product-order__footer-back">
-															<a href="product-archive.html" class="product-order__footer-back-link">Back to Store</a>
+															<a href="<?php echo base_url('product'); ?>" class="product-order__footer-back-link">Back to Store</a>
 														</p>
 														
 
 														<!-- FOOTER CHECKOUT : begin -->
 														<p class="product-order__footer-checkout">
-															<button type="submit" class="product-order__footer-checkout-btn lsvr-button">To Checkout</button>
+															<a href="<?php echo base_url('cart/checkout'); ?>"  class="product-order__footer-checkout-btn lsvr-button">To Checkout</a>
 														</p>
 														<!-- FOOTER CHECKOUT : end -->
 

@@ -46,7 +46,13 @@
                    foreach ($brand as $key => $value) { ?>
                     <tr>
                       <td><?php echo $key+1; ?></td>
-                      <td><?php echo $value->name; ?></td>
+                      <td><?php 
+
+                      if($value->logo_filename != null) {
+                        echo '<img src="'.base_url('images/brand/'.$value->logo_filename).'" style="height:50px;" /><br/>';
+                      }
+
+                      echo $value->name; ?></td>
                       <td class="d-flex justify-content-end"><a href="#" brandid="<?php echo $value->id; ?>" class="btn btn-xs btn-primary mr-1 brandedit"><i class="nav-icon fas fa-edit"></i> Edit</a> <a href="<?php echo base_url('admin/product/delbrand/'.$value->id); ?>" onclick="return confirm('Are you sure want to delete <?php echo $value->name; ?>?');" class="btn btn-xs btn-danger m-0"><i class="nav-icon fas fa-trash"></i> Delete</a></td>
                     </tr>
                    <?php }
@@ -74,7 +80,7 @@
   <div class="modal fade" id="modalAddBrand" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form action="<?php echo base_url('admin/product/brand'); ?>" method="post">
+      <form action="<?php echo base_url('admin/product/brand'); ?>" method="post" enctype="multipart/form-data">
         <div class="modal-header">
           <h5 class="modal-title">Add Brand</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
