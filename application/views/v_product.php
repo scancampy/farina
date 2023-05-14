@@ -61,6 +61,12 @@
 						<br/>
 						<p>Menampilkan produk <strong style="color:#ff007c;"><?php echo $current_cat[0]->name; ?></strong></p>
 					<?php } ?>
+
+					<?php if(!empty($currentbrand[0]->logo_filename)) { ?>
+					<img style="display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 140px;" src="<?php echo base_url('images/brand/'.$currentbrand[0]->logo_filename); ?>"/><?php } ?>
 					</form>
 					
 				</div>

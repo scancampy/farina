@@ -67,6 +67,12 @@
 			<!-- PAGE : begin -->
 			<div class="page product-post-page product-post-single">
 				<div class="page__content">
+					<?php if(!empty($brand[0]->logo_filename)) { ?>
+					<img style="display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+    width: 140px;" src="<?php echo base_url('images/brand/'.$brand[0]->logo_filename); ?>"/><?php } ?>
 
 					<!-- POST : begin -->
 					<article class="post product-post">

@@ -50,11 +50,19 @@
 							<?php if($this->session->flashdata('notif')) { 
 								$notif = $this->session->flashdata('notif');
 								?>
-							<div class="lsvr-alert-message lsvr-alert-message--warning">
-								<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
-								<h3 class="lsvr-alert-message__title">Warning Message</h3>
-								<p><?php echo $notif['msg']; ?>	</p>
-							</div>
+							<?php if($notif['type'] == 'success') { ?>
+									<div class="lsvr-alert-message lsvr-alert-message--success">
+										<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+										<h3 class="lsvr-alert-message__title">Sign In Success</h3>
+										<p><?php echo $notif['msg']; ?></p>
+									</div>
+									<?php } else { ?> 
+									<div class="lsvr-alert-message lsvr-alert-message--warning">
+										<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+										<h3 class="lsvr-alert-message__title">Sign In Failed</h3>
+										<p><?php echo $notif['msg']; ?></p>
+									</div>
+									<?php } ?>
 						    <?php } ?>
 
 						   
@@ -63,7 +71,7 @@
 							<div class="page product-post-page product-post-order product-post-order--checkout">
 								<div class="page__content">
 									<!-- PRODUCT CHECKOUT : begin -->
-									<form class="product-checkout lsvr-form" method="post" action="<?php 
+									<form class="product-checkout lsvr-form" id="formsignin" method="post" action="<?php 
 
 									if(!empty($_SERVER['QUERY_STRING'])) {
 										echo base_url('member/signin?'.$_SERVER['QUERY_STRING']); 
@@ -129,9 +137,16 @@
 
 											<!-- FOOTER CHECKOUT : begin -->
 											<p class="product-order__footer-checkout">
-												<button type="submit" name="btnsubmit" value="submit" class="product-order__footer-checkout-btn lsvr-button">Sign In</button>
+												<button type="submit" id="btnsubmit" name="btnsubmit" value="submit" class="product-order__footer-checkout-btn lsvr-button">Sign In</button>
+												<input type="hidden" name="token" id="token">
 											</p>
-											<p>Don't have account? Register <a href="<?php echo base_url('member/signup'); ?>">here</a>
+											<p>Don't have account? Register <a href="<?php 
+									if(!empty($_SERVER['QUERY_STRING'])) {
+										echo base_url('member/signup?'.$_SERVER['QUERY_STRING']); 
+									} else {
+										echo base_url('member/signup'); 
+									}
+									?>">here</a>
 											<!-- FOOTER CHECKOUT : end -->
 
 										</div>

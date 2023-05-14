@@ -164,6 +164,14 @@ either add "fancy-link" or "fancy-link2" class to a text link where you want to 
 	cursor: pointer;
 }
 
+.box-div {
+	background-color: #FFF;
+    border: 1px solid;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #e1e7ec;
+}
+
 .category-container {
 	margin-top:30px;
 }
@@ -207,4 +215,247 @@ either add "fancy-link" or "fancy-link2" class to a text link where you want to 
     justify-content: center;
     color: white;
     z-index: 100; margin-left:10px; margin-top: 10px;
+}
+
+.mtop30 {
+	margin-top:30px;
+}
+
+/* Absolute Center Spinner */
+.loading {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Transparent Overlay */
+.loading:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+    background: radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0, .8));
+
+  background: -webkit-radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0,.8));
+}
+
+/* :not(:required) hides these rules from IE9 and below */
+.loading:not(:required) {
+  /* hide "loading..." text */
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+.loading:not(:required):after {
+  content: '';
+  display: block;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  margin-top: -0.5em;
+  -webkit-animation: spinner 150ms infinite linear;
+  -moz-animation: spinner 150ms infinite linear;
+  -ms-animation: spinner 150ms infinite linear;
+  -o-animation: spinner 150ms infinite linear;
+  animation: spinner 150ms infinite linear;
+  border-radius: 0.5em;
+  -webkit-box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+}
+
+/* Animation */
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/* Table Styling */
+table.table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+}
+
+.table th, td {
+  padding: 8px !important;
+}
+
+.table th {
+  font-weight: bold !important;
+}
+
+.table thead {
+      background-color: #ff007c !important;
+    color: white !important;
+}
+
+.table tr:nth-child(even) {
+  background-color: rgba(255,143,179,0.7);
+}
+
+/* Pagination Styling */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination .page-link {
+  border: 1px solid #ff007c;
+  border-radius: 20px;
+  color: #ff007c;
+  padding: 5px 10px;
+  margin: 0 5px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.pagination .page-link:hover {
+  background-color: #ff007c;
+  color: #fff;
+}
+
+.pill_green {
+  color: #367b30;
+  background-color: #d4fbd3;
+  display: inline-block;
+  margin: 10px 0 0 0;
+  padding: 2px 15px;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  border-radius: 20px;
+}
+
+.pill_yellow {
+  color: #ac6819;
+  background-color: #fff4cf;
+  display: inline-block;
+  margin: 10px 0 0 0;
+  padding: 2px 15px;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  border-radius: 20px;
+}
+
+.pill_red {
+  color: #ac1921;
+  background-color: #ffcfd6;
+  display: inline-block;
+  margin: 10px 0 0 0;
+  padding: 2px 15px;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  border-radius: 20px;
+}
+
+.line {
+  background-color: #ff007c;
+    height: 1px;
+    position: relative;
+    top: -80px;
+    left: 10%;
+    width: 80%;
+    z-index: -100;
+}
+
+.pink-bg {
+  background-color: rgba(255,143,179,1.0) !important;
+}
+
+.white-color {
+  color: white;
+}
+
+.circle_container {
+  margin-top:30px;
+  display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+}
+
+.circle_order {
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    text-align: center;
+}
+
+.circle_order_icon {
+      border-radius: 220px;
+    border: 1px solid #ff007c;
+    background-color: white;
+    padding: 20px;
 }

@@ -123,6 +123,12 @@ class Product extends CI_Controller {
 		$config['per_page'] = 12;
 		$config['prev_tag_open'] = '<li class="pagination__item pagination__item--prev">';
 		$config['prev_tag_close'] = '</li>';
+		$config['last_tag_open'] = '<li style="margin-left:10px;" class="pagination__item pagination__item--prev">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['first_tag_open'] = '<li style="margin-left:10px;" class="pagination__item pagination__item--prev">';
+		$config['first_tag_close'] = '</li>';
+
 		$config['prev_link'] = '<a href="#" class="pagination__item-link">Previous</a>';
 
 		$config['cur_tag_open'] = '<li class="pagination__item pagination__item--current"><span class="pagination__item-link">';
@@ -148,6 +154,7 @@ class Product extends CI_Controller {
 
 
 
+
 		$this->load->view('v_header', $data);
 		$this->load->view('v_product',$data);
 		$this->load->view('v_footer', $data);
@@ -161,6 +168,12 @@ class Product extends CI_Controller {
 
 		$data['js'] = '';
 		$data['product'] = $this->product_model->getProduct(array('product.is_deleted' => 0), $id);
+
+		if(empty($data['product'])) {
+			redirect('notfound');
+		}
+		$data['brand'] = $this->product_model->getBrand('', $data['product'][0]->brand_id);
+		
 		$data['breadcrumb'] = $this->category_model->getRoot($data['product'][0]->category_id);
 		
 

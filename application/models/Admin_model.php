@@ -29,6 +29,31 @@ class Admin_model extends CI_Model {
 		return $q->row();
 	}
 
+	public function updateAddress($kodepos, $address, $propinsi, $kota, $kecamatan) {
+		$data = array(
+					  'kodepos' 	=> $kodepos,
+					  'kecamatan' 	=> $kecamatan,
+					  'propinsi' 	=> $propinsi,
+					  'kota' 		=> $kota,
+					  'address' 	=> $address,
+					 );
+		$this->db->where('id', 1);
+		$this->db->update('setting', $data);
+	}
+
+	public function updateBank($bank1, $bank2, $no_akun_bank1, $no_akun_bank2, $nama_akun_bank1, $nama_akun_bank2) {
+		$data = array(
+					  'bank1' 				=> $bank1,
+					  'bank2' 				=> $bank2,
+					  'no_akun_bank1' 		=> $no_akun_bank1,
+					  'no_akun_bank2' 		=> $no_akun_bank2,
+					  'nama_akun_bank1' 	=> $nama_akun_bank1,
+					  'nama_akun_bank2' 	=> $nama_akun_bank2
+					 );
+		$this->db->where('id', 1);
+		$this->db->update('setting', $data);
+	}
+
 	public function getSlides($where =  null, $id = null) {
 		if($where != null) {
 			$this->db->where($where);

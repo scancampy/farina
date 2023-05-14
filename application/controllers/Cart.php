@@ -8,6 +8,10 @@ class Cart extends CI_Controller {
 		$data['setting'] = $this->admin_model->getSetting();
 		$data['title'] = 'Cart';
 
+		if(!empty($this->session->userdata('member'))) {
+			$data['member'] =  $this->session->userdata('member');
+		}
+
 		$this->load->helper('cookie');
 
 		if($this->input->post('btnsubmit')) {
@@ -91,11 +95,24 @@ class Cart extends CI_Controller {
 			if(isset($user)) {
 				// kalau user sudah login
 				if($this->voucher_model->checkVouhcerUsed($user->id, $code)) {
-					$q = $this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),$code);
+					$q = $this->voucher_model->getVoucher(array('exp_date >=' => date('Y-m-d') ),$code);
 
 					if(count($q) >0 ) {
+						// cek jika private
+						if($q[0]->voucher_type =='private') {
+							$data['private_voucher_eligible'] = $this->voucher_model->checkPrivateVoucher($code, $user->id);
+						}
+				
 						// ada voucher
 						$data['voucher'] = $q;
+						$cookie = array(
+			                'name'   => 'voucher',
+			                'value'  => $code,
+			                'expire' =>  86500,
+			                'secure' => false
+			            );
+			            //print_r($product);
+			            set_cookie($cookie); 
 					} else {
 						// voucher tidak ada
 						$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher not valid'));
@@ -107,22 +124,27 @@ class Cart extends CI_Controller {
 				}
 			} else {
 				// user belum login
-				$q = $this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),$code);
+				$q = $this->voucher_model->getVoucher(array('exp_date >=' => date('Y-m-d') ),$code);
 
 				if(count($q) >0 ) {
-					// ada voucher
-					$data['voucher'] = $q;
-					$cookie = array(
-		                'name'   => 'voucher',
-		                'value'  => $code,
-		                'expire' =>  86500,
-		                'secure' => false
-		            );
-		            //print_r($product);
-		            set_cookie($cookie); 
+					if($q[0]->voucher_type == 'global' || $q[0]->voucher_type == 'produk' || $q[0]->voucher_type == 'brand') {
+						// ada voucher
+						$data['voucher'] = $q;
+						$cookie = array(
+			                'name'   => 'voucher',
+			                'value'  => $code,
+			                'expire' =>  86500,
+			                'secure' => false
+			            );
+			            //print_r($product);
+			            set_cookie($cookie); 
+			        } else {
+			        	$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher is not valid'));
+						redirect('cart');
+			        } 
 				} else {
 					// voucher tidak ada
-					$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher not valid'));
+					$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher is not valid'));
 					redirect('cart');
 				}
 			}			
@@ -134,7 +156,8 @@ class Cart extends CI_Controller {
 		$data['variant'] = array();
 
 		if(get_cookie('voucher') != null) {
-			$q = $this->voucher_model->getVoucher(array('voucher_type' => 'global', 'exp_date >=' => date('Y-m-d') ),get_cookie('voucher'));
+
+			$q = $this->voucher_model->getVoucher(array( 'exp_date >=' => date('Y-m-d') ),get_cookie('voucher'));
 
 			if(count($q) >0 ) {
 				// ada voucher
@@ -209,21 +232,34 @@ class Cart extends CI_Controller {
 				var idx = $(this).attr('idx');
 				$.post('".base_url('cart/updatecart')."', { delaction:true, removeid:idx }, function(data) {
 					
-					$('#lst' + idx).fadeOut(300, function() { $(this).remove(); 
+					$('#lst' + idx).fadeOut(300, function() { $(this).remove();
+					location.reload(); 
 							if(data ==0) { location.reload(); }
-						}); 
+					}); 
 				});
 			});
 		";
 
+		// loading
+		$data['js'] .= "
+			$('.checkoutbtn').on('click', function() {
+				$('.loading').show();
+			});
+		";
+		
 		$this->load->view('v_header', $data);
 		$this->load->view('v_cart',$data);
 		$this->load->view('v_footer', $data);
 	}
 
 	public function checkout() {
+		$this->load->helper('cookie');
 		if(!$this->session->userdata('member')) {
 			redirect('member/signin?b=cart');
+		} else if(unserialize(get_cookie('product')) == null) {
+			redirect('cart');
+		} else {
+			$member =  $this->session->userdata('member');
 		}
 
 		$data = array();
@@ -234,7 +270,7 @@ class Cart extends CI_Controller {
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+		  CURLOPT_URL => "https://pro.rajaongkir.com/api/province",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -258,19 +294,100 @@ class Cart extends CI_Controller {
 		} else {
 			$hasil = json_decode($response);
 			if($hasil->rajaongkir->status->code == 200) {
-				$data['propinsi'] = $hasil->rajaongkir->results;
-				
+				$data['propinsi'] = $hasil->rajaongkir->results; 
 
 			} else {
 				// redirect ke halaman error aja
 			}
 		}
 
+		// load data if cookie exist maka load cookie. If not maka load default address
+		if(unserialize(get_cookie('address')) != null) {
+			$data['address'] = unserialize(get_cookie('address'));
+		} else {
+			$hasil = $this->member_model->loadDefaultAddress($member->id);
+
+			if($hasil) {
+				$data['address']['firstname'] = $hasil->firstname;
+				$data['address']['lastname'] = $hasil->lastname;
+				$data['address']['handphone'] = $hasil->handphone;
+				$data['address']['propinsi'] = $hasil->propinsi;
+				$data['address']['kota'] = $hasil->kota;
+				$data['address']['kecamatan'] = $hasil->kecamatan;
+				$data['address']['address'] = $hasil->address;
+				$data['address']['kodepos'] = $hasil->kodepos;
+				$data['address']['kecamatan'] = $hasil->kecamatan;
+			}
+		}
+
+		if(!empty($data['address'])) {
+			// curl untuk dapetin list kota dari propinsi tertentu
+			$propid = $data['address']['propinsi'];
+			$curl = curl_init();
+			curl_setopt_array($curl, array(
+			 CURLOPT_URL => "https://pro.rajaongkir.com/api/city?province=".$propid,
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => "",
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 30,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => "GET",
+			  CURLOPT_HTTPHEADER => array(
+			    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+			  ),
+			));
+
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+
+			curl_close($curl);
+
+			if ($err) {
+			} else {
+			  	$hasil = json_decode($response);
+				if($hasil->rajaongkir->status->code == 200) {
+					$data['kota'] = $hasil->rajaongkir->results;
+				} else {
+					// redirect ke halaman error aja
+				}
+			}
+
+			$cityid =  $data['address']['kota'];
+
+			// curl untuk dapetin list kota dari propinsi tertentu
+			$curl = curl_init();
+			curl_setopt_array($curl, array(
+		      CURLOPT_URL => "https://pro.rajaongkir.com/api/subdistrict?city=".$cityid,
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => "",
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 30,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => "GET",
+			  CURLOPT_HTTPHEADER => array(
+			    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+			  ),
+			));
+
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+
+			curl_close($curl);
+
+			if ($err) {
+			} else {
+			  	$hasil = json_decode($response);
+				if($hasil->rajaongkir->status->code == 200) {
+					$data['kecamatan'] = $hasil->rajaongkir->results;
+				} else {
+					// redirect ke halaman error aja
+				}
+			}
+		} 
+		
 
 		// SUBMIT
 		if($this->input->post('btnsubmit')) {
-			print_r($_POST);
-			die();
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('firstname', 'Nama Depan', 'required');
 			$this->form_validation->set_rules('lastname', 'Nama Belakang', 'required');
@@ -284,14 +401,53 @@ class Cart extends CI_Controller {
             }
             else
             {
-                die();
+            	if($this->input->post('propinsi') != '-' && $this->input->post('kota') != '-' && $this->input->post('kecamatan') != '-') {
+	            	// simpan cookie
+
+	                $addressInfo = array(
+	                	'firstname'		=> $this->input->post('firstname'),
+	                	'lastname'		=> $this->input->post('lastname'),
+	                	'handphone'		=> $this->input->post('handphone'),
+	                	'propinsi'		=> $this->input->post('propinsi'),
+	                	'kota'			=> $this->input->post('kota'),
+	                	'kecamatan'		=> $this->input->post('kecamatan'),
+	                	'address'		=> $this->input->post('address'),
+	                	'kodepos'		=> $this->input->post('kodepos'),
+	                	'propinsi'		=> $this->input->post('propinsi')
+	                );
+
+	                $cookie = array(
+		                'name'   => 'address',
+		                'value'  => serialize($addressInfo),
+		                'expire' =>  86500,
+		                'secure' => false
+		            );
+		            //print_r($product);
+		            set_cookie($cookie); 
+		            if($this->input->post('simpandefault')) {
+		            	$this->member_model->updateDefaultAddress($member->id, $addressInfo['firstname'], $addressInfo['lastname'], $addressInfo['kodepos'], $addressInfo['address'], $addressInfo['handphone'], $addressInfo['propinsi'], $addressInfo['kota'], $addressInfo['kecamatan']);
+		            }
+
+		            // redirect to shipping
+		            redirect('cart/shipping');
+            	} else {
+            		$data['warning'] = 'Periksa kembali provinsi, kota, dan kecamatan pengiriman';
+            	}
             }
 
 		}
 
+        // ubah propinsi
 		$data['js'] = '
 		$("#propinsi").on("change", function() {
 			$("#kota").attr("disabled", true);
+			var str = "<option value=\'-\'>[Pilih Kota/Kabupaten]</option>";
+			$("#kota").html(str);		
+
+			$("#kecamatan").attr("disabled", true);
+			var str = "<option value=\'-\'>[Pilih kecamatan]</option>";
+			$("#kecamatan").html(str);
+		
 			$.post("'.base_url('cart/ajaxcity').'", {propid: $(this).val()}, function(data) {
 				$("#kota").attr("disabled", false);
 				var jsonobj = JSON.parse(data);
@@ -309,6 +465,37 @@ class Cart extends CI_Controller {
 		});
 		';
 
+		// ubah city
+		$data['js'] .= '
+		$("#kota").on("change", function() {
+			$("#kecamatan").attr("disabled", true);
+			var str = "<option value=\'-\'>[Pilih kecamatan]</option>";
+			$("#kecamatan").html(str);
+
+			$.post("'.base_url('cart/ajaxdistrict').'", {cityid: $(this).val()}, function(data) {
+				$("#kecamatan").attr("disabled", false);
+				var jsonobj = JSON.parse(data);
+				if(jsonobj.rajaongkir.status.code == 200) {
+					var result = jsonobj.rajaongkir.results;
+					var str = "<option value=\'-\'>[Pilih kecamatan]</option>";
+					for(var i = 0; i < result.length; i++) {
+						str += "<option value=\'" + result[i].subdistrict_id + "\'>" + result[i].subdistrict_name + "</option>";
+					}
+					$("#kecamatan").html(str);
+
+					
+				}
+			});
+		});
+		';
+
+		// loading
+		$data['js'] .= "
+			$('#btnsubmit').on('click', function() {
+				$('.loading').show();
+			});
+		";
+
 		$this->load->view('v_header', $data);
 		$this->load->view('v_checkout',$data);
 		$this->load->view('v_footer', $data);
@@ -320,7 +507,7 @@ class Cart extends CI_Controller {
 		// curl untuk dapetin list kota dari propinsi tertentu
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=".$propid,
+		 CURLOPT_URL => "https://pro.rajaongkir.com/api/city?province=".$propid,
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -341,6 +528,613 @@ class Cart extends CI_Controller {
 		} else {
 		  echo $response;
 		}
+	}
+
+	public function ajaxdistrict() {
+		$cityid =  $this->input->post('cityid');
+
+		// curl untuk dapetin list kota dari propinsi tertentu
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+	      CURLOPT_URL => "https://pro.rajaongkir.com/api/subdistrict?city=".$cityid,
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "GET",
+		  CURLOPT_HTTPHEADER => array(
+		    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		} else {
+		  echo $response;
+		}
+	}
+
+	public function myinvoice($orderid=null) {
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'My Invoice #'.$orderid;
+
+
+		$data['trans'] = $this->trans_model->getTrans($orderid);
+		if(empty($data['trans'])) {
+			redirect('cart');
+		}
+
+		$data['detil'] = $this->trans_model->getTransDetail($orderid);
+
+		$this->load->view('v_invoice',$data);
+	}
+
+	public function orderconfirmed($orderid=null) {
+		$this->load->helper('cookie');
+		if(!$this->session->userdata('member')) {
+			redirect('member/signin?b=cart');
+		} else if($orderid==null) {
+			redirect('cart');
+		} else {
+			$member =  $this->session->userdata('member');
+		}
+
+		
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Order Confirmed';
+
+
+
+		$data['trans'] = $this->trans_model->getTrans($orderid);
+		if(empty($data['trans'])) {
+			redirect('cart');
+		}
+
+		
+		
+		$this->load->view('v_header', $data);
+		$this->load->view('v_order_confirmed',$data);
+		$this->load->view('v_footer', $data);
+	}
+
+	public function shipping() {
+		$this->load->helper('cookie');
+
+		$data = array();
+		if(!$this->session->userdata('member')) {
+			redirect('member/signin?b=cart');
+		} else if(unserialize(get_cookie('product')) == null) {
+			redirect('cart');
+		} else if(unserialize(get_cookie('address')) == null) {
+			redirect('cart');
+		} else {
+			$member =  $this->session->userdata('member');
+			$data['member'] = $member;
+		}
+
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Shipping';
+
+		if(get_cookie('voucher') != null) {
+
+			$voucher = $this->voucher_model->getVoucher(array('exp_date >=' => date('Y-m-d')),get_cookie('voucher'));
+			//print_r($voucher);
+			if(count($voucher) > 0) {		
+				if($this->voucher_model->checkVouhcerUsed($member->id, get_cookie('voucher'))) {
+					$data['voucher'] = $voucher;
+
+					$data['private_voucher_eligible'] = $this->voucher_model->checkPrivateVoucher($data['voucher'][0]->voucher_code, $data['member']->id);
+			//		die();
+				}
+			}
+		}
+
+
+		
+		$data['address'] = unserialize(get_cookie('address'));
+
+
+		if($this->input->post('btnsubmit')) {
+
+			$cityid =  $data['address']['kota'];
+
+			// curl untuk dapetin list kota dari propinsi tertentu
+			$curl = curl_init();
+			curl_setopt_array($curl, array(
+		      CURLOPT_URL => "https://pro.rajaongkir.com/api/subdistrict?id=".$data['address']['kecamatan']."&city=".$cityid,
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => "",
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 30,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => "GET",
+			  CURLOPT_HTTPHEADER => array(
+			    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+			  ),
+			));
+
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+
+			curl_close($curl);
+
+			if ($err) {
+			} else {
+			  	$hasil = json_decode($response);
+				if($hasil->rajaongkir->status->code == 200) {
+					$data['kecamatan'] = $hasil->rajaongkir->results;
+				}
+			}
+
+			$product = unserialize(get_cookie('product'));
+			$totalweight = 0;
+			$data['product'] = array();
+			foreach ($product as $key => $value) {
+				$hasil = $this->product_model->getProduct('', $value['id']);
+				$totalweight += ($hasil[0]->weight * $value['qty']);
+				$data['product'][$key]['product'] = $hasil;
+				$data['product'][$key]['weight'] = ($hasil[0]->weight * $value['qty']);
+				$data['product'][$key]['qty'] = $value['qty'];
+				$data['product'][$key]['variant'] = $this->product_model->getVariant('',$value['id'],$value['variant']);
+				$data['product'][$key]['img'] = $this->product_model->getImageProduct('',$value['id']);
+			}
+
+			$ongkir = 0;
+			$layananongkir = '';
+
+			// SICEPAT
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+			  CURLOPT_URL => "https://pro.rajaongkir.com/api/cost",
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => "",
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 30,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => "POST",
+			  CURLOPT_POSTFIELDS => "origin=".$data['setting']->kecamatan."&originType=subdistrict&destination=".
+			$data['address']['kecamatan']."&destinationType=subdistrict&courier=sicepat&weight=".$totalweight,
+			  CURLOPT_HTTPHEADER => array(
+			    "content-type: application/x-www-form-urlencoded",
+			    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+			  ),
+			));
+
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+
+			curl_close($curl);
+
+			if ($err) {
+			  //echo "cURL Error #:" . $err;
+			} else {
+			  $hasil = json_decode($response);
+			  if($hasil->rajaongkir->status->code == 200) {
+				$costs = $hasil->rajaongkir->results[0]->costs;
+
+				foreach ($costs as $key => $value) {
+					if($value->service == $this->input->post('radiokirim')) {
+						//echo 'R'.$value->service;
+						$ongkir = $value->cost[0]->value;
+						$layananongkir = $hasil->rajaongkir->results[0]->name.' '.$value->service;
+						//echo '<br/>'.$value->description.' '.$value->cost[0]->value;
+					}
+				}
+
+			  }
+			}
+
+			if($ongkir ==0) {
+				// JNT
+				$curl = curl_init();
+
+				curl_setopt_array($curl, array(
+				  CURLOPT_URL => "https://pro.rajaongkir.com/api/cost",
+				  CURLOPT_RETURNTRANSFER => true,
+				  CURLOPT_ENCODING => "",
+				  CURLOPT_MAXREDIRS => 10,
+				  CURLOPT_TIMEOUT => 30,
+				  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				  CURLOPT_CUSTOMREQUEST => "POST",
+				  CURLOPT_POSTFIELDS => "origin=".$data['setting']->kecamatan."&originType=subdistrict&destination=".$data['kecamatan']->subdistrict_id."&destinationType=subdistrict&courier=jnt&weight=".$totalweight,
+				  CURLOPT_HTTPHEADER => array(
+				    "content-type: application/x-www-form-urlencoded",
+				    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+				  ),
+				));
+
+				$response = curl_exec($curl);
+				$err = curl_error($curl);
+
+				curl_close($curl);
+
+				if ($err) {
+				  //echo "cURL Error #:" . $err;
+				} else {
+				  $hasil = json_decode($response);
+				  if($hasil->rajaongkir->status->code == 200) {
+					$costs = $hasil->rajaongkir->results[0]->costs;
+
+					foreach ($costs as $key => $value) {
+						if($value->service == $this->input->post('radiokirim')) {
+							//echo 'R'.$value->service;
+							$ongkir = $value->cost[0]->value;
+							$layananongkir = $hasil->rajaongkir->results[0]->name.' '.$value->service;
+							//echo '<br/>'.$value->description.' '.$value->cost[0]->value;
+						}
+					}
+				  }
+				}
+			}
+
+			
+
+			if($ongkir > 0) {
+
+				$diskon = 0;
+				$voucher_code = null;
+
+				$product = unserialize(get_cookie('product'));
+				$totalweight = 0;
+				$totaltrans = 0;
+				foreach ($product as $key => $value) {
+					$hasil = $this->product_model->getProduct('', $value['id']);
+					$totalweight += ($hasil[0]->weight * $value['qty']);
+					$totaltrans += ($hasil[0]->price * $value['qty']);
+				}
+
+				// voucher
+				if(!empty($data['voucher'])) {
+
+					if($data['voucher'][0]->voucher_type == 'global') {
+						if($totaltrans >= $data['voucher'][0]->min_order) {
+							$voucher_code = $data['voucher'][0]->voucher_code;
+
+							if($data['voucher'][0]->discount_value > 0) {
+								$diskon = $data['voucher'][0]->discount_value;
+							} else { 
+								$diskon = $totaltrans * ($data['voucher'][0]->discount_percentage/100); 
+							}
+						}
+					} else if($data['voucher'][0]->voucher_type == 'private') {
+						$private_voucher_eligible = $this->voucher_model->checkPrivateVoucher($data['voucher'][0]->voucher_code, $data['member']->id);
+						if($totaltrans >= $data['voucher'][0]->min_order && $private_voucher_eligible) {
+							$voucher_code = $data['voucher'][0]->voucher_code;
+
+							if($data['voucher'][0]->discount_value > 0) {
+								$diskon = $data['voucher'][0]->discount_value;
+							} else { 
+								$diskon = $totaltrans * ($data['voucher'][0]->discount_percentage/100); 
+							}
+						}
+					} else if($data['voucher'][0]->voucher_type == 'vip') {
+						if($totaltrans >= $data['voucher'][0]->min_order && @$member->member_type == 'VIP') {
+							$voucher_code = $data['voucher'][0]->voucher_code;
+
+							if($data['voucher'][0]->discount_value > 0) {
+								$diskon = $data['voucher'][0]->discount_value;
+							} else { 
+								$diskon = $totaltrans * ($data['voucher'][0]->discount_percentage/100); 
+							}
+						}
+					} else if($data['voucher'][0]->voucher_type == 'produk') {
+						$adaproduk = false;
+						foreach ($data['product'] as $key => $value) {
+							if($value['product'][0]->id == $data['voucher'][0]->product_id) {
+
+								$voucher_code = $data['voucher'][0]->voucher_code;
+								$harga = ($value['product'][0]->price * $value['qty']);
+								if($data['voucher'][0]->min_order <= $harga) {  
+									if($data['voucher'][0]->discount_value > 0) { 
+										$diskon = $data['voucher'][0]->discount_value;
+									} else {  
+										$diskon = $harga * ($data['voucher'][0]->discount_percentage/100); 
+									}
+								}
+
+								$adaproduk = true;
+								break;
+							}
+						}
+					} else if($data['voucher'][0]->voucher_type == 'brand') {
+						$adaproduk = false;
+						$totalbrand =0;
+						foreach ($data['product'] as $key => $value) {
+							if($value['product'][0]->brand_id == $data['voucher'][0]->brand_id) {
+								$totalbrand += ($value['product'][0]->price * $value['qty']);
+								$adaproduk = true;
+							}
+						}
+
+						if($adaproduk) {
+							if($data['voucher'][0]->min_order <= $totalbrand) { 
+
+								$voucher_code = $data['voucher'][0]->voucher_code;
+								if($data['voucher'][0]->discount_value > 0) { 
+									$diskon = $data['voucher'][0]->discount_value;
+								} else { 
+									$diskon = $totalbrand * ($data['voucher'][0]->discount_percentage/100); 
+								}
+							}
+						}
+					}
+				}
+				
+
+				// simpan transaksi
+				$transid =hexdec( substr(sha1(strtotime(date('Y-m-d H:i:s'))), 0, 10) );
+				$order_placed_date = date('Y-m-d H:i:s');
+				$trans = array(
+					'id'					=> $transid,
+					'order_placed_date'		=> $order_placed_date,
+					'member_id'				=> $member->id,
+					'firstname_receiver'	=> $data['address']['firstname'],
+					'lastname_receiver'		=> $data['address']['lastname'],
+					'phone'					=> $data['address']['handphone'],
+					'address'				=> $data['address']['address'],
+					'kecamatan'				=> $data['kecamatan']->subdistrict_name,
+					'kota'					=> $data['kecamatan']->city,
+					'propinsi'				=> $data['kecamatan']->province,
+					'kodepos'				=> $data['address']['kodepos'],
+					'total_trans'			=> $totaltrans,
+					'total_weight'			=> $totalweight,
+					'shipping_cost'			=> $ongkir,
+					'shipping_service'		=> $layananongkir,
+					'status'				=> "order_placed",
+					'discount'				=> $diskon,
+					'voucher_code'			=> $voucher_code
+				);
+
+				$this->trans_model->insertTrans($trans);
+
+				if($voucher_code != null) {
+					$this->voucher_model->useVoucher($voucher_code,$member->id, $transid);
+				}
+
+
+				foreach ($product as $key => $value) {
+					$hasil = $this->product_model->getProduct('', $value['id']);
+				
+					$detiltrans = array(
+						'trans_id'				=> $transid,
+						'product_id'			=> $value['id'],
+						'qty'					=> $value['qty'],
+						'variant_id'			=> $value['variant'],
+						'harga'					=> $hasil[0]->price
+					);	
+
+					$this->trans_model->insertDetailTrans($detiltrans);
+				}
+
+				$data['detil'] = $this->trans_model->getTransDetail($transid);
+				$strDetil ='<dl>';
+
+
+				foreach ($data['detil'] as $key => $value) {
+					
+					$strDetil .= '<dt><strong>'.$value->name.'</strong></dt>';
+					if($value->variantname != '') {
+						$strDetil .= '<dd>Variant: '.$value->variantname.'</dd>';
+					}
+					$strDetil .= '<dd>Qty: '.$value->qty.'</dd>';			
+					$strDetil .= '<dd>Price: Rp. '.number_format($value->harga,0,',','.').'</dd>';
+				}
+				$strDetil .= '</dl>';
+
+				// tes kirim email
+				$this->load->library('email');
+				$config['protocol'] = 'smtp';
+				$config['smtp_host'] = 'mail.farinafemme.com';
+				$config['smtp_port'] = 25;
+				$config['smtp_user'] = 'noreply@farinafemme.com';
+				$config['smtp_pass'] = 'p;B%GCo[?UCN';
+				$config['mailtype'] = 'html';
+
+				$this->email->initialize($config);
+
+				$this->email->from('noreply@farinafemme.com', 'Farina Femme');
+				$this->email->to($member->email);
+
+				$tot = $totaltrans + $ongkir - $diskon;
+
+				$diskstr = '';
+				if($diskon >0) {
+					$diskstr = 'Discount: Rp. '.number_format($diskon,0,',','.').' (kode voucher '.$voucher_code.')<br/>';
+				}
+
+				$this->email->subject('Order Confirmation - Farina Femme');
+				$this->email->message('Thank you for choosing Farina Femme for your recent purchase! We\'re excited to let you know that your order has been successfully placed. Here are the details of your purchase:<br/><br/>
+					Order ID: <strong>'.$transid.'</strong><br/>
+					Order Date: '.strftime("%d %B %Y", strtotime($order_placed_date)).'<br/>
+					Shipping Address: '.$data['address']['address'].', '.$data['kecamatan']->subdistrict_name.', '.$data['kecamatan']->city.', '.$data['kecamatan']->province.'<br/>
+					Recipient: '.$data['address']['firstname'].' '.$data['address']['lastname'].' (phone: '.$data['address']['handphone'].')<br/><br/>
+					Item(s) Purchased:<br/>'.$strDetil.'<br/><br/>
+					Subtotal: Rp. '.number_format($totaltrans,0,',','.').'<br/>'.$diskstr.'
+					Shipping: Rp. '.number_format($ongkir,0,',','.').' ('.$layananongkir.')<br/>
+					Order Total: <strong>Rp. '.number_format($tot,0,',','.').'</strong><br/><br/>
+					Your order has been received by our team. As soon as we receive your payment, we will begin processing your order.<br/><br/>The total amount due for your order is <strong>Rp. '.number_format($tot,0,',','.').'</strong>. Please make payment at your earliest convenience using the following details: <br/><br/>
+				    <strong>'.$data['setting']->bank1.'</strong><br/>
+				    <strong>No. Rek: '.$data['setting']->no_akun_bank1.'</strong><br/>
+				    <strong>A/N: '.$data['setting']->nama_akun_bank1.'</strong><br/><br/>
+				    <strong>'.$data['setting']->bank2.'</strong><br/>
+				    <strong>No. Rek: '.$data['setting']->no_akun_bank2.'</strong><br/>
+				    <strong>A/N: '.$data['setting']->nama_akun_bank2.'</strong><br/><br/>
+
+				    To ensure a smooth and timely processing of your order, we kindly request you to confirm your payment by providing a payment proof screenshot. Please visit this link to confirm your payment: <br/>
+				    <a href="'.base_url('confirm?order_id='.$transid).'">'.base_url('confirm?order_id='.$transid).'</a>
+					<br/><br/>
+				    If you have any questions or require further assistance regarding the payment process or any other concerns, please do not hesitate to reach out to our customer support team. We are here to help and ensure a seamless shopping experience for you.<br/><br/>
+
+		Thank you for choosing Farina Femme. We truly appreciate your business and look forward to fulfilling your order soon.<br/><br/>
+
+		Best regards,<br/>
+		Farina Femme
+				    ');
+
+				
+
+				$this->email->send();
+				
+				// delete all cookies
+				delete_cookie('product');
+				delete_cookie('voucher');
+				delete_cookie('address');
+
+				redirect('cart/orderconfirmed/'.$transid);
+			} else {
+				// TODO: Redirect to error
+			}
+
+			die();
+		}
+
+
+		$cityid =  $data['address']['kota'];
+
+		// curl untuk dapetin list kota dari propinsi tertentu
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+	      CURLOPT_URL => "https://pro.rajaongkir.com/api/subdistrict?id=".$data['address']['kecamatan']."&city=".$cityid,
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "GET",
+		  CURLOPT_HTTPHEADER => array(
+		    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		} else {
+		  	$hasil = json_decode($response);
+			if($hasil->rajaongkir->status->code == 200) {
+				$data['kecamatan'] = $hasil->rajaongkir->results;
+				//print_r($data['kecamatan']);
+
+				// ONGKIR
+				// TODO: berat harus tercantum di cookie
+				// hitung berat
+				$product = unserialize(get_cookie('product'));
+				$totalweight = 0;
+				$data['product'] = array();
+				foreach ($product as $key => $value) {
+					$hasil = $this->product_model->getProduct('', $value['id']);
+					$totalweight += ($hasil[0]->weight * $value['qty']);
+					$data['product'][$key]['product'] = $hasil;
+					$data['product'][$key]['weight'] = ($hasil[0]->weight * $value['qty']);
+					$data['product'][$key]['qty'] = $value['qty'];
+					$data['product'][$key]['variant'] = $this->product_model->getVariant('',$value['id'],$value['variant']);
+					$data['product'][$key]['img'] = $this->product_model->getImageProduct('',$value['id']);
+				}
+
+				$data['totalweight'] = $totalweight;
+
+				// SICEPAT
+				$curl = curl_init();
+
+				curl_setopt_array($curl, array(
+				  CURLOPT_URL => "https://pro.rajaongkir.com/api/cost",
+				  CURLOPT_RETURNTRANSFER => true,
+				  CURLOPT_ENCODING => "",
+				  CURLOPT_MAXREDIRS => 10,
+				  CURLOPT_TIMEOUT => 30,
+				  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				  CURLOPT_CUSTOMREQUEST => "POST",
+				  CURLOPT_POSTFIELDS => "origin=".$data['setting']->kecamatan."&originType=subdistrict&destination=".$data['kecamatan']->subdistrict_id."&destinationType=subdistrict&courier=sicepat&weight=".$totalweight,
+				  CURLOPT_HTTPHEADER => array(
+				    "content-type: application/x-www-form-urlencoded",
+				    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+				  ),
+				));
+
+				$response = curl_exec($curl);
+				$err = curl_error($curl);
+
+				curl_close($curl);
+
+				if ($err) {
+				  //echo "cURL Error #:" . $err;
+				} else {
+				  $hasil = json_decode($response);
+				  if($hasil->rajaongkir->status->code == 200) {
+					$data['sicepat'] = $hasil->rajaongkir->results;
+				  }
+				}
+
+
+				// JNT
+				$curl = curl_init();
+
+				curl_setopt_array($curl, array(
+				  CURLOPT_URL => "https://pro.rajaongkir.com/api/cost",
+				  CURLOPT_RETURNTRANSFER => true,
+				  CURLOPT_ENCODING => "",
+				  CURLOPT_MAXREDIRS => 10,
+				  CURLOPT_TIMEOUT => 30,
+				  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				  CURLOPT_CUSTOMREQUEST => "POST",
+				  CURLOPT_POSTFIELDS => "origin=".$data['setting']->kecamatan."&originType=subdistrict&destination=".$data['kecamatan']->subdistrict_id."&destinationType=subdistrict&courier=jnt&weight=".$totalweight,
+				  CURLOPT_HTTPHEADER => array(
+				    "content-type: application/x-www-form-urlencoded",
+				    "key: 6f27d98d6be9cdfd72518394b6131c2f"
+				  ),
+				));
+
+				$response = curl_exec($curl);
+				$err = curl_error($curl);
+
+				curl_close($curl);
+
+				if ($err) {
+				  //echo "cURL Error #:" . $err;
+				} else {
+				  $hasil = json_decode($response);
+				  if($hasil->rajaongkir->status->code == 200) {
+					$data['jnt'] = $hasil->rajaongkir->results;
+				  }
+				}
+			} else {
+				// redirect ke halaman error aja
+			}
+		}
+
+
+		$data['js'] = '
+
+		function numberWithCommas(x) {
+    		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		}
+
+		$(".radioongkir").on("click",function() {
+			var subtotal = $("#hiddentotal").val();
+			var shippingcost = $(this).attr("cost");
+			var diskon = $("#hiddendiskon").val();
+			var total = parseInt(subtotal) - parseInt(diskon) + parseInt(shippingcost);
+
+			$("#shippingcost").html("Rp. " + numberWithCommas($(this).attr("cost")));
+			$("#totalcost").html("<strong>Rp. " + numberWithCommas(total) + "</strong>");
+		});
+		';
+
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_shipping',$data);
+		$this->load->view('v_footer', $data);
 	}
 
 	public function updatecart() {

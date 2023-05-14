@@ -122,7 +122,11 @@
 		<!-- SCRIPTS : begin -->
 		<script src="<?php echo base_url('assets/js/jquery-3.5.1.min.js'); ?>" type="text/javascript"></script>
 		<script src="<?php echo base_url('assets/js/third-party-scripts.min.js'); ?>" type="text/javascript"></script>
+		
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.js"></script>
 		<script src="<?php echo base_url('assets/js/scripts.js'); ?>" type="text/javascript"></script>
+
+		<script src="https://www.google.com/recaptcha/api.js?render=6LdODPMlAAAAANqZ8s-N-ozy2Gz9dOFmni_1fPOl"></script>
 
 		<!-- JavaScript -->
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>

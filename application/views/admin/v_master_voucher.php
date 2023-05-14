@@ -41,7 +41,7 @@
                     <th>Title</th>
                     <th>Type</th>
                     <th>Expired Date</th>
-                    <th>Actions</th>
+                    <th width="25%">Actions</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -51,10 +51,26 @@
                       <td><?php echo $key+1; ?></td>
                       <td><?php echo $value->voucher_code; ?></td>
                       <td><?php echo $value->title; ?></td>
-                      <td><?php echo $value->voucher_type; ?></td>                      
-                      <td><?php echo $value->exp_date; ?></td>
+                      <td><?php
+                       if($value->voucher_type == 'vip') {
+                        echo '<span class="badge bg-warning">'.$value->voucher_type.'</span>';
+                       } else if($value->voucher_type == 'global') {
+                        echo '<span class="badge bg-secondary">'.$value->voucher_type.'</span>';
+                       } else if($value->voucher_type == 'private') {
+                        echo '<span class="badge bg-info">'.$value->voucher_type.'</span>';
+                       }  else if($value->voucher_type == 'brand') {
+                        echo '<span class="badge bg-primary">'.$value->voucher_type.'</span>';
+                       }   else if($value->voucher_type == 'produk') {
+                        echo '<span class="badge bg-danger">'.$value->voucher_type.'</span>';
+                       }
+                        ?></td>                      
                       
-                      <td class="d-flex justify-content-end">
+                      <td><?php echo strftime("%d %B %Y",strtotime($value->exp_date)); ?></td>
+                      
+                      <td class="">
+                        <?php if($value->voucher_type=='private') { ?>
+                           <a href="<?php echo base_url('admin/voucher/privatemember/'.$value->voucher_code); ?>"  class="btn btn-xs btn-warning mr-1 voudedit"><i class="nav-icon fas fa-users"></i> Member</a> 
+                        <?php } ?>
                         <a href="#" vouid="<?php echo $value->voucher_code; ?>" class="btn btn-xs btn-primary mr-1 voudedit"><i class="nav-icon fas fa-edit"></i> Edit</a> 
                         <a href="<?php echo base_url('admin/voucher/delvoucher/'.$value->voucher_code); ?>" onclick="return confirm('Are you sure want to delete <?php echo $value->voucher_code; ?>?');" class="btn btn-xs btn-danger m-0"><i class="nav-icon fas fa-trash"></i> Delete</a></td>
                     </tr>
@@ -100,21 +116,52 @@
             <input type="text" class="form-control" id="voucher_code" name="voucher_code" required placeholder="Enter voucher code">
           </div>
 
-          <div class="form-group">
-            <label for="voucher_type">Voucher Type</label>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_global" value="global" checked="">
-                <label class="form-check-label">Global</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_vip" value="vip" >
-                <label class="form-check-label">VIP</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_private" value="private" >
-                <label class="form-check-label">Private</label>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="voucher_type">Voucher Type</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_global" value="global" checked="">
+                  <label class="form-check-label" for="voucher_type_global">Global</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_vip" value="vip" >
+                  <label class="form-check-label" for="voucher_type_vip">VIP</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_private" value="private" >
+                  <label class="form-check-label" for="voucher_type_private">Private</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_produk" value="produk" >
+                  <label class="form-check-label" for="voucher_type_produk">Produk</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_brand" value="brand" >
+                  <label class="form-check-label" for="voucher_type_brand">Brand</label>
+                </div>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group" id="form-brand" style="display:none;">
+                <label for="pilih_brand">Brand</label>
+                <select class="form-control" name="pilih_brand" id="pilih_brand">
+                  <?php foreach ($brand as $key => $value) { ?>
+                    <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="form-group" id="form-produk" style="display:none;"> 
+                <label for="pilih_produk">Produk</label>
+                <select class="form-control" name="pilih_produk" id="pilih_produk">
+                  <?php foreach ($product as $key => $value) { ?>
+                    <option value="<?php echo $value->id; ?>"><?php echo $value->name; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+          </div>
 
          
 

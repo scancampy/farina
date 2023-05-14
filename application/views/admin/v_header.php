@@ -161,6 +161,24 @@
           </li>
 
           <li class="nav-item">
+            <a href="<?php echo base_url('admin/member'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'member') { echo 'active';  } ?>">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Member
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="<?php echo base_url('admin/trans'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'trans') { echo 'active';  } ?>">
+              <i class="nav-icon fas fa-shopping-cart"></i>
+              <p>
+                Transactions
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="<?php echo base_url('admin/events'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'events') { echo 'active';  } ?>">
               <i class="nav-icon fas fa-calendar-day"></i>
               <p>

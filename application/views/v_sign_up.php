@@ -53,15 +53,22 @@
 							<div class="page product-post-page product-post-archive">
 								<div class="page__content">
 									
-
-									<div class="lsvr-alert-message <?php if($notif['type'] == 'success') { echo 'lsvr-alert-message--success'; } else { echo 'lsvr-alert-message--failed'; } ?>">
+									<?php if($notif['type'] == 'success') { ?>
+									<div class="lsvr-alert-message lsvr-alert-message--success">
 										<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
 										<h3 class="lsvr-alert-message__title">Registration Success</h3>
 										<p><?php echo $notif['msg']; ?></p>
 									</div>
+									<?php } else { ?> 
+									<div class="lsvr-alert-message lsvr-alert-message--warning">
+										<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+										<h3 class="lsvr-alert-message__title">Registration Failed</h3>
+										<p><?php echo $notif['msg']; ?></p>
+									</div>
+									<?php } ?>
 
 									<p>
-										<a href="<?php echo base_url('member/signin'); ?>" class="lsvr-button">Kembali ke Sign In</a>
+										<a href="<?php echo base_url('member/signin'); ?>" class="lsvr-button">Back to Sign In</a>
 									</p>
 								</div>
 							</div>
@@ -72,9 +79,12 @@
 								<div class="page__content">
 
 									<!-- PRODUCT CHECKOUT : begin -->
-									<form class="product-checkout lsvr-form" method="post" action="<?php 
-
-									echo base_url('member/signup');
+									<form class="product-checkout lsvr-form" id="formsignup" method="post" action="<?php 
+									if(!empty($_SERVER['QUERY_STRING'])) {
+										echo base_url('member/signup?'.$_SERVER['QUERY_STRING']); 
+									} else {
+										echo base_url('member/signup'); 
+									}
 
 									if(isset($_GET['refcode'])) { echo '?refcode='.$_GET['refcode']; } ?>">
 
@@ -172,7 +182,7 @@
 
 								        <!-- SHIPPING CHECKBOX : begin -->
 								        <p class="lsvr-form__field">
-								        	<label for="order-shipping-checkbox" class="lsvr-form__field-label lsvr-form__field-label--checkbox">
+								        	<label for="check_aggreement" class="lsvr-form__field-label lsvr-form__field-label--checkbox">
 								        		<input type="checkbox" value="true" class="lsvr-form__field-input lsvr-form__field-input--checkbox"
 								        			name="check_aggreement" id="check_aggreement"
 								        			
@@ -188,9 +198,15 @@
 
 											<!-- FOOTER CHECKOUT : begin -->
 											<p class="product-order__footer-checkout">
-												<button type="submit" name="btnsubmit" value="submit" class="product-order__footer-checkout-btn lsvr-button">Sign Up</button>
+												<button type="submit" name="btnsubmit" id="btnsubmit" value="submit" class="product-order__footer-checkout-btn lsvr-button">Sign Up</button>
+												<input type="hidden" name="token" id="token">
 											</p>
-											<p>Already have account? Click <a href="<?php echo base_url('member/signin'); ?>">here</a> to sign in </p>
+											<p>Already have account? Click <a href="<?php 
+											if(!empty($_SERVER['QUERY_STRING'])) {
+												echo base_url('member/signin?'.$_SERVER['QUERY_STRING']); 
+											} else {
+												echo base_url('member/signin'); 
+											} ?>">here</a> to sign in </p>
 											<!-- FOOTER CHECKOUT : end -->
 
 										</div>

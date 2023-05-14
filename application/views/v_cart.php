@@ -191,27 +191,170 @@
 													<div class="product-cart__summary">
 
 <?php if(isset($voucher)) {
-	if($total < $voucher[0]->min_order) { ?>
-<div class="lsvr-alert-message lsvr-alert-message--warning">
-	<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
-	<h3 class="lsvr-alert-message__title">Warning Message</h3>
-	<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucher[0]->min_order, 0, ",","."); ?></strong></p>
+	if($voucher[0]->voucher_type == 'global') {
+		if($total < $voucher[0]->min_order) { ?>
+			<div class="lsvr-alert-message lsvr-alert-message--warning">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title">Warning Message</h3>
+				<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucher[0]->min_order, 0, ",","."); ?></strong></p>
 
-	<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
-</div>
-<?php } else { ?>
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+			<?php } else { ?>
+			<div class="lsvr-alert-message lsvr-alert-message--success">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title"><strong><?php echo $voucher[0]->voucher_code; ?></strong> Voucher Applied</h3>
+				<p><strong><?php echo $voucher[0]->title; ?></strong><br/>Anda mendapatkan potongan sebesar <?php
+				if($voucher[0]->discount_value > 0) { echo 'Rp. '.number_format($voucher[0]->discount_value, 0, ",","."); 
+					$diskon = $voucher[0]->discount_value;
+				} else { echo $voucher[0]->discount_percentage.'%'; $diskon = $total * ($voucher[0]->discount_percentage/100); }
+				?></p>
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+	<?php	} 
+		} else if($voucher[0]->voucher_type == 'private') { 
+				  if($total < $voucher[0]->min_order && @$private_voucher_eligible) { ?> 
+			<div class="lsvr-alert-message lsvr-alert-message--warning">
+					<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+					<h3 class="lsvr-alert-message__title">Warning Message</h3>
+					<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucher[0]->min_order, 0, ",","."); ?></strong></p>
+
+					<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+				</div>
+			<?php } else { ?>
+			<div class="lsvr-alert-message lsvr-alert-message--success">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title"><strong><?php echo $voucher[0]->voucher_code; ?></strong> Voucher Applied</h3>
+				<p><strong><?php echo $voucher[0]->title; ?></strong><br/>Anda mendapatkan potongan sebesar <?php
+				if($voucher[0]->discount_value > 0) { echo 'Rp. '.number_format($voucher[0]->discount_value, 0, ",","."); 
+					$diskon = $voucher[0]->discount_value;
+				} else { echo $voucher[0]->discount_percentage.'%'; $diskon = $total * ($voucher[0]->discount_percentage/100); }
+				?></p>
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+		<?php	}
+		}  else if($voucher[0]->voucher_type == 'vip') { 
+		if($total < $voucher[0]->min_order && @$member->member_type=='VIP') { ?>
+			<div class="lsvr-alert-message lsvr-alert-message--warning">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title">Warning Message</h3>
+				<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucher[0]->min_order, 0, ",","."); ?></strong></p>
+
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+			<?php } else if(@$member->member_type != 'VIP') { ?>
+			<div class="lsvr-alert-message lsvr-alert-message--warning">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title">Warning Message</h3>
+				<p>Voucher ini hanya berlaku khusus untuk Member VIP</p>
+
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+			<?php } else { ?>
+			<div class="lsvr-alert-message lsvr-alert-message--success">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title"><strong><?php echo $voucher[0]->voucher_code; ?></strong> Voucher Applied</h3>
+				<p><strong><?php echo $voucher[0]->title; ?></strong><br/>Anda mendapatkan potongan sebesar <?php
+				if($voucher[0]->discount_value > 0) { echo 'Rp. '.number_format($voucher[0]->discount_value, 0, ",","."); 
+					$diskon = $voucher[0]->discount_value;
+				} else { echo $voucher[0]->discount_percentage.'%'; $diskon = $total * ($voucher[0]->discount_percentage/100); }
+				?></p>
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+	<?php	} 
+		} else if($voucher[0]->voucher_type == 'produk') {
+			// cek apakah ada produknya di dalam cart
+			$adaproduk = false;
+			foreach ($product as $key => $value) {
+				if($value[0]->id == $voucher[0]->product_id) {
+					$harga = ($value[0]->price * $qty[$key]);
+					if($voucher[0]->min_order <= $harga) {  ?>
+						
 <div class="lsvr-alert-message lsvr-alert-message--success">
-	<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
-	<h3 class="lsvr-alert-message__title"><strong><?php echo $voucher[0]->voucher_code; ?></strong> Voucher Applied</h3>
-	<p><strong><?php echo $voucher[0]->title; ?></strong><br/>Anda mendapatkan potongan sebesar <?php
-	if($voucher[0]->discount_value > 0) { echo 'Rp. '.number_format($voucher[0]->discount_value, 0, ",","."); 
-		$diskon = $voucher[0]->discount_value;
-	} else { echo $voucher[0]->discount_percentage.'%'; $diskon = $total * ($voucher[0]->discount_percentage/100);; }
-	?></p>
-	<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
-</div>
-<?php	} 
-} ?>
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title"><strong><?php echo $voucher[0]->voucher_code; ?></strong> Voucher Applied</h3>
+				<p><strong><?php echo $voucher[0]->title; ?></strong><br/>Anda mendapatkan potongan sebesar <?php
+				if($voucher[0]->discount_value > 0) { echo 'Rp. '.number_format($voucher[0]->discount_value, 0, ",","."); 
+					$diskon = $voucher[0]->discount_value;
+				} else { echo $voucher[0]->discount_percentage.'%'; $diskon = $harga * ($voucher[0]->discount_percentage/100); }
+				?></p>
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+
+					<?php	
+					} else { ?>
+<div class="lsvr-alert-message lsvr-alert-message--warning">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title">Warning Message</h3>
+				<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucher[0]->min_order, 0, ",","."); ?></strong></p>
+
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+
+				<?php	}
+					$adaproduk = true;
+					break;
+				}
+			}
+
+			if(!$adaproduk) { ?>
+<div class="lsvr-alert-message lsvr-alert-message--warning">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title">Warning Message</h3>
+				<p>Voucher tidak dapat dipakai karena produk tidak ditemukan didalam cart <strong></p>
+
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+			<?php } 
+		} else if($voucher[0]->voucher_type == 'brand') {
+			// cek apakah ada produknya di dalam cart
+			$adaproduk = false;
+			$totalbrand =0;
+			foreach ($product as $key => $value) {
+				if($value[0]->brand_id == $voucher[0]->brand_id) {
+					$totalbrand += ($value[0]->price * $qty[$key]);
+					$adaproduk = true;
+				}
+			}
+
+			if(!$adaproduk) { ?>
+<div class="lsvr-alert-message lsvr-alert-message--warning">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title">Warning Message</h3>
+				<p>Voucher tidak dapat dipakai karena produk tidak ditemukan didalam cart <strong></p>
+
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+			<?php } else { 
+if($voucher[0]->min_order <= $totalbrand) {  ?>
+						
+<div class="lsvr-alert-message lsvr-alert-message--success">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title"><strong><?php echo $voucher[0]->voucher_code; ?></strong> Voucher Applied</h3>
+				<p><strong><?php echo $voucher[0]->title; ?></strong><br/>Anda mendapatkan potongan sebesar <?php
+				if($voucher[0]->discount_value > 0) { echo 'Rp. '.number_format($voucher[0]->discount_value, 0, ",","."); 
+					$diskon = $voucher[0]->discount_value;
+				} else { echo $voucher[0]->discount_percentage.'%'; $diskon = $totalbrand * ($voucher[0]->discount_percentage/100); }
+				?></p>
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+
+					<?php	
+					} else { ?>
+<div class="lsvr-alert-message lsvr-alert-message--warning">
+				<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+				<h3 class="lsvr-alert-message__title">Warning Message</h3>
+				<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucher[0]->min_order, 0, ",","."); ?></strong></p>
+
+				<button type="submit" name="btnCancelVoucher" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+			</div>
+
+				<?php	}
+
+			}
+		}
+	} 
+?>
 
 <?php if(!isset($voucher)) { ?>
 
@@ -263,7 +406,7 @@
 
 														<!-- FOOTER CHECKOUT : begin -->
 														<p class="product-order__footer-checkout">
-															<a href="<?php echo base_url('cart/checkout'); ?>"  class="product-order__footer-checkout-btn lsvr-button">To Checkout</a>
+															<a href="<?php echo base_url('cart/checkout'); ?>"  class="checkoutbtn product-order__footer-checkout-btn lsvr-button">To Checkout</a>
 														</p>
 														<!-- FOOTER CHECKOUT : end -->
 

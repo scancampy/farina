@@ -186,7 +186,71 @@
 
 			<div class="lsvr-tabs__content-item" id="lsvr-tabs__content-item-2" style="display: none;">
 
-				<p>The main reasons for this are cosmetic: to cover gray or white hair, to change to a color regarded as more fashionable or desirable.</p>
+		        <!-- GRID COL : begin -->
+				<div class="lsvr-grid lsvr-grid--2-cols lsvr-grid--md-2-cols">
+					<div class="lsvr-grid__col">
+			            <p class="lsvr-form__field">
+			                <label class="lsvr-form__field-label" for="propinsi">Provinsi*</label>
+			                <select class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
+			                	name="propinsi" id="propinsi">
+			                	<option value="-">[Pilih Provinsi]</option>
+			        <?php foreach ($propinsi as $key => $value) { ?>
+			        	<option <?php if(@$address['propinsi'] == $value->province_id) { echo 'selected="selected"'; } ?> value="<?php echo $value->province_id; ?>"><?php echo $value->province; ?></option>
+			        <?php } ?>
+			                </select>
+			            </p>
+			        </div>
+
+			        <div class="lsvr-grid__col">
+			            <p class="lsvr-form__field">
+			                <label class="lsvr-form__field-label" for="kota">Kota/Kabupaten*</label>
+			               <select class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
+			                	name="kota" id="kota">
+			                	<option value="-">[Pilih Kota/Kabupaten]</option>
+			         <?php if(!empty($kota)) { foreach ($kota as $key => $value) { ?>
+			        	<option <?php if(@$address['kota'] == $value->city_id) { echo 'selected="selected"'; } ?> value="<?php echo $value->city_id; ?>"><?php echo $value->city_name; ?></option>
+			        <?php } } ?>
+			                </select>
+			            </p>
+			        </div>
+		        </div>
+		        <!-- GRID COL : end -->
+				
+				<!-- GRID COL : begin -->
+				<div class="lsvr-grid lsvr-grid--2-cols lsvr-grid--md-2-cols mtop30">
+					<div class="lsvr-grid__col">
+			            <p class="lsvr-form__field">
+			                <label class="lsvr-form__field-label" for="kecamatan">Kecamatan*</label>
+			                <select class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
+			                	name="kecamatan" id="kecamatan">
+			                	<option value="-">[Pilih Kecamatan]</option>
+			       <?php if(!empty($kecamatan)) { foreach ($kecamatan as $key => $value) { ?>
+			        	<option <?php if(@$address['kecamatan'] == $value->subdistrict_id) { echo 'selected="selected"'; } ?> value="<?php echo $value->subdistrict_id; ?>"><?php echo $value->subdistrict_name; ?></option>
+			        <?php } } ?>
+			                </select>
+			            </p>
+			        </div>
+
+			       
+		        </div>
+		        <!-- GRID COL : end -->
+
+		        <p class="lsvr-form__field">
+	                <label class="lsvr-form__field-label" for="address">Alamat Lengkap*</label>
+	                <textarea class="lsvr-form__field-input lsvr-form__field-input--textarea lsvr-form__field-input--required" name="address" id="address" cols="40" rows="5"><?php echo @$address['address']; ?></textarea>
+	            </p>
+
+	            <!-- GRID COL : begin -->
+				<div class="lsvr-grid lsvr-grid--2-cols lsvr-grid--md-2-cols mtop30">
+					<div class="lsvr-grid__col">
+			            <p class="lsvr-form__field">
+			                <label class="lsvr-form__field-label" for="kodepos">Kode Pos*</label>
+			                <input class="lsvr-form__field-input lsvr-form__field-input--text lsvr-form__field-input--required"
+			                	type="text"  value="<?php echo @$address['kodepos']; ?>" id="kodepos" name="kodepos">
+			            </p>
+			        </div>
+		        </div>
+		        <!-- GRID COL : end -->
 
 			</div>
 

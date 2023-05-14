@@ -27,8 +27,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/color-schemes/default.css'); ?>"><!-- Default color scheme generated from assets/scss/color-schemes/default.scss (change to other pre-defined or custom color scheme) -->
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url('style.css'); ?>"><!-- Place your own CSS into this file -->
 
+		
+<link rel="stylesheet" href="<?php echo base_url('assets/icofont/icofont.min.css'); ?>">
 		<!-- CSS -->
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.css" />
 <!-- Default theme -->
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
@@ -44,6 +48,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 		<!-- WRAPPER : begin -->
 		<div id="wrapper">
+			<div class="loading" style="display:none;">Loading&#8230;</div>
 
 			<!-- HEADER : begin -->
 			<header id="header" class="header--has-languages header--has-search header--has-cta header--has-contact header--has-social-links header--has-collision-detection header--has-expanded-panel"
@@ -164,7 +169,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 										</li>
 
 										<li class="header-menu__item">
-											<a href="person-archive.html" class="header-menu__item-link" role="menuitem">My Orders</a>
+											<a href="<?php echo base_url('member/myorders'); ?>" class="header-menu__item-link" role="menuitem">My Orders</a>
 										</li>
 
 										<li class="header-menu__item">
@@ -190,6 +195,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 									<span class="header-menu__item-link-wrapper">
 										<a href="contact.html" class="header-menu__item-link">Contact</a>
+									</span>
+
+								</li>
+								<!-- MENU ITEM : end -->
+
+								<!-- MENU ITEM : begin -->
+								<li class="header-menu__item <?php if ($this->uri->segment(2) == 'confirm') { ?> header-menu__item--current <?php } ?>">
+
+									<span class="header-menu__item-link-wrapper">
+										<a href="<?php echo base_url('confirm'); ?>" class="header-menu__item-link">Payment Confirmation</a>
 									</span>
 
 								</li>
