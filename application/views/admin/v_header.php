@@ -217,6 +217,12 @@
                   <p>Setting</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/setting/info'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'info' && $this->uri->segment(2) == 'setting') { echo 'active';  } ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Web Info</p>
+                </a>
+              </li>
             </ul>
           </li>
 

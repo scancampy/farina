@@ -421,15 +421,31 @@ table.table {
   border-radius: 20px;
 }
 
-.line {
-  background-color: #ff007c;
-    height: 1px;
-    position: relative;
-    top: -80px;
-    left: 10%;
-    width: 80%;
-    z-index: -100;
+@media (min-width: 481px) {
+  .line {
+    background-color: #ff007c;
+      height: 1px;
+      position: relative;
+      top: -80px;
+      left: 10%;
+      width: 80%;
+      z-index: -100;
+  }
 }
+
+@media (max-width: 480px) {
+  .line {
+    background-color: #ff007c;
+      height: 1px;
+      position: relative;
+      top: -100px;
+      left: 10%;
+      width: 80%;
+      z-index: -100;
+  }
+}
+
+
 
 .pink-bg {
   background-color: rgba(255,143,179,1.0) !important;

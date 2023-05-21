@@ -127,6 +127,7 @@ class Member extends CI_Controller {
 		$data['setting'] = $this->admin_model->getSetting();
 		$data['title'] = 'Sign Up';
 		$data['js'] = '';
+		$data['terms'] = $this->info_model->getInfo(1);
 
 		if(!empty($this->input->post('token'))) {
 			if($this->_check_token($this->input->post('token'))) {

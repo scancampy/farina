@@ -35,6 +35,80 @@ class Setting extends CI_Controller {
 		}
 	}
 
+	public function info() {
+		// Tendang jika tidak ada session
+		if(!$this->session->userdata('user')) {
+			redirect('admin/dashboard/login');
+		}
+		$data = array();
+		$data['js'] = '';
+		
+
+		// notif
+		if($this->session->flashdata('notif')) {
+			$notif = $this->session->flashdata('notif');
+			if($notif['type'] == 'success') {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "success",
+				        title: "'.$notif['msg'].'"
+				      });';
+			} else {
+				if($notif['type'] == 'failed') {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "error",
+				        title: "'.$notif['msg'].'"
+				      });';
+			}
+			}
+		}
+
+		if($this->input->post('btnSubmit')) {
+			$this->info_model->updateInfo($this->input->post('hiddenid'), $this->input->post('title'), $this->input->post('content'));
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Web Info successfully updated!'));
+
+			redirect('admin/setting/info');
+		}
+
+		$data['name'] = $this->session->userdata('user')->name;
+		$data['title'] = "Info";
+		$data['info'] = $this->info_model->getInfoAll();
+
+
+		$data['js'] .= '
+			$("body").on("click",".infoedit", function() {
+			var id = $(this).attr("infoid");
+
+			$.post("'.base_url('admin/setting/jsongetinfo').'", { sentid: id}, function(data){ 
+				
+				var obj = JSON.parse(data);
+				console.log(obj.data);
+				$("#title").val(obj.data.title);
+				$("#hiddenid").val(obj.data.id);
+				
+				$("#modalEditInfo").modal();
+				$(".textarea").summernote("code", obj.data.content);
+			});			
+		});';	
+		
+		$this->load->view('admin/v_header', $data);
+		$this->load->view('admin/v_web_info', $data);
+		$this->load->view('admin/v_footer', $data);	
+	}
+
 	public function web() {
 		// Tendang jika tidak ada session
 		if(!$this->session->userdata('user')) {
@@ -432,6 +506,15 @@ class Setting extends CI_Controller {
 	public function jsongetslide() {
 		if($this->input->post('sentid')) {
 			$q = $this->admin_model->getSlides(null, $this->input->post('sentid'));
+			echo json_encode(array('result' => 'success', 'data' => $q));
+		} else {
+			echo json_encode(array('result' => 'failed'));
+		}
+	}
+
+	public function jsongetinfo() {
+		if($this->input->post('sentid')) {
+			$q = $this->info_model->getInfo($this->input->post('sentid'));
 			echo json_encode(array('result' => 'success', 'data' => $q));
 		} else {
 			echo json_encode(array('result' => 'failed'));

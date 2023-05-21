@@ -187,7 +187,7 @@
 								        			name="check_aggreement" id="check_aggreement"
 								        			
 								        			data-toggle-element="order-form-shipping-fields">
-								        		<span>Saya setuju dengan <a href="#" target="_blank">syarat dan ketentuan</a></span>
+								        		<span>I agree with the <a href="<?php echo base_url('info/1/'.url_title($terms->title)); ?>" target="_blank">terms and conditions</a></span>
 								        	</label>
 							        	</p>
 
