@@ -1,11 +1,3 @@
-
-<?php if(!empty(@$setting->whatsapp)) { ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-<a href="https://api.whatsapp.com/send?phone=<?php echo $setting->whatsapp; ?>&text=<?php echo $setting->default_whatsapp_message; ?>" class="float" target="_blank">
-<i class="fa fa-whatsapp my-float"></i>
-</a>
-<?php } ?>
-
 	<!-- FOOTER : begin -->
 			<footer id="footer">
 				<div class="footer__inner">
@@ -144,9 +136,6 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 				<?php if(isset($js)) { echo $js; } ?>
-				$('#myprofile').on('click', function() {
-					$('.loading').show();
-				});
 			});
 		</script>
 	</body>

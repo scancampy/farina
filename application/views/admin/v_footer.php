@@ -1,3 +1,4 @@
+<div id="cover-spin"></div>
 <!-- /.content-wrapper -->
   <footer class="main-footer">
     <strong>Copyright &copy; 2021 Farina
@@ -41,6 +42,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+    $('.linkload').on("click", function() { $('#cover-spin').show(0); });
 <?php if(isset($js)) { echo $js; } ?>
 	});	
 </script>

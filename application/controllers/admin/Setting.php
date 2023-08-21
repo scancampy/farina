@@ -125,6 +125,10 @@ class Setting extends CI_Controller {
 			if($this->input->post('propinsi') != '-' && $this->input->post('kota') != '-' && $this->input->post('kecamatan') != '-') {
 				$this->admin_model->updateAddress($this->input->post('kodepos'), $this->input->post('alamat'), $this->input->post('propinsi'), $this->input->post('kota'), $this->input->post('kecamatan'));
 
+				$this->admin_model->updateKontak($this->input->post('whatsapp'), $this->input->post('default_whatsapp_message'));
+
+				$this->admin_model->updatePoin($this->input->post('kurs_poin'));
+
 				$this->admin_model->updateBank($this->input->post('bank1'), $this->input->post('bank2'), $this->input->post('no_akun_bank1'), $this->input->post('no_akun_bank2'), $this->input->post('nama_akun_bank1'), $this->input->post('nama_akun_bank2'));
 
 				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Setting berhasil disimpan'));
@@ -148,6 +152,9 @@ class Setting extends CI_Controller {
 			$data['address']['no_akun_bank2'] = $hasil->no_akun_bank2;
 			$data['address']['nama_akun_bank1'] = $hasil->nama_akun_bank1;
 			$data['address']['nama_akun_bank2'] = $hasil->nama_akun_bank2;
+			$data['address']['whatsapp'] = $hasil->whatsapp;
+			$data['address']['default_whatsapp_message'] = $hasil->default_whatsapp_message;
+			$data['address']['kurs_poin'] = $hasil->kurs_poin;
 		}
 
 		if(!empty($data['address'])) {
@@ -283,6 +290,12 @@ class Setting extends CI_Controller {
 			}
 			}
 		}
+
+		// submit
+		$data['js'] .= '
+		$("#btnSubmit").on("click", function() {
+			$("#cover-spin").show(0);
+		});';
 
 		// ubah propinsi
 		$data['js'] .= '

@@ -120,10 +120,14 @@
 		<!-- ITEM ITEM COL : end -->
 
 		<!-- ITEM ITEM COL : begin -->
-		<div class="product-cart__item-col product-cart__item-col--remove" style="display:flex; justify-content: space-around;">
-			<a href="<?php echo base_url('cart/myinvoice/'.$value->id); ?>" target="_blank"><span class="fa fa-print"></span></a>
+		<div class="product-cart__item-col product-cart__item-col--remove" style="display:flex; text-align: left; ">
+			<a href="<?php echo base_url('cart/myinvoice/'.$value->id); ?>" style="margin-right: 5px;" target="_blank"><span class="fa fa-print"></span></a>
 
-			<a href="<?php echo base_url('member/myorderdetails/'.$value->id); ?>"><span class="fa fa-list-alt"></span></a>
+			<a style="margin-right: 5px;" href="<?php echo base_url('member/myorderdetails/'.$value->id); ?>"><span class="fa fa-list-alt"></span></a>
+
+			<?php if($value->status == 'order_delivered' && $value->is_reviewed == null) { ?>
+			<a href="<?php echo base_url('review?order_id='.$value->id); ?>"><span class="fa fa-star"></span></a>
+		<?php } ?>
 		</div>
 		<!-- ITEM ITEM COL : end -->
 

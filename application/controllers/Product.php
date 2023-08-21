@@ -97,8 +97,12 @@ class Product extends CI_Controller {
 
 		if(count($data['product']) >0 ) {
 			$data['photo'] = array();
+			$data['ratingproduct'] = array();
+			$data['numrating'] = array();
 			foreach ($data['product'] as $key => $value) {
 				$data['photo'][$key] = $this->product_model->getImageProduct(null, $value->id);
+				$data['ratingproduct'][$key] = $this->trans_model->getProductRating($value->id);
+				$data['numrating'][$key] = $this->trans_model->getProductRatingNumber($value->id);
 			}
 		}
 
@@ -175,6 +179,10 @@ class Product extends CI_Controller {
 		$data['brand'] = $this->product_model->getBrand('', $data['product'][0]->brand_id);
 		
 		$data['breadcrumb'] = $this->category_model->getRoot($data['product'][0]->category_id);
+
+		$data['ratings'] = $this->trans_model->getProductRating($id);
+		$data['total'] = $this->trans_model->getProductRatingNumber($id);
+		$data['reviews'] = $this->trans_model->getProductReview($id);
 		
 
 		$data['variant'] = $this->product_model->getVariant(array('is_active' => 1, 'is_deleted' => 0),$id);

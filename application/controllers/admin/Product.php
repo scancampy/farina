@@ -41,6 +41,82 @@ class Product extends CI_Controller {
   	return $str;
   }
 
+  public function review() {
+  	$data = array();
+  	$data['js'] = '';
+
+		if(!$this->session->userdata('user')) {
+			redirect('admin/dashboard/login');
+		}
+
+		$data['title'] = "Manage Review";
+		$data['products'] = $this->trans_model->getProductsNeedReview();
+		$data['name'] = $this->session->userdata('user')->name;
+
+		if($this->input->post('btnReject')) {
+			$this->trans_model->rejectProductReview($this->input->post('hiddenid'));
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Review is succesfully rejected'));
+			redirect('admin/product/review');
+		}
+
+		if($this->input->post('btnApprove')) {
+			$this->trans_model->approveProductReview($this->input->post('hiddenid'));
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Review is successfully approved'));
+			redirect('admin/product/review');
+		}
+
+		// notif
+		if($this->session->flashdata('notif')) {
+			$notif = $this->session->flashdata('notif');
+			if($notif['type'] == 'success') {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "success",
+				        title: "'.$notif['msg'].'"
+				      });';
+			} else {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "error",
+				        title: "'.$notif['msg'].'"
+				      });';
+			}
+		}
+
+		$data['js'] .= '
+		$("body").on("click", ".inspect", function() {
+			var id = $(this).attr("transdetailid");
+			$.post("'.base_url('admin/product/jsongetreview').'", { sentid: id}, function(data){ 
+				var obj = JSON.parse(data);
+				var name = obj.data[0].data.name;
+				var brandname = obj.data[0].data.brandname;
+				$("#name").val(name);
+				$("#brand").val(brandname);
+				$("#rating").val(obj.data[0].data.rating);
+				$("#review").html(obj.data[0].data.review);
+				$("#hiddenid").val(obj.data[0].data.id);
+			});
+		});
+		';
+		
+
+		$this->load->view('admin/v_header', $data);
+		$this->load->view('admin/v_manage_review', $data);
+		$this->load->view('admin/v_footer', $data);
+  }
+
 	public function master() {
 		$data = array();
 		$data['js'] ='';
@@ -303,6 +379,19 @@ class Product extends CI_Controller {
              $("#containerVariant").html(newVariant);
 		});
 
+		$("body").on("click",".btndelimg",function() {
+			if(confirm(\'Yakin hapus gambar ini?\')) {
+				var id = $(this).attr("delid");
+				console.log(id);
+				$(this).closest("div").remove();
+
+				// del json 
+				$.post("'.base_url('admin/product/jsondelimg').'", { sentid: id }, function(data) {
+					
+				});
+			}
+		});
+
 		$("body").on("click", ".prodedit", function() {
 			var id = $(this).attr("prodid");
 
@@ -311,7 +400,9 @@ class Product extends CI_Controller {
 				$("#uploadedFoto").html("");
 				for(var i=0; i< obj.datafoto.length; i++) {
 					var filename = obj.datafoto[i].filename;
-					$("#uploadedFoto").append("<div class=\"col-md-3 \"><img class=\"img-fluid rounded img-thumbnail \" style=\"object-fit: cover; height:200px;\" src=\"'.base_url('img/product/').'" + filename + "\"/></div>");
+					console.log(obj.datafoto[i]);
+
+					$("#uploadedFoto").append("<div class=\"col-md-3 \"><img class=\"img-fluid rounded img-thumbnail \" style=\"object-fit: cover; height:200px;\" src=\"'.base_url('img/product/').'" + filename + "\"/><span class=\"btndelimg btn btn-warning\" delid=" + obj.datafoto[i].id + "  style=\"position: absolute; right: 10px; top: 5px;\"><i class=\"fa fa-trash\"></i></span></div>");
 				}
 
 				$("#variantContainer").html("");
@@ -502,6 +593,25 @@ class Product extends CI_Controller {
 	}
 
 	// JSON
+	public function jsondelimg() {
+		if($this->input->post('sentid')) {
+			$q = $this->product_model->delImageProduct($this->input->post('sentid'));
+			echo json_encode(array('result' => 'success', 'data' => $q));
+		} else {
+			echo json_encode(array('result' => 'failed'));
+		}
+	}
+
+
+	public function jsongetreview() {
+		if($this->input->post('sentid')) {
+			$q = $this->trans_model->getProductsNeedReview($this->input->post('sentid'));
+			echo json_encode(array('result' => 'success', 'data' => $q));
+		} else {
+			echo json_encode(array('result' => 'failed'));
+		}
+	}
+
 	public function jsongetbrand() {
 
 		if($this->input->post('sentid')) {

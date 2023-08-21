@@ -10,6 +10,91 @@ class Events extends CI_Controller {
           	redirect('admin/dashboard/login');
           }
 	 }
+
+	public function registration($id = null) {
+		$data = array();
+		$data['js'] ='';
+
+		if(!$this->session->userdata('user')) {
+			redirect('admin/dashboard/login');
+		}
+
+		if($id != null) {
+			$data['event'] = $this->event_model->getEvent('',$id);
+			$data['members'] = $this->event_model->getMemberFromEvent($id);
+		} else {
+			redirect('notfound');
+		}
+
+		if($this->input->post('btnSubmit')) {
+			$this->event_model->updateRegistrantStatus($this->input->post('eventid'), $this->input->post('memberid'), $this->input->post('status'));
+
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Status updated successfully!'));
+			redirect('admin/events/registration/'.$id);
+		}
+
+		// notif
+		if($this->session->flashdata('notif')) {
+			$notif = $this->session->flashdata('notif');
+			if($notif['type'] == 'success') {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "success",
+				        title: "'.$notif['msg'].'"
+				      });';
+			}
+		}
+
+		$data['name'] = $this->session->userdata('user')->name;
+		$data['title'] = "Manage Registration";
+
+		// handle data table
+		$data['js'] .= ' $("#tablearticle").DataTable({
+		      "responsive": true,
+		      "autoWidth": false,
+		    });';
+
+		// verify button
+		$data['js'] .= '
+		$(".verifyregis").on("click",function() {
+			var mid = $(this).attr("memberid");
+			var eid = $(this).attr("eventid");
+
+			$.post("'.base_url('admin/events/jsongetmemberregis').'", { memberid: mid, eventid:eid }, function(data){ 
+				
+				var obj = JSON.parse(data);
+				var imgstr = obj.data.payment_proof_filename;
+				$("#eventid").val(eid);
+				$("#memberid").val(mid);
+
+				if(imgstr != "") {
+					$("#imgproof").attr("src","'.base_url('images/payment_proof/').'" + imgstr);
+				} 
+
+				if(obj.data.status == "pending") {
+					$("#status").html("<option value=\"pending\">Verify Request in Progress</option><option value=\"registered\">Registered</option><option value=\"cancelled\">Canceled</option>");
+				} else if(obj.data.status =="registered") {
+					$("#status").html("<option value=\"registered\">Registered</option>");
+				} else if(obj.data.status =="cancelled") {
+					$("#status").html("<option value=\"cancelled\">Canceled</option>");
+				}
+				$("#status").val(obj.data.status);
+
+			});
+
+		});';
+
+
+		$this->load->view('admin/v_header', $data);
+		$this->load->view('admin/v_event_registration', $data);
+		$this->load->view('admin/v_footer', $data);
+	}
 	 
 	public function index() {
 	
@@ -51,7 +136,9 @@ class Events extends CI_Controller {
 					$this->input->post('eventtime'), 					
 					$this->input->post('icon'), 
 					$this->input->post('need_registration'), 
-					$this->input->post('host'));
+					$this->input->post('host'),
+					$this->input->post('amount'),
+					$this->input->post('points'));
 				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data updated successfully!'));
 			} else {
 				$lastid = $this->event_model->addEvent(
@@ -62,7 +149,10 @@ class Events extends CI_Controller {
 					$this->input->post('eventtime'), 					
 					$this->input->post('icon'), 
 					$this->input->post('need_registration'), 
-					$this->input->post('host'));
+					$this->input->post('host'),
+					$this->input->post('amount'),
+					$this->input->post('points')
+				);
 				$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Data added successfully!'));
 			}
 			
@@ -182,6 +272,26 @@ class Events extends CI_Controller {
 				$("#containerMedia").append(newPhoto);
 			});
 		';
+
+		// handle radio member_registration
+		$data['js'] .='
+		$("#member_registration").on("click", function() {
+			if($(this).is(":checked")) {
+				$("#div_event_fee").show();
+			} else {
+				$("#div_event_fee").hide();
+			}
+		});
+
+		$("#no_registration").on("click", function() {
+			if($(this).is(":checked")) {
+				$("#div_event_fee").hide();
+			} else {
+				$("#div_event_fee").show();
+			}
+		});
+		';
+
 		// handle edit
 		$data['js'] .= '
 		$("#btnaddevent").on("click", function() {
@@ -212,6 +322,7 @@ class Events extends CI_Controller {
 			$.post("'.base_url('admin/events/jsongetevent').'", { sentid: id}, function(data){ 
 				
 				var obj = JSON.parse(data);
+				console.log(obj);
 
 				$("#mediaContainer").html("");
 				for(var i=0; i< obj.datafoto.length; i++) {
@@ -228,9 +339,20 @@ $("#mediaContainer").append("<div class=\"col-md-3 \">" + obj.datafoto[i].youtub
 				$("#host").val(obj.data[0].host);
 				$("#icon").val(obj.data[0].icon);
 				$("#short_desc").val(obj.data[0].short_desc);
+				$("#amount").val(obj.data[0].event_fee);
+				$("#points").val(obj.data[0].points);
 				
 				if(obj.data[0].need_registration == 1) {
 					$("#member_registration").prop( "checked", true );
+					$("#div_event_fee").show();
+
+					if(obj.data[0].event_fee != 0) {
+						$("#feeamount").prop( "checked", true );
+						$("#free").prop( "checked", false );
+					} else {
+						$("#free").prop( "checked", true );
+						$("#feeamount").prop( "checked", false );
+					}
 				} else {
 					$("#no_registration").prop( "checked", false );
 				}
@@ -263,6 +385,16 @@ $("#mediaContainer").append("<div class=\"col-md-3 \">" + obj.datafoto[i].youtub
 			$f = $this->event_model->getImageEvent(null,  $this->input->post('sentid')); 
 			
 			echo json_encode(array('result' => 'success', 'data' => $q, 'datafoto' => $f));
+		} else {
+			echo json_encode(array('result' => 'failed'));
+		}
+	}
+
+	public function jsongetmemberregis() {
+		if($this->input->post('memberid')) {
+			$q = $this->event_model->getRegister($this->input->post('eventid'),$this->input->post('memberid'));
+			
+			echo json_encode(array('result' => 'success', 'data' => $q));
 		} else {
 			echo json_encode(array('result' => 'failed'));
 		}

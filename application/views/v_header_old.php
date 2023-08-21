@@ -161,7 +161,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 									<ul class="header-menu__submenu">
 
 										<li class="header-menu__item">
-											<a href="<?php echo base_url('member/profile'); ?>" class="header-menu__item-link" id="myprofile" role="menuitem">My Profile</a>
+											<a href="<?php echo base_url('member/profile'); ?>" class="header-menu__item-link" role="menuitem">My Profile</a>
 										</li>
 
 										<li class="header-menu__item">
@@ -173,15 +173,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 										</li>
 
 										<li class="header-menu__item">
-											<a href="<?php echo base_url('member/mypoints'); ?>" class="header-menu__item-link" role="menuitem">My Points</a>
+											<a href="testimonial-archive.html" class="header-menu__item-link" role="menuitem">My Points</a>
 										</li>
 
 										<li class="header-menu__item">
-											<a href="<?php echo base_url('member/myevents'); ?>" class="header-menu__item-link" role="menuitem">My Events</a>
-										</li>
-
-										<li class="header-menu__item">
-											<a href="<?php echo base_url('member/myinbox'); ?>" class="header-menu__item-link" role="menuitem">My Inbox</a>
+											<a href="testimonial-archive.html" class="header-menu__item-link" role="menuitem">My Inbox</a>
 										</li>
 
 										<li class="header-menu__item">

@@ -184,6 +184,11 @@ class Product_model extends CI_Model {
 
 	}
 
+	public function delImageProduct($id) {
+		$this->db->where('id', $id);
+		$this->db->delete('product_photo');
+	}
+
 	public function delProduct($id) {
 		$data = array('is_deleted' => 1);
 		$this->db->where('id',$id);

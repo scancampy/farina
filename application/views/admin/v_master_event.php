@@ -39,7 +39,7 @@
                     <th>No</th>
                     <th>Event Name</th>
                     <th>Date</th>
-                    <th>Registration</th>
+                    <th class="text-center">Registration</th>
                     <th>Actions</th>
                   </tr>
                   </thead>
@@ -50,11 +50,14 @@
                       <td><?php echo $key+1; ?></td>
                       <td><?php echo $value->name; ?></td>
                       <td><?php echo strftime("%d-%m-%Y %H:%M", strtotime($value->event_date)); ?></td>   
-                      <td><?php if($value->need_registration == true) { echo '<span class="badge badge-warning">Member only</span>'; } else {
+                      <td class="text-center"><?php if($value->need_registration == true) { echo '<span class="badge badge-warning">Member only</span>'; } else {
                          echo '<span class="badge badge-dark">No registration</span>';
                       } ?></td>
                           
                       <td class="d-flex justify-content-end">
+                        <?php if($value->need_registration == true) { ?>
+                        <a href="<?php echo base_url('admin/events/registration/'.$value->id); ?>"  class="btn btn-xs btn-info mr-1 eventedit"><i class="nav-icon fas fa-users"></i> Registration</a> 
+                      <?php } ?>
                         <a href="#" eventid="<?php echo $value->id; ?>" class="btn btn-xs btn-primary mr-1 eventedit"><i class="nav-icon fas fa-edit"></i> Edit</a> 
                         <a href="<?php echo base_url('admin/events/delevent/'.$value->id); ?>" onclick="return confirm('Are you sure want to delete <?php echo $value->name; ?>?');" class="btn btn-xs btn-danger m-0"><i class="nav-icon fas fa-trash"></i> Delete</a></td>
                     </tr>
@@ -66,7 +69,7 @@
                     <th>No</th>
                     <th>Event Name</th>
                     <th>Date</th>
-                    <th>Registration</th>
+                    <th class="text-center">Registration</th>
                     <th>Actions</th>
                   </tr>
                   </tfoot>
@@ -114,12 +117,36 @@
             <label for="need_registration">Registration</label>
             <div class="form-check">
               <input class="form-check-input" id="no_registration" type="radio" name="need_registration" value="0" checked>
-              <label class="form-check-label">No Registration</label>
+              <label class="form-check-label" for="no_registration">No Registration</label>
             </div>
             <div class="form-check">
               <input class="form-check-input" id="member_registration" type="radio" name="need_registration" value="1" >
-              <label class="form-check-label">Member Only</label>
+              <label class="form-check-label" for="member_registration">Member Only</label>
             </div>
+          </div>
+
+          <div class="form-group" id="div_event_fee" style="display:none;">
+            <label for="event_fee">Event Fee</label>
+            <div class="form-check">
+              <input class="form-check-input" id="free" type="radio" name="event_fee" value="0" checked>
+              <label class="form-check-label" for="free">Free of Charge</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" id="feeamount" type="radio" name="event_fee" value="1" >
+              <label class="form-check-label" for="feeamount">Fee Amount</label>
+              <div class="input-group col-md-6">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Rp.</span>
+                  </div>
+                  <input type="number" class="form-control" name="amount" value="0" id="amount">
+                  
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="points">Points Earned</label>
+            <input type="number" class="form-control" value="0" id="points" name="points" >
           </div>
 
           <div class="row">

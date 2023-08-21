@@ -50,7 +50,7 @@
 							<?php if($this->session->flashdata('notif')) { 
 								$notif = $this->session->flashdata('notif');
 								?>
-							<?php if($notif['type'] == 'success') { ?>
+							<?php if($notif['result'] == 'success') { ?>
 									<div class="lsvr-alert-message lsvr-alert-message--success">
 										<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
 										<h3 class="lsvr-alert-message__title">Sign In Success</h3>

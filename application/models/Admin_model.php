@@ -41,6 +41,24 @@ class Admin_model extends CI_Model {
 		$this->db->update('setting', $data);
 	}
 
+	public function updateKontak($whatsapp, $default_whatsapp_message) {
+		$data = array(
+					  'whatsapp' 	=> $whatsapp,
+					  'default_whatsapp_message'	=> $default_whatsapp_message
+					 );
+		$this->db->where('id', 1);
+		$this->db->update('setting', $data);
+	}
+
+	public function updatePoin($kurs_poin) {
+		$data = array(
+					  'kurs_poin' 	=> $kurs_poin,
+					 
+					 );
+		$this->db->where('id', 1);
+		$this->db->update('setting', $data);
+	}
+
 	public function updateBank($bank1, $bank2, $no_akun_bank1, $no_akun_bank2, $nama_akun_bank1, $nama_akun_bank2) {
 		$data = array(
 					  'bank1' 				=> $bank1,

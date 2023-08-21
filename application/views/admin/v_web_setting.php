@@ -39,6 +39,10 @@
                     <li class="nav-item">
                       <a class="nav-link" id="custom-tabs-three-settings-tab" data-toggle="pill" href="#custom-tabs-three-settings" role="tab" aria-controls="custom-tabs-three-settings" aria-selected="false">Rekening Pembayaran</a>
                     </li>
+
+                    <li class="nav-item">
+                      <a class="nav-link" id="custom-tabs-three-poin-tab" data-toggle="pill" href="#custom-tabs-three-poin" role="tab" aria-controls="custom-tabs-three-poin" aria-selected="false">Poin</a>
+                    </li>
                   </ul>
                 </div>
                 <div class="card-body">
@@ -92,7 +96,14 @@
                     </div>
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                       Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                      <div class="form-group">
+                        <label for="kodepos">Whatsapp</label>
+                        <input type="text" class="form-control" value="<?php echo @$address['whatsapp']; ?>" id="whatsapp" required name="whatsapp"  >
+                      </div>
+                       <div class="form-group">
+                        <label for="default_whatsapp_message">Pesan Default Whatsapp</label>
+                        <textarea class="form-control" id="default_whatsapp_message" name="default_whatsapp_message" required ><?php echo @$address['default_whatsapp_message']; ?></textarea>
+                      </div>
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
                        Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
@@ -142,11 +153,22 @@
                         </div>
                       </div>
                     </div>
+                    <div class="tab-pane fade" id="custom-tabs-three-poin" role="tabpanel" aria-labelledby="custom-tabs-three-poin-tab">
+                       <div class="form-group row">
+                        <label for="kodepos">1 Poin = </label>
+                        <div class="input-group col-md-4">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Rp. </span>
+                          </div>
+                          <input type="text" class="form-control" value="<?php echo @$address['kurs_poin']; ?>" name="kurs_poin">
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <input type="submit" class="btn  btn-primary" value="Submit" name="btnSubmit" />
+                  <input type="submit" class="btn  btn-primary" value="Submit" name="btnSubmit" id="btnSubmit" />
                 </div>
                 <!-- /.card -->
               </div>

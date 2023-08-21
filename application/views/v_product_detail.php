@@ -104,6 +104,21 @@
 											</a>
 										</p>
 										<?php } ?>
+										<div style="text-align:center;">
+											<?php if($total >0) { ?>
+
+											<?php for($i = 1; $i<= $ratings; $i++) { ?>
+												<i style="color: #ff007c;" class="fas fa-regular fa-star"></i>
+											<?php }  
+
+											if($ratings % 4 > 0) { ?>
+												<i style="color: #ff007c;" class="fas fa-regular fa-star-half"></i>
+											<?php }
+											?>
+
+											<?php echo $ratings; ?> (<?php echo $total;	  ?> reviews)
+										<?php } else { echo 'No review yet'; } ?>
+										</div>
 										<!-- POST GALLERY FEATURED : end -->
 
 										<!-- POST GALLERY LIST : begin -->
@@ -231,6 +246,64 @@
 
 								</div>
 
+							</div>
+							<hr/>
+							<div>
+								<h4>Customer Reviews (<?php echo $total; ?>)</h4>
+								<?php foreach ($reviews as $key => $value) { ?>
+								<div class="customerreview">
+									<div class="ratingblock">
+										<div>
+											<?php for($i = 1; $i<= $value->rating; $i++) { ?>
+												<i style="color: #ff007c;" class="fas fa-regular fa-star"></i>
+											<?php }  ?>
+											&nbsp;
+											<strong><?php echo $value->rating; ?></strong>
+											<br/><span><?php echo $value->first_name; ?></span><br/>
+											<?php if(!empty($value->variantname)) { ?>
+											<span>Variant: <?php echo $value->variantname; ?></span>
+										<?php } ?>
+										</div>
+										<div>
+											
+			<?php // olah tanggal
+$currentDate = new DateTime();
+//$givenDate = DateTime::createFromFormat('Y-m-d', );
+//echo $givenDate;
+$givenDate = new DateTimeImmutable($value->order_placed_date);
+$interval = $currentDate->diff($givenDate);
+$years = $interval->y;
+$months = $interval->m;
+$days = $interval->d;
+$hours = $interval->h;
+$minutes = $interval->i;
+$seconds = $interval->s;
+
+$display = '';
+if ($years > 0) {
+    $display =  $years . " year" . ($years > 1 ? "s" : "") . " ago";
+} elseif ($months > 0) {
+    $display =  $months . " month" . ($months > 1 ? "s" : "") . " ago";
+} elseif ($days > 0) {
+    $display =  $days . " day" . ($days > 1 ? "s" : "") . " ago";
+} elseif ($hours > 0) {
+    $display =  $hours . " hour" . ($hours > 1 ? "s" : "") . " ago";
+} elseif ($minutes > 0) {
+    $display =  $minutes . " minute" . ($minutes > 1 ? "s" : "") . " ago";
+} else {
+    $display =  $seconds . " second" . ($seconds > 1 ? "s" : "") . " ago";
+}
+
+
+			 ?>
+											<span><?php echo $display; ?></span>
+										</div>
+									</div>
+									<p class="reviewblock">
+										<?php echo $value->review; ?>
+									</p>
+								</div>
+								<?php } ?>
 							</div>
 
 						</div>

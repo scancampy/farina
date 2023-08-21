@@ -73,6 +73,43 @@ class Voucher_model extends CI_Model {
 		return $newArray;
 	}
 
+	public function getMemberVoucher($member_id) {
+		$voucher = array();
+		$q = $this->db->get_where('voucher_assign', array('member_id' => $member_id));
+
+		foreach ($q->result() as $key => $value) {
+			$voucher[] = $value->voucher_code;
+		}
+
+		// cek member vip atau bukan
+		$q = $this->db->get_where('member', array('id' => $member_id));
+		$hq = $q->row();
+
+		if($hq->member_type == 'VIP') {
+			$q = $this->db->get_where('voucher', array('voucher_type !=' => 'private', 'exp_date <=' => date('Y-m-d'), 'is_deleted' => 0));
+		} else {
+			$q = $this->db->get_where('voucher', array('voucher_type !=' => 'private', 'voucher_type != ' => 'vip', 'exp_date <=' => date('Y-m-d'), 'is_deleted' => 0));
+		}
+
+		foreach ($q->result() as $key => $value) {
+			$voucher[] = $value->voucher_code;
+		}
+
+		// strip voucher used
+		$newvoucher = array();
+		foreach ($voucher as $key => $value) {
+			$q = $this->db->get_where('voucher_used', array('member_id' => $member_id, 'voucher_code' => $value));
+			if($q->num_rows() == 0) {
+				$p = $this->db->get_where('voucher', array('voucher_code' => $value));
+
+				$newvoucher[] = $p->row();
+			}
+		}
+		
+
+		return $newvoucher;
+	}
+
 	public function getVoucher($where =  null, $voucher_code = null) {
 		if($where != null) {
 			$this->db->where($where);

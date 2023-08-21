@@ -138,6 +138,19 @@
 													<p class="category"><!-- You can use "in-stock", "on-order" and "unavailable" modifiers -->
 														<?php echo $value->brandname; ?>
 													</p>
+			<div style="text-align:center;">
+	<?php if($numrating[$key] >0) { ?>
+
+	<?php for($i = 1; $i<= $ratingproduct[$key]; $i++) { ?>
+		<i style="color: #ff007c;" class="fas fa-regular fa-star"></i>
+	<?php }  
+
+	if($ratingproduct[$key] % 4 > 0) { ?>
+		<i style="color: #ff007c;" class="fas fa-regular fa-star-half"></i>
+	<?php }
+	?><br/>(<?php echo $numrating[$key]; ?> reviews)
+<?php } ?>
+</div>
 
 													<!-- POST PRICE : begin -->
 													<p class="post__price"><?php

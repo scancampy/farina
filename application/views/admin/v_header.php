@@ -30,6 +30,42 @@
   <link rel="stylesheet" href="<?php echo base_url('adminlte/css/adminlte.min.css'); ?>">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  <style type="text/css">
+    #cover-spin {
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    background-color: rgba(255,255,255,0.7);
+    z-index:9999;
+    display:none;
+}
+
+@-webkit-keyframes spin {
+  from {-webkit-transform:rotate(0deg);}
+  to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+
+#cover-spin::after {
+    content:'';
+    display:block;
+    position:absolute;
+    left:48%;top:40%;
+    width:40px;height:40px;
+    border-style:solid;
+    border-color:black;
+    border-top-color:transparent;
+    border-width: 4px;
+    border-radius:50%;
+    -webkit-animation: spin .8s linear infinite;
+    animation: spin .8s linear infinite;
+}
+  </style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -133,6 +169,15 @@
                   </p>
                 </a>
               </li>
+
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/product/review'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'review' && $this->uri->segment(2) == 'product') { echo 'active';  } ?>">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>
+                    Manage Review
+                  </p>
+                </a>
+              </li>
             </ul>
           </li>
 
@@ -165,6 +210,15 @@
               <i class="nav-icon fas fa-users"></i>
               <p>
                 Member
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="<?php echo base_url('admin/messaging'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'messaging') { echo 'active';  } ?>">
+              <i class="nav-icon fas fa-inbox"></i>
+              <p>
+                Messaging
               </p>
             </a>
           </li>
@@ -212,7 +266,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?php echo base_url('admin/setting/web'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'web' && $this->uri->segment(2) == 'setting') { echo 'active';  } ?>">
+                <a href="<?php echo base_url('admin/setting/web'); ?>" class="nav-link linkload <?php if ($this->uri->segment(3) == 'web' && $this->uri->segment(2) == 'setting') { echo 'active';  } ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Setting</p>
                 </a>

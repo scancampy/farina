@@ -17,6 +17,60 @@ class Member extends CI_Controller {
 		$this->load->view('v_footer', $data);
 	}
 
+	// Voucher
+	public function voucher() {
+		if(empty($this->session->userdata('member'))) {
+          	redirect('member/signin');
+        }
+        $this->load->helper('text');
+
+
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'My Voucher';
+		$user = $this->session->userdata('member');
+
+		$data['myvoucher'] = $this->voucher_model->getMemberVoucher($user->id);
+
+		$data['js'] = "
+		$('body').on('click','.buttoncopy', function() {
+			var vc= $(this).attr('vouchercode');
+			navigator.clipboard.writeText(vc);
+			alert('Voucher code is copied');
+		});
+		";
+
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_my_voucher',$data);
+		$this->load->view('v_footer', $data);
+
+	}
+	// End of Voucher
+
+	// Events
+	public function myevents() {
+		if(empty($this->session->userdata('member'))) {
+          	redirect('member/signin');
+        }
+        $this->load->helper('text');
+
+
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'My Events';
+		$user = $this->session->userdata('member');
+
+		$data['myevents'] = $this->event_model->getMemberEvent($user->id);
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_my_events',$data);
+		$this->load->view('v_footer', $data);
+
+	}
+	// End of Events
+
+
 	private function _check_token($token) {
     	$secret_key = "6LdODPMlAAAAAEfgDO4mxkdSwflCqLvstgrf2dTp";
 	    // call curl to POST request 
@@ -80,6 +134,16 @@ class Member extends CI_Controller {
 
 				if($this->input->get('b') == 'cart') {
 					redirect('cart/checkout');
+				}
+
+				if($this->input->get('redirect') == 'event') {
+					$idc = (int) $this->input->get('id');
+
+					$data['event'] = $this->event_model->getEvent(array('is_deleted' => 0), $idc);
+
+					if(!empty($data['event'])) {
+						redirect('event/details/'.$idc.'/'.url_title($data['event'][0]->name));
+					}
 				}
 
 				redirect('member');
@@ -221,6 +285,70 @@ Thank you for choosing our online store. We can\'t wait to see you exploring the
 
 		$this->load->view('v_header', $data);
 		$this->load->view('v_sign_up',$data);
+		$this->load->view('v_footer', $data);
+	}
+
+	public function mypoints() {
+		if(empty($this->session->userdata('member'))) {
+          	redirect('member/signin');
+        }
+
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'My Points';
+		$user = $this->session->userdata('member');
+		$data['poin'] = $this->trans_model->getPoin($user->id);
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_my_points',$data);
+		$this->load->view('v_footer', $data);
+	}
+
+	public function myinbox() {
+		if(empty($this->session->userdata('member'))) {
+          	redirect('member/signin');
+        }
+
+		$data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'My Inbox';
+		$user = $this->session->userdata('member');
+		$data['inbox'] = $this->messaging_model->getMemberMessage($user->id);
+
+		//print_r($data['inbox']);
+		//die();
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_my_inbox',$data);
+		$this->load->view('v_footer', $data);
+	}
+
+	public function read($id) {
+		// cek
+		if(empty($this->session->userdata('member'))) {
+          	redirect('member/signin');
+        }
+		$user = $this->session->userdata('member');
+        $read = $this->messaging_model->readMessage($id, $user->id);
+
+        if(!$read) {
+        	redirect('notfound');
+        }
+
+        //print_r($read);
+        //die();
+
+        $data = array();
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'My Inbox';
+		$data['inbox'] = $this->messaging_model->getMemberMessage($user->id);
+		$data['files'] = $this->messaging_model->getMessageFiles($id);
+
+		//print_r($data['inbox']);
+		//die();
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_my_inbox_read',$data);
 		$this->load->view('v_footer', $data);
 	}
 

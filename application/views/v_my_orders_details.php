@@ -49,6 +49,23 @@
 							</div>
 							<?php } ?>
 							
+							<?php if($this->session->flashdata('order_received') == 'success') { ?>
+							<div class="lsvr-alert-message lsvr-alert-message--success">
+								<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+								<h3 class="lsvr-alert-message__title">Order is Received</h3>
+								<p>This order is completed. We hope you're delighted with your purchase and that it meets or even exceeds your expectations. As a token of our appreciation, we have added <strong><?php echo $this->session->flashdata('poin_earned'); ?> points</strong> to your account. These points can be used as a discount on your future purchases.</p>
+							</div>
+						<?php } ?>
+
+						<?php if($this->session->flashdata('order_reviewed') == 'success') { ?>
+							<div class="lsvr-alert-message lsvr-alert-message--success">
+								<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+								<h3 class="lsvr-alert-message__title">Thank you for your review!</h3>
+								<p>Your feedback is incredibly valuable to our team, and we're thrilled to hear about your positive experience. We're constantly striving to provide top-notch products and services, and your review reassures us that we're on the right track.</p>
+							</div>
+						<?php } ?>
+
+
 						</div>
 					</main>
 					<!-- MAIN : end -->
@@ -159,6 +176,7 @@
 									</div>
 								</div>
 								<!-- PAGE : end -->
+								<?php if(empty($myorder[0]->payment_confirmation_date)) { ?> 
 								<div class="lsvr-grid">
 									<div class="lsvr-grid__col">
 										<p>
@@ -169,6 +187,32 @@
 										</p>
 									</div>
 								</div>
+							<?php } ?>
+							<?php if($myorder[0]->status == 'order_in_transit') { ?> 
+								<div class="lsvr-grid">
+									<div class="lsvr-grid__col">
+										<p>
+											Your order is in transit<br/>
+											<!-- BUTTON : begin -->
+											<a href="<?php echo base_url('received?order_id='.$myorder[0]->id); ?>" onclick="return confirm('Are you sure you already received the package?');" class="lsvr-button lsvr-button--small">I have received my order</a>
+											<!-- BUTTON : end -->
+										</p>
+									</div>
+								</div>
+							<?php } ?>
+
+							<?php if($myorder[0]->status == 'order_delivered' && $myorder[0]->is_reviewed == null) { ?> 
+								<div class="lsvr-grid">
+									<div class="lsvr-grid__col">
+										<p>
+											Thank you for your purchased. We would love to hear your thoughts and feedback about the product(s) you received.<br/>
+											<!-- BUTTON : begin -->
+											<a href="<?php echo base_url('review?order_id='.$myorder[0]->id); ?>"  class="lsvr-button lsvr-button--small">Review Products</a>
+											<!-- BUTTON : end -->
+										</p>
+									</div>
+								</div>
+							<?php } ?>
 							</div>
 						</main>
 						<!-- MAIN : end -->

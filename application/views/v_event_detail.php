@@ -87,7 +87,19 @@
 															<div style=" margin-right: 30px;">
 																<small style="margin-bottom: 0px;">Hosted By</small><h4 style="margin-bottom: 0px;">
 																<?php echo $event[0]->host; ?></h4></div>
-															</div>
+															
+														<?php } ?>
+														<?php if($event[0]->event_fee != null) { ?>
+															<div style=" margin-right: 30px;">
+																<small style="margin-bottom: 0px;">Fee</small><h4 style="margin-bottom: 0px;">
+																<?php echo "IDR ".number_format($event[0]->event_fee,0,',','.'); ?></h4></div>
+															
+														<?php } ?>
+														<?php if($event[0]->points != null) { ?>
+															<div style=" margin-right: 30px;">
+																<small style="margin-bottom: 0px;">Points Earned</small><h4 style="margin-bottom: 0px;">
+																<?php echo $event[0]->points; ?></h4></div>
+															
 														<?php } ?>
 														</div>
 														<hr/>
@@ -97,14 +109,32 @@
 
 
 													</div>
+
+	<?php if($member == true) { 
+		if(!$registrant) {
+		?>												
 													<!-- POST CONTENT : end -->
-<p style="display: flex; justify-content: flex-end;">
-
-															<!-- BUTTON : begin -->
-															<a href="#" class="lsvr-button">Register Now</a>
-															<!-- BUTTON : end -->
-
-														</p>
+	<p style="display: flex; justify-content: flex-end;">
+		<!-- BUTTON : begin -->
+		<a href="<?php echo base_url('event/register/'.$event[0]->id.'/'.url_title($event[0]->name)); ?>" class="lsvr-button">Register Now</a>
+		<!-- BUTTON : end -->
+	</p>
+<?php  } else { 
+			if($registrant->status=='pending') {
+			?>
+			<p>Your registration is currently being verified. Check the <a href="<?php echo base_url('event/register/'.$event[0]->id.'/'.url_title($event[0]->name)); ?>">registration details</a>.</p>
+		<?php 
+			} else if($registrant->status=='registered') {
+			?>
+			<p>You have registered for this event. Check the <a href="<?php echo base_url('event/register/'.$event[0]->id.'/'.url_title($event[0]->name)); ?>">registration details</a>.</p>
+		<?php 
+			} 
+	}
+} else { ?>
+	<p style="display: flex; justify-content: center;">
+		Please note that you need to &nbsp;<a href="<?php echo base_url('member/signin?redirect=event&id='.$event[0]->id); ?>">log in</a>&nbsp; before registering for this event. 
+	</p>
+<?php } ?> 
 												
 
 												</div>
