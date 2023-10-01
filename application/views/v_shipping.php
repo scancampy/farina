@@ -170,7 +170,8 @@
 											</tr>
 											<?php 
 
-		$diskon = 0;
+	$diskon = 0;
+	$diskonongkir = 0;
 
 	if(!empty($voucher)) {
 		if($voucher[0]->voucher_type == 'global') {
@@ -246,15 +247,43 @@
 											<?php	}
 											}
 											?>
-											<input type="hidden" id="hiddendiskon" name="hiddendiskon" value="<?php echo $diskon; ?>">
+											
 											<tr>
+												<input type="hidden" id="hiddendiskon" name="hiddendiskon" value="<?php echo $diskon; ?>">
+
+												
+
 												<td colspan="3" style="text-align:right;">SHIPPING COST</td>
 												<td style="text-align: right;" id="shippingcost"><?php echo 'Rp. '.number_format($shipingcost,0,',','.');   ?></td>
 											</tr>
+<?php 
+	
+	if(!empty($voucherongkir)) { 
+		if($voucherongkir[0]->voucher_type == 'ongkir') {
 
+			if($subtotal >= $voucherongkir[0]->min_order) {
+				
+				if($voucherongkir[0]->discount_value > 0) {
+					$diskonongkir = $voucherongkir[0]->discount_value;
+				} else { 
+					$diskonongkir = $subtotal * ($voucherongkir[0]->discount_percentage/100); 
+				}
+				if($diskonongkir > $shipingcost) {
+					$diskonongkir = $shipingcost;
+				}
+		 ?>
+<tr>
+	<td colspan="3" style="text-align:right;"><strong style="color:#ff007c;"><?php echo $voucherongkir[0]->voucher_code; ?></strong> VOUCHER ONGKIR APPLIED</td>
+	<td style="text-align: right;" id="voucherongkirdisc"><?php echo '- Rp. '.number_format($diskonongkir,0,',','.');   ?></td>
+</tr>
+		<?php	}
+		}
+	}
+?>
 											<tr>
+												<input type="hidden" id="hiddendiskonongkir" name="hiddendiskonongkir" value="<?php echo $diskonongkir; ?>">
 												<td colspan="3" style="text-align:right;"><strong>TOTAL</strong></td>
-												<td  style="text-align: right;" id="totalcost"><strong><?php echo 'Rp. '.number_format($shipingcost+$subtotal-$diskon,0,',','.');   ?></strong></td>
+												<td  style="text-align: right;" id="totalcost"><strong><?php echo 'Rp. '.number_format($shipingcost+$subtotal-$diskon-$diskonongkir,0,',','.');   ?></strong></td>
 											</tr>
 										</table>
 									</div>

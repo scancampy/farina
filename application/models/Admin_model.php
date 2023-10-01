@@ -41,10 +41,14 @@ class Admin_model extends CI_Model {
 		$this->db->update('setting', $data);
 	}
 
-	public function updateKontak($whatsapp, $default_whatsapp_message) {
+	public function updateKontak($whatsapp, $default_whatsapp_message,$ig_link,$tiktok_link, $lazada_link, $shopee_link) {
 		$data = array(
 					  'whatsapp' 	=> $whatsapp,
-					  'default_whatsapp_message'	=> $default_whatsapp_message
+					  'default_whatsapp_message'	=> $default_whatsapp_message,
+					  'ig_link'		=> $ig_link,
+					  'tiktok_link'	=> $tiktok_link,
+					  'lazada_link'	=> $lazada_link,
+					  'shopee_link'	=> $shopee_link
 					 );
 		$this->db->where('id', 1);
 		$this->db->update('setting', $data);

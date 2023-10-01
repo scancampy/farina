@@ -3,7 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product_model extends CI_Model {
 	// BRAND
-	public function getBrand($where =  null, $id = null) {
+	public function getBrand($where =  null, $id = null, $orderby='id',$ordertype='asc',$limit=null) {
+
+		$this->db->order_by($orderby, $ordertype);
+
+		if($limit!=null) {
+			$this->db->limit($limit);
+		}
+
 		if($where != null) {
 			$this->db->where($where);
 		}

@@ -23,6 +23,22 @@
           <div class="col-md-12">
             <h1>Welcome back</h1>
           </div>
+          <?php if(!empty(@$trans)) { ?>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3><?php echo count($trans); ?></h3>
+
+                <p>New Orders</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="<?php echo base_url('admin/trans?filterstatus=payment_uploaded&btnfilter=Submit'); ?>" class="small-box-footer">Check Now <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        <?php } ?>
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->

@@ -87,6 +87,10 @@ class Cart extends CI_Controller {
 			delete_cookie('voucher');
 			redirect('cart'); 
 		}
+		if($this->input->post('btnCancelVoucherOngkir')) {
+			delete_cookie('voucherongkir');
+			redirect('cart'); 
+		}
 
 		if($this->input->post('btnApply')) {
 			$code =  $this->input->post('voucher_code');
@@ -102,17 +106,31 @@ class Cart extends CI_Controller {
 						if($q[0]->voucher_type =='private') {
 							$data['private_voucher_eligible'] = $this->voucher_model->checkPrivateVoucher($code, $user->id);
 						}
-				
-						// ada voucher
-						$data['voucher'] = $q;
-						$cookie = array(
-			                'name'   => 'voucher',
-			                'value'  => $code,
-			                'expire' =>  86500,
-			                'secure' => false
-			            );
-			            //print_r($product);
-			            set_cookie($cookie); 
+
+						if($q[0]->voucher_type == 'ongkir') {
+							// cek jika ongkir
+							// ada voucher
+							$data['voucherongkir'] = $q;
+							$cookie = array(
+				                'name'   => 'voucherongkir',
+				                'value'  => $code,
+				                'expire' =>  86500,
+				                'secure' => false
+				            );
+				            //print_r($product);
+				            set_cookie($cookie); 
+						} else {				
+							// ada voucher
+							$data['voucher'] = $q;
+							$cookie = array(
+				                'name'   => 'voucher',
+				                'value'  => $code,
+				                'expire' =>  86500,
+				                'secure' => false
+				            );
+				            //print_r($product);
+				            set_cookie($cookie); 
+				        }
 					} else {
 						// voucher tidak ada
 						$this->session->set_flashdata('notif', array('result' => 'voucher_na', 'msg' => 'Voucher not valid'));
@@ -162,6 +180,16 @@ class Cart extends CI_Controller {
 			if(count($q) >0 ) {
 				// ada voucher
 				$data['voucher'] = $q;
+			}
+		}
+
+		if(get_cookie('voucherongkir') != null) {
+
+			$q = $this->voucher_model->getVoucher(array( 'exp_date >=' => date('Y-m-d') ),get_cookie('voucherongkir'));
+
+			if(count($q) >0 ) {
+				// ada voucher
+				$data['voucherongkir'] = $q;
 			}
 		}
 
@@ -636,6 +664,20 @@ class Cart extends CI_Controller {
 			}
 		}
 
+		if(get_cookie('voucherongkir') != null) {
+
+			$voucherongkir = $this->voucher_model->getVoucher(array('exp_date >=' => date('Y-m-d')),get_cookie('voucherongkir'));
+			//print_r($voucher);
+			if(count($voucherongkir) > 0) {		
+				if($this->voucher_model->checkVouhcerUsed($member->id, get_cookie('voucherongkir'))) {
+					$data['voucherongkir'] = $voucherongkir;
+
+					$data['private_voucher_eligible'] = $this->voucher_model->checkPrivateVoucher($data['voucherongkir'][0]->voucher_code, $data['member']->id);
+			//		die();
+				}
+			}
+		}
+
 
 		
 		$data['address'] = unserialize(get_cookie('address'));
@@ -780,7 +822,10 @@ class Cart extends CI_Controller {
 			if($ongkir > 0) {
 
 				$diskon = 0;
+				$diskonongkir = 0;
 				$voucher_code = null;
+				$voucher_ongkir_code = null;
+
 
 				$product = unserialize(get_cookie('product'));
 				$totalweight = 0;
@@ -867,6 +912,27 @@ class Cart extends CI_Controller {
 						}
 					}
 				}
+
+				// voucher ongkir
+				if(!empty($data['voucherongkir'])) {
+
+					if($data['voucherongkir'][0]->voucher_type == 'ongkir') {
+						if($totaltrans >= $data['voucherongkir'][0]->min_order) {
+							$voucher_ongkir_code = $data['voucherongkir'][0]->voucher_code;
+
+							if($data['voucherongkir'][0]->discount_value > 0) {
+								$diskonongkir = $data['voucherongkir'][0]->discount_value;
+							} else { 
+								$diskonongkir = $totaltrans * ($data['voucherongkir'][0]->discount_percentage/100);
+
+							}
+
+							if($diskonongkir > $ongkir) {
+								$diskonongkir = $ongkir;
+							}
+						}
+					}
+				}
 				
 
 				// simpan transaksi
@@ -890,13 +956,23 @@ class Cart extends CI_Controller {
 					'shipping_service'		=> $layananongkir,
 					'status'				=> "order_placed",
 					'discount'				=> $diskon,
-					'voucher_code'			=> $voucher_code
+					'voucher_code'			=> $voucher_code,
+					'voucher_ongkir_code'	=> $voucher_ongkir_code,
+					'discount_ongkir'		=> $diskonongkir
+
 				);
+
+				//print_r($trans);
+				//die();
 
 				$this->trans_model->insertTrans($trans);
 
 				if($voucher_code != null) {
 					$this->voucher_model->useVoucher($voucher_code,$member->id, $transid);
+				}
+
+				if($voucher_ongkir_code != null) {
+					$this->voucher_model->useVoucher($voucher_ongkir_code,$member->id, $transid);
 				}
 
 
@@ -943,11 +1019,16 @@ class Cart extends CI_Controller {
 				$this->email->from('noreply@farinafemme.com', 'Farina Femme');
 				$this->email->to($member->email);
 
-				$tot = $totaltrans + $ongkir - $diskon;
+				$tot = $totaltrans + $ongkir - $diskon - $diskonongkir;
 
 				$diskstr = '';
 				if($diskon >0) {
 					$diskstr = 'Discount: Rp. '.number_format($diskon,0,',','.').' (kode voucher '.$voucher_code.')<br/>';
+				}
+
+				$diskongkirstr = '';
+				if($diskonongkir >0) {
+					$diskongkirstr = 'Discount Ongkir: Rp. '.number_format($diskonongkir,0,',','.').' (kode voucher '.$voucher_ongkir_code.')<br/>';
 				}
 
 				$this->email->subject('Order Confirmation - Farina Femme');
@@ -958,15 +1039,12 @@ class Cart extends CI_Controller {
 					Recipient: '.$data['address']['firstname'].' '.$data['address']['lastname'].' (phone: '.$data['address']['handphone'].')<br/><br/>
 					Item(s) Purchased:<br/>'.$strDetil.'<br/><br/>
 					Subtotal: Rp. '.number_format($totaltrans,0,',','.').'<br/>'.$diskstr.'
-					Shipping: Rp. '.number_format($ongkir,0,',','.').' ('.$layananongkir.')<br/>
+					Shipping: Rp. '.number_format($ongkir,0,',','.').' ('.$layananongkir.')<br/>'.$diskongkirstr.'
 					Order Total: <strong>Rp. '.number_format($tot,0,',','.').'</strong><br/><br/>
 					Your order has been received by our team. As soon as we receive your payment, we will begin processing your order.<br/><br/>The total amount due for your order is <strong>Rp. '.number_format($tot,0,',','.').'</strong>. Please make payment at your earliest convenience using the following details: <br/><br/>
 				    <strong>'.$data['setting']->bank1.'</strong><br/>
 				    <strong>No. Rek: '.$data['setting']->no_akun_bank1.'</strong><br/>
 				    <strong>A/N: '.$data['setting']->nama_akun_bank1.'</strong><br/><br/>
-				    <strong>'.$data['setting']->bank2.'</strong><br/>
-				    <strong>No. Rek: '.$data['setting']->no_akun_bank2.'</strong><br/>
-				    <strong>A/N: '.$data['setting']->nama_akun_bank2.'</strong><br/><br/>
 
 				    To ensure a smooth and timely processing of your order, we kindly request you to confirm your payment by providing a payment proof screenshot. Please visit this link to confirm your payment: <br/>
 				    <a href="'.base_url('confirm?order_id='.$transid).'">'.base_url('confirm?order_id='.$transid).'</a>
@@ -986,6 +1064,7 @@ class Cart extends CI_Controller {
 				// delete all cookies
 				delete_cookie('product');
 				delete_cookie('voucher');
+				delete_cookie('voucherongkir');
 				delete_cookie('address');
 
 				redirect('cart/orderconfirmed/'.$transid);
@@ -993,7 +1072,7 @@ class Cart extends CI_Controller {
 				// TODO: Redirect to error
 			}
 
-			die();
+			//die();
 		}
 
 
@@ -1124,7 +1203,14 @@ class Cart extends CI_Controller {
 			var subtotal = $("#hiddentotal").val();
 			var shippingcost = $(this).attr("cost");
 			var diskon = $("#hiddendiskon").val();
-			var total = parseInt(subtotal) - parseInt(diskon) + parseInt(shippingcost);
+			var diskonongkir = $("#hiddendiskonongkir").val();
+			//alert("change" + shippingcost + " " + diskonongkir);
+			if(parseInt(shippingcost) < parseInt(diskonongkir)) {
+				diskonongkir = shippingcost;
+				$("#voucherongkirdisc").html("- Rp. " + diskonongkir);
+			//	alert("tes");
+			}
+			var total = parseInt(subtotal) - parseInt(diskon) - parseInt(diskonongkir) + parseInt(shippingcost);
 
 			$("#shippingcost").html("Rp. " + numberWithCommas($(this).attr("cost")));
 			$("#totalcost").html("<strong>Rp. " + numberWithCommas(total) + "</strong>");

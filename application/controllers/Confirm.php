@@ -68,9 +68,12 @@ class Confirm extends CI_Controller {
 			}
 		}
 
-		if($this->input->post('btnsubmitconfirm')) {
+		
+		if($this->input->post('hiddenid')) {
 			if ($_FILES['proof']['error'] == 4 || ($_FILES['proof']['size'] == 0 && $_FILES['proof']['error'] == 0))
 			{
+				//29013883112
+				//die();
 			    $this->session->set_flashdata('error', 'Please upload payment proof (bukti bayar).');
 				redirect('confirm?order_id='.$this->input->get('order_id'));
 			} else {

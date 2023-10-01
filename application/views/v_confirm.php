@@ -37,8 +37,20 @@
 							<!-- PAGE : begin -->
 							<div class="page product-post-page product-post-order product-post-order--checkout">
 								<div class="page__content">
+									<?php 
+
+										$adaisi = false; 
+										$methodstr = '';
+										if(!empty($order)) { 
+											$adaisi = true; 
+											$methodstr = 'method="post"'; 
+										} else { 
+
+											$adaisi = false; 
+											$methodstr  = 'method="get"'; 
+										} ?>
 									<!-- PRODUCT CHECKOUT : begin -->
-									<form id="formpayment" class="product-checkout lsvr-form" <?php if(empty(@$order)) { ?> method="get"<?php } else { ?>method="post"<?php } ?> enctype="multipart/form-data" action="<?php
+									<form id="formpayment" class="product-checkout lsvr-form" <?php  echo $methodstr; ?> enctype="multipart/form-data" action="<?php
 										echo base_url('confirm');
 										?>">
 										<!-- VALIDATION ERROR MESSAGE : begin -->
@@ -91,16 +103,15 @@
 												</div>
 												<?php } else if($order['trans']->status == 'order_placed') { ?>
 												<p>The total amount due for your order is <strong style="color:#ff007c;">
-													Rp. <?php $tot = $order['trans']->total_trans + $order['trans']->shipping_cost - $order['trans']->discount;
+													Rp. <?php $tot = $order['trans']->total_trans + $order['trans']->shipping_cost - $order['trans']->discount - $order['trans']->discount_ongkir;
 														echo number_format($tot,0,',','.');
 													?></strong>. Please make payment at your earliest convenience using the following details:<br/>
 													<?php
 														echo '<strong>'.$setting->bank1.'</strong><br/>';
 														echo '<strong>No. Rek: '.$setting->no_akun_bank1.'</strong><br/>';
 														echo '<strong>A/N: '.$setting->nama_akun_bank1.'</strong><br/><br/>';
-														echo '<strong>'.$setting->bank2.'</strong><br/>';
-														echo '<strong>No. Rek: '.$setting->no_akun_bank2.'</strong><br/>';
-													echo '<strong>A/N: '.$setting->nama_akun_bank2.'</strong></p>';
+														echo '<strong>'.$setting->bank2.'</strong></p>';
+														
 												} else { ?>
 												<p>Payment has been received. Thank you for your order.</p>
 												<?php } ?>
@@ -130,7 +141,7 @@
 															<select class="lsvr-form__field-input lsvr-form__field-input--required"
 																name="trans_to" id="trans_to">
 																<option value="1"><?php echo $setting->bank1.' ('.$setting->no_akun_bank1.' a/n '.$setting->nama_akun_bank1.')'; ?></option>
-																<option value="2"><?php echo $setting->bank2.' ('.$setting->no_akun_bank2.' a/n '.$setting->nama_akun_bank2.')'; ?></option>
+																
 															</select>
 														</p>
 													</div>

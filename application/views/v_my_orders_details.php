@@ -167,9 +167,15 @@
 												<td colspan="3" style="text-align:right;">SHIPPING COST</td>
 												<td style="text-align: right;" id="shippingcost"><?php echo 'Rp. '.number_format($myorder[0]->shipping_cost,0,',','.');   ?></td>
 											</tr>
+<?php if($myorder[0]->discount_ongkir >0) { ?>
+<tr>
+	<td colspan="3" style="text-align:right;"><strong style="color:#ff007c;"><?php echo $myorder[0]->voucher_ongkir_code; ?></strong> VOUCHER APPLIED</td>
+	<td style="text-align: right;" id="shippingcost"><?php echo '-Rp. '.number_format($myorder[0]->discount_ongkir,0,',','.');   ?></td>
+</tr>
+<?php } ?>
 											<tr>
 												<td colspan="3" style="text-align:right;"><strong>TOTAL</strong></td>
-												<td  style="text-align: right;" id="totalcost"><strong><?php echo 'Rp. '.number_format($myorder[0]->shipping_cost+$subtotal-$myorder[0]->discount,0,',','.');   ?></strong></td>
+												<td  style="text-align: right;" id="totalcost"><strong><?php echo 'Rp. '.number_format($myorder[0]->shipping_cost+$subtotal-$myorder[0]->discount - $myorder[0]->discount_ongkir,0,',','.');   ?></strong></td>
 											</tr>
 										</table>
 										

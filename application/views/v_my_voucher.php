@@ -24,7 +24,7 @@
 									</li>
 
 									<li class="breadcrumbs__item">
-										<a href="<?php echo base_url('member/myorders'); ?>" class="breadcrumbs__link">My Orders</a>
+										<a href="<?php echo base_url('member/voucher'); ?>" class="breadcrumbs__link">My Voucher</a>
 									</li>
 
 								</ul>
@@ -68,8 +68,7 @@
 							<!-- PAGE : begin -->
 							<div class="page product-post-page product-post-order product-post-order--cart">
 								<div class="page__content">
-
-<?php foreach ($myvoucher as $key => $value) { ?>
+					<?php foreach ($myvoucher as $key => $value) { ?>
 <div class="wrap">
   <div class="coupon">
     <div class="coupon-left">

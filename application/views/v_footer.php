@@ -28,9 +28,7 @@
 												<h3 class="widget__title">About <?php echo $setting->website_name; ?></h3>
 												<div class="widget__content">
 
-													<p>BeautySpot is an ideal HTML template for beauty salons, hairdressers, wellness or spa websites.
-													Clean and fast code is wrapped in unique design.</p>
-													<p>You can buy this HTML template on <a href="https://themeforest.net/item/beautyspot-html-template-for-beauty-salons/7734629" target="_blank">ThemeForest</a>.</p>
+													<p>Discover beauty reimagined with FarinaFemme, your premier destination for a wide range of high-quality beauty products. From makeup essentials to skincare solutions, lipsticks to powders, we offer a curated selection to help you look and feel your best. Explore our collection and elevate your beauty routine with FarinaFemme.</p>
 
 												</div>
 
@@ -51,11 +49,11 @@
 												<h3 class="widget__title">Quick Links</h3>
 												<div class="widget__content">
 													<ul>
-														<li><a href="#">How to register</a></li>
-														<li><a href="#">How to make transaction</a></li>
-														<li><a href="#">VIP Benefit</a></li>
-														<li><a href="#">S&K</a></li>
-														<li><a href="#">FAQ</a></li>
+														<li><a href="<?php echo base_url('product'); ?>">Our Products</a></li>
+														<li><a href="<?php echo base_url('member'); ?>">Member Access</a></li>
+														<li><a href="<?php echo base_url('confirm'); ?>">Confirm Payment</a></li>
+														<li><a href="<?php echo base_url('event'); ?>">Event</a></li>
+														<li><a href="<?php echo base_url('article'); ?>">Beauty Article</a></li><li><a href="<?php echo base_url('community'); ?>">Community</a></li>
 													</ul>
 												</div>
 
@@ -79,38 +77,12 @@
 						<div class="lsvr-container">
 							<div class="footer-bottom__inner">
 
-								<!-- FOOTER MENU : begin -->
-								<nav class="footer-menu">
-									<ul class="footer-menu__list">
-
-										<li class="footer-menu__item">
-											<a href="index.html">Home</a>
-										</li>
-
-										<li class="footer-menu__item">
-											<a href="https://themeforest.net/item/beautyspot-html-template-for-beauty-salons/7734629" target="_blank">Purchase</a>
-										</li>
-
-										<li class="footer-menu__item">
-											<a href="http://docs.lsvr.sk/beautyspot.html/" target="_blank">Documentation</a>
-										</li>
-
-										<li class="footer-menu__item">
-											<a href="demo-credits.html">Demo Credits</a>
-										</li>
-
-										<li class="footer-menu__item">
-											<a href="../beautyspot.rtl/index.html">RTL Version</a>
-										</li>
-
-									</ul>
-								</nav>
-								<!-- FOOTER MENU : end -->
+								
 
 								<!-- FOOTER TEXT : begin -->
 								<div class="footer-text">
 									<p>
-										<a href="https://themeforest.net/item/beautyspot-html-template-for-beauty-salons/7734629" target="_blank">BeautySpot</a> - HTML Template for Beauty Salons
+										<a href="<?php echo base_url(); ?>" target="_blank"><?php echo $setting->website_name; ?></a>
 									</p>
 								</div>
 								<!-- FOOTER TEXT : end -->

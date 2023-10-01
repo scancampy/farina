@@ -650,4 +650,35 @@ table.table {
 .my-float{
   margin-top:16px;
 }
+.member_nav {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+.member_nav div {
+      display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.member_nav div:hover {
+  cursor: pointer;
+}
+.member_nav div i {
+  color: #ff007c;
+  border: 1px solid #ff007c;
+  width: 50px;
+  height: 50px;
+  border-radius: 150px;
+    /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.member_nav div i:hover {
+  background-color: #ff007c;
+  color: white;
+}
+.member_nav div a {
+  text-decoration: none;
+}
 

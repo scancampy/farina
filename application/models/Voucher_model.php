@@ -86,9 +86,9 @@ class Voucher_model extends CI_Model {
 		$hq = $q->row();
 
 		if($hq->member_type == 'VIP') {
-			$q = $this->db->get_where('voucher', array('voucher_type !=' => 'private', 'exp_date <=' => date('Y-m-d'), 'is_deleted' => 0));
+			$q = $this->db->get_where('voucher', array('voucher_type !=' => 'private', 'exp_date >=' => date('Y-m-d'), 'is_deleted' => 0));
 		} else {
-			$q = $this->db->get_where('voucher', array('voucher_type !=' => 'private', 'voucher_type != ' => 'vip', 'exp_date <=' => date('Y-m-d'), 'is_deleted' => 0));
+			$q = $this->db->get_where('voucher', array('voucher_type !=' => 'private', 'voucher_type != ' => 'vip', 'exp_date >=' => date('Y-m-d'), 'is_deleted' => 0));
 		}
 
 		foreach ($q->result() as $key => $value) {

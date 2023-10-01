@@ -55,34 +55,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				style="background-image: url( 'images/header_bg.jpg' )">
 				<div class="header__inner">
 					<div class="header__content">
-
-						
-
 						<!-- HEADER BRANDING : begin -->
 						<div class="header-branding">
 							<div class="header-branding__inner">
 
 								<!-- HEADER LOGO : begin -->
-								<div class="header-logo">
-									<a href="index.html" class="header-logo__link">
+								<div class="header-logo" style="max-width: none; ">
+									<a href="<?php echo base_url(); ?>" class="header-logo__link">
 										<img src="<?php echo base_url('images/logo.png'); ?>" class="header-logo__image" alt="Logo">
 									</a>
 								</div>
 								<!-- HEADER LOGO : end -->
-
-								<!-- HEADER TITLE TAGLINE : begin -->
-								<div class="header-title-tagline">
-
-									<div class="header-title">
-										<a href="<?php echo base_url(''); ?>" class="header-title__link"><?php echo $setting->website_name; ?></a>
-									</div>
-
-									<p class="header-tagline">
-										HTML Template for Beauty Salons
-									</p>
-
-								</div>
-								<!-- HEADER TITLE TAGLINE : end -->
 
 							</div>
 						</div>
@@ -194,15 +177,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 								</li>
 								<!-- MENU ITEM : end -->
 
-								<!-- MENU ITEM : begin -->
-								<li class="header-menu__item <?php if ($this->uri->segment(2) == 'contact') { ?> header-menu__item--current <?php } ?>">
-
-									<span class="header-menu__item-link-wrapper">
-										<a href="contact.html" class="header-menu__item-link">Contact</a>
-									</span>
-
-								</li>
-								<!-- MENU ITEM : end -->
 
 								<!-- MENU ITEM : begin -->
 								<li class="header-menu__item <?php if ($this->uri->segment(2) == 'confirm') { ?> header-menu__item--current <?php } ?>">
@@ -224,7 +198,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 							<div class="header-search__form">
 
 								<!-- SEARCH FORM : begin -->
-								<form class="search-form" action="search-results.html" method="get" role="search">
+								<form class="search-form" action="#" method="get" role="search">
 									<div class="search-form__inner">
 										<div class="search-form__input-holder">
 
@@ -260,7 +234,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 										<!-- HEADER CTA : begin -->
 										<div class="header-cta">
-											<a href="contact.html" class="header-cta__button">Make An Appointment</a>
+											<a href="https://api.whatsapp.com/send?phone=<?php echo $setting->whatsapp; ?>&text=<?php echo $setting->default_whatsapp_message; ?>" class="header-cta__button" target="_blank">CONTACT US</a>
 										</div>
 										<!-- HEADER CTA : end -->
 
@@ -271,44 +245,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 												<ul class="header-contact__list">
 
 													<!-- CONTACT ITEM : begin -->
-													<li class="header-contact__item header-contact__item--has-icon">
+													<li class="header-contact__item header-contact__item--has-icon" style="width:100%;">
 														<span class="header-contact__item-icon icon-phone" aria-hidden="true"></span>
-														<a href="tel:12346789">(123) 456 789</a>
+														<a href="https://api.whatsapp.com/send?phone=<?php echo $setting->whatsapp; ?>&text=<?php echo $setting->default_whatsapp_message; ?>" target="_blank">+<?php echo $setting->whatsapp; ?> (whatsapp)</a>
 													</li>
 													<!-- CONTACT ITEM : end -->
 
 													<!-- CONTACT ITEM : begin -->
-													<li class="header-contact__item header-contact__item--has-icon">
+													<li class="header-contact__item header-contact__item--has-icon" style="width:100%;">
 														<span class="header-contact__item-icon icon-envelope-o" aria-hidden="true"></span>
-														<a href="mailto:example@example.com">example@example.com</a>
+														<a href="mailto:<?php echo $setting->email; ?>"><?php echo $setting->email; ?></a>
 													</li>
 													<!-- CONTACT ITEM : end -->
 
 													<!-- CONTACT ITEM : begin -->
-													<li class="header-contact__item header-contact__item--has-icon">
+													<li class="header-contact__item header-contact__item--has-icon" style="width:100%;">
 														<span class="header-contact__item-icon icon-map-marker" aria-hidden="true"></span>
 														<p>
-															BeautySpot<br>
-															9015 Sunset Boulevard<br>
-															Ca 90069
+															<?php echo $setting->website_name; ?><br>
+															<?php echo $setting->address; ?><br>
+															Sidoarjo, Jawa Timur, Indonesia
 														</p>
 													</li>
 													<!-- CONTACT ITEM : end -->
 
-													<!-- CONTACT ITEM : begin -->
-													<li class="header-contact__item header-contact__item--has-icon">
-														<span class="header-contact__item-icon icon-clock-o" aria-hidden="true"></span>
-														<dl>
-															<dt>Mo. - Fr.:</dt>
-															<dd>10am - 4pm</dd>
-															<dt>Sa.:</dt>
-															<dd>9am - 2pm</dd>
-															<dt>Su.:</dt>
-															<dd>Closed</dd>
-														</dl>
-													</li>
-													<!-- CONTACT ITEM : end -->
-
+													
 												</ul>
 
 											</div>
@@ -329,32 +290,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 												<!-- SOCIAL ITEM : begin -->
 												<li class="header-social__item header-social__item--facebook">
-													<a class="header-social__item-link" href="#facebook" target="_blank" title="Facebook">
-														<span class="header-social__icon icon-facebook" aria-hidden="true"></span>
+													<a class="header-social__item-link" href="<?php echo $setting->tiktok_link; ?>" target="_blank" title="TikTok">
+														<img src="<?php echo base_url('images/tiktok_link.png'); ?>" style="max-width: 50%; padding-top:7px;" />
 													</a>
 												</li>
 												<!-- SOCIAL ITEM : end -->
 
 												<!-- SOCIAL ITEM : begin -->
 												<li class="header-social__item header-social__item--instagram">
-													<a class="header-social__item-link" href="#instagram" target="_blank" title="Instagram">
-														<span class="header-social__icon icon-instagram" aria-hidden="true"></span>
+													<a class="header-social__item-link" href="<?php echo $setting->ig_link; ?>" target="_blank" title="Instagram">
+														<img src="<?php echo base_url('images/ig_link.png'); ?>" style="max-width: 50%; padding-top:7px;" />
 													</a>
 												</li>
 												<!-- SOCIAL ITEM : end -->
 
 												<!-- SOCIAL ITEM : begin -->
-												<li class="header-social__item header-social__item--twitter">
-													<a class="header-social__item-link" href="#twitter" target="_blank" title="Twitter">
-														<span class="header-social__icon icon-twitter" aria-hidden="true"></span>
+												<li class="header-social__item header-social__item--instagram">
+													<a class="header-social__item-link" href="<?php echo $setting->lazada_link; ?>" target="_blank" title="Lazada">
+														<img src="<?php echo base_url('images/lazada_link.png'); ?>" style="max-width: 50%; padding-top:7px;" />
 													</a>
 												</li>
 												<!-- SOCIAL ITEM : end -->
 
 												<!-- SOCIAL ITEM : begin -->
-												<li class="header-social__item header-social__item--youtube">
-													<a class="header-social__item-link" href="#youtube" target="_blank" title="YouTube">
-														<span class="header-social__icon icon-youtube" aria-hidden="true"></span>
+												<li class="header-social__item header-social__item--instagram">
+													<a class="header-social__item-link" href="<?php echo $setting->shopee_link; ?>" target="_blank" title="Shopee">
+														<img src="<?php echo base_url('images/shopee_link.png'); ?>" style="max-width: 50%; padding-top:7px;" />
 													</a>
 												</li>
 												<!-- SOCIAL ITEM : end -->

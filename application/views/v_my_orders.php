@@ -112,7 +112,7 @@
 
 			<!-- ITEM PRICE : begin -->
 			<p class="product-cart__item-price">
-				<?php $tot = $value->total_trans + $value->shipping_cost- $value->discount;  echo 'Rp. '.number_format($tot,0,',','.'); ?>
+				<?php $tot = $value->total_trans + $value->shipping_cost- $value->discount-$value->discount_ongkir;  echo 'Rp. '.number_format($tot,0,',','.'); ?>
 			</p>
 			<!-- ITEM PRICE : end -->
 

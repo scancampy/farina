@@ -46,20 +46,96 @@
 							<!-- PAGE : begin -->
 							<div class="page product-post-page product-post-order product-post-order--checkout">
 								<div class="page__content">
+									<div style="display:flex; justify-content: space-between;">
 									<h3>Welcome, <?php
 									$member = $this->session->userdata('member');
 									echo $member->first_name;
 									 ?></h3>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-										consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-										cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-										proident, sunt in culpa qui officia deserunt mollit anim id est laborum.ws
-									</p>
+									 <a href="<?php echo base_url('member/signout'); ?>" style="text-decoration: none; "><i class="fas fa-door-open"></i> Sign Out</a>
+									</div>
+									<nav class="member_nav">
+										<div>
+											<a href="<?php echo base_url('member/profile'); ?>"><i class="fas fa-user"></i></a>
+											<a href="<?php echo base_url('member/profile'); ?>">My Profile</a>
+										</div>
+										<div>									
+											<a href="<?php echo base_url('member/voucher'); ?>"><i class="fas fa-ticket-alt"></i></a>
+											<a href="<?php echo base_url('member/voucher'); ?>">My Voucher</a>
+										</div>
+										<div>
+											<a href="<?php echo base_url('member/myorders'); ?>"><i class="fas fa-shopping-cart"></i></a>
+											<a href="<?php echo base_url('member/myorders'); ?>">My Orders</a>
+										</div>
+										<div>
+											<a href="<?php echo base_url('member/mypoints'); ?>"><i class="fas fa-star"></i></a>
+											<a href="<?php echo base_url('member/mypoints'); ?>">My Points</a>
+										</div>
+										<div>
+											<a href="<?php echo base_url('member/myevents'); ?>"><i class="fas fa-calendar-day"></i></a>
+											<a href="<?php echo base_url('member/myevents'); ?>">My Events</a>
+										</div>
+										<div>
+											<a href="<?php echo base_url('member/myinbox'); ?>"><i class="fas fa-envelope"></i></a>
+											<a href="<?php echo base_url('member/myinbox'); ?>">My Inbox</a>
+										</div>
+									</nav>
+									<hr class="lsvr-spacer" aria-hidden="true">
 
-								</div>
+<div class="lsvr-grid lsvr-grid--2-cols lsvr-grid--sm-1-cols">
+
+	<?php if(count($orders) >0) { ?>
+    <div class="lsvr-grid__col">
+
+    	<!-- LSVR PRICING TABLE : begin -->
+		<div class="lsvr-pricing-table">
+		    <div class="lsvr-pricing-table__inner">
+
+		        <h3 class="lsvr-pricing-table__title">Orders</h3>
+
+		        <p class="lsvr-pricing-table__price">
+		        	<span class="lsvr-pricing-table__price-value"><?php echo count($orders); ?></span>
+		        	<em class="lsvr-pricing-table__price-description">ongoing orders</em>
+		        </p>
+
+		        <p class="lsvr-pricing-table__button">
+		        	<a href="<?php echo base_url('member/myorders'); ?>" class="lsvr-pricing-table__button-link lsvr-button">Check Now</a>
+		        </p>
+
+		    </div>
+		</div>
+		<!-- LSVR PRICING TABLE : end -->
+
+	</div>
+<?php } ?>
+
+    <?php if(count($vouchers) >0) { ?>
+    <div class="lsvr-grid__col">
+
+    	<!-- LSVR PRICING TABLE : begin -->
+		<div class="lsvr-pricing-table">
+		    <div class="lsvr-pricing-table__inner">
+
+		        <h3 class="lsvr-pricing-table__title">Voucher</h3>
+
+		        <p class="lsvr-pricing-table__price">
+		        	<span class="lsvr-pricing-table__price-value"><?php echo count($vouchers); ?></span>
+		        	<em class="lsvr-pricing-table__price-description">available vouchers</em>
+		        </p>
+
+		        <p class="lsvr-pricing-table__button">
+		        	<a href="<?php echo base_url('member/voucher'); ?>" class="lsvr-pricing-table__button-link lsvr-button">Check Now</a>
+		        </p>
+
+		    </div>
+		</div>
+		<!-- LSVR PRICING TABLE : end -->
+
+	</div>
+<?php } ?>
+
+</div>
+
+</div>
 							</div>
 							<!-- PAGE : end -->
 

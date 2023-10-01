@@ -12,8 +12,11 @@ class Trans_model extends CI_Model {
 	}
 
 	public function getTransWhere($where = null) {
+		$this->db->join('member','member.id = trans.member_id', 'left');
 		$this->db->order_by('order_placed_date', 'desc');
+		$this->db->select('trans.*, member.first_name as "memberfname", member.last_name as "memberlname", member.email');
 		$q =$this->db->get_where('trans', $where);
+		//echo $this->db->last_query();
 		return $q->result();
 	}
 
@@ -113,7 +116,12 @@ class Trans_model extends CI_Model {
 		$q = $this->db->get_where('trans_detail', array('product_id' => $id, 'show_review' => TRUE));
 		$hasil = $q->row();
 		$rating = $hasil->rating;
-		return $rating/$q->num_rows();
+		$h = $this->db->get_where('trans_detail', array('product_id' => $id, 'show_review' => TRUE));
+		if($h->num_rows() > 0) {
+			return $rating/$h->num_rows();
+		} else {
+			return 0;
+		}
 	}
 
 	public function getProductRatingNumber($id) {

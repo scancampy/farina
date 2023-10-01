@@ -1,5 +1,4 @@
-﻿
-<!-- CORE : begin -->
+﻿<!-- CORE : begin -->
 <div id="core" class="core--fullwidth">
 	<div class="core__inner">
 
@@ -83,7 +82,7 @@
 			                    					<header class="lsvr-services__header">
 
 			                    						<h2 class="lsvr-services__title">
-			                    							<a href="service-archive.html" class="lsvr-services__title-link">Features Products</a>
+			                    							<a href="service-archive.html" class="lsvr-services__title-link">Featured Products</a>
 			                    						</h2>
 
 			                    						<h3 class="lsvr-services__subtitle">Max Femme menyediakan produk berkualitas dengan harga terjangkau</h3>
@@ -162,35 +161,34 @@
 		<div class="lsvr-container">
 			<div class="lsvr-services__list lsvr-grid lsvr-grid--3-cols lsvr-grid--md-2-cols lsvr-grid--sm-1-cols">
 
-				<!-- SERVICE ITEM : begin -->
+				<?php 
+				$arrayicon = array('icon-powder-brush','icon-hair-dryer','icon-beard','icon-spa-lotion', 'icon-lotus-flower', 'icon-essence-candle-1');
+
+				 ?>
+				<?php foreach ($brand as $key => $value) { ?>
+					<!-- SERVICE ITEM : begin -->
 				<div class="lsvr-services__item lsvr-grid__col lsvr-services__item--has-thumbnail">
 					<article class="lsvr-beautyspot-services__post">
-						<div class="lsvr-services__post-bg" style="background-image: url( 'images/service_01.jpg' ); ">
+						<div class="lsvr-services__post-bg" style="background-image: url( 'images/brand/<?php  echo $value->logo_filename; ?>' ); ">
                     		<div class="lsvr-services__post-inner">
 
                     			<!-- SERVICE ITEM HEADER : begin -->
                 				<header class="lsvr-services__post-header">
                             		<div class="lsvr-services__post-header-inner">
 
-                            			<span class="lsvr-services__post-icon icon-powder-brush" aria-hidden="true"></span>
+                            			<span class="lsvr-services__post-icon <?php echo $arrayicon[$key]; ?>" aria-hidden="true"></span>
 
                             			<h3 class="lsvr-services__post-title">
-                            				<a href="service-single.html" class="lsvr-services__post-title-link">Garnier</a>
+                            				<a href="service-single.html" class="lsvr-services__post-title-link"><?php echo $value->name; ?></a>
                         				</h3>
 
                                 	</div>
                         		</header>
                         		<!-- SERVICE ITEM HEADER : end -->
 
-                        		<!-- SERVICE ITEM DESCRIPTION : begin -->
-                        		<div class="lsvr-services__post-description">
-                                	<div class="lsvr-services__post-description-inner">
-                                    	<p>Cosmetics are substances or products used to enhance or alter the appearance of the face or fragrance and texture of the body.</p>
-                                	</div>
-                            	</div>
-                            	<!-- SERVICE ITEM DESCRIPTION : end -->
+                        		
 
-                                <a href="service-single.html" class="lsvr-services__post-overlay-link">
+                                <a href="<?php echo base_url('product?brand='.$value->id) ?>" class="lsvr-services__post-overlay-link">
                                     <span class="screen-reader-text">More Info</span>
                                 </a>
 
@@ -199,196 +197,11 @@
             		</article>
     			</div>
     			<!-- SERVICE ITEM : end -->
+				<?php } ?>
 
-				<!-- SERVICE ITEM : begin -->
-				<div class="lsvr-services__item lsvr-grid__col lsvr-services__item--has-thumbnail">
-					<article class="lsvr-beautyspot-services__post">
-						<div class="lsvr-services__post-bg" style="background-image: url( 'images/service_02.jpg' ); ">
-                    		<div class="lsvr-services__post-inner">
+				
 
-                    			<!-- SERVICE ITEM HEADER : begin -->
-                				<header class="lsvr-services__post-header">
-                            		<div class="lsvr-services__post-header-inner">
-
-                            			<span class="lsvr-services__post-icon icon-hair-dryer" aria-hidden="true"></span>
-
-                            			<h3 class="lsvr-services__post-title">
-                            				<a href="service-single.html" class="lsvr-services__post-title-link">Hairdressing</a>
-                        				</h3>
-
-                                	</div>
-                        		</header>
-                        		<!-- SERVICE ITEM HEADER : end -->
-
-                        		<!-- SERVICE ITEM DESCRIPTION : begin -->
-                        		<div class="lsvr-services__post-description">
-                                	<div class="lsvr-services__post-description-inner">
-                                    	<p>Hairdressing as an occupation dates back thousands of years. Ancient art drawings and paintings have been discovered.</p>
-                                	</div>
-                            	</div>
-                            	<!-- SERVICE ITEM DESCRIPTION : end -->
-
-                                <a href="service-single.html" class="lsvr-services__post-overlay-link">
-                                    <span class="screen-reader-text">More Info</span>
-                                </a>
-
-                    		</div>
-                		</div>
-            		</article>
-    			</div>
-    			<!-- SERVICE ITEM : end -->
-
-				<!-- SERVICE ITEM : begin -->
-				<div class="lsvr-services__item lsvr-grid__col lsvr-services__item--has-thumbnail">
-					<article class="lsvr-beautyspot-services__post">
-						<div class="lsvr-services__post-bg" style="background-image: url( 'images/service_03.jpg' ); ">
-                    		<div class="lsvr-services__post-inner">
-
-                    			<!-- SERVICE ITEM HEADER : begin -->
-                				<header class="lsvr-services__post-header">
-                            		<div class="lsvr-services__post-header-inner">
-
-                            			<span class="lsvr-services__post-icon icon-beard" aria-hidden="true"></span>
-
-                            			<h3 class="lsvr-services__post-title">
-                            				<a href="service-single.html" class="lsvr-services__post-title-link">Barber</a>
-                        				</h3>
-
-                                	</div>
-                        		</header>
-                        		<!-- SERVICE ITEM HEADER : end -->
-
-                        		<!-- SERVICE ITEM DESCRIPTION : begin -->
-                        		<div class="lsvr-services__post-description">
-                                	<div class="lsvr-services__post-description-inner">
-                                    	<p>A barber is a person whose occupation is mainly to cut, dress, groom, style and shave men’s and boys’ hair. Most barbers now specialize.</p>
-                                	</div>
-                            	</div>
-                            	<!-- SERVICE ITEM DESCRIPTION : end -->
-
-                                <a href="service-single.html" class="lsvr-services__post-overlay-link">
-                                    <span class="screen-reader-text">More Info</span>
-                                </a>
-
-                    		</div>
-                		</div>
-            		</article>
-    			</div>
-    			<!-- SERVICE ITEM : end -->
-
-				<!-- SERVICE ITEM : begin -->
-				<div class="lsvr-services__item lsvr-grid__col lsvr-services__item--has-thumbnail">
-					<article class="lsvr-beautyspot-services__post">
-						<div class="lsvr-services__post-bg" style="background-image: url( 'images/service_04.jpg' ); ">
-                    		<div class="lsvr-services__post-inner">
-
-                    			<!-- SERVICE ITEM HEADER : begin -->
-                				<header class="lsvr-services__post-header">
-                            		<div class="lsvr-services__post-header-inner">
-
-                            			<span class="lsvr-services__post-icon icon-spa-lotion" aria-hidden="true"></span>
-
-                            			<h3 class="lsvr-services__post-title">
-                            				<a href="service-single.html" class="lsvr-services__post-title-link">Massages</a>
-                        				</h3>
-
-                                	</div>
-                        		</header>
-                        		<!-- SERVICE ITEM HEADER : end -->
-
-                        		<!-- SERVICE ITEM DESCRIPTION : begin -->
-                        		<div class="lsvr-services__post-description">
-                                	<div class="lsvr-services__post-description-inner">
-                                    	<p>Massage is the manipulation of soft tissues in the body. Massage techniques are commonly applied with hands, fingers, elbows.</p>
-                                	</div>
-                            	</div>
-                            	<!-- SERVICE ITEM DESCRIPTION : end -->
-
-                                <a href="service-single.html" class="lsvr-services__post-overlay-link">
-                                    <span class="screen-reader-text">More Info</span>
-                                </a>
-
-                    		</div>
-                		</div>
-            		</article>
-    			</div>
-    			<!-- SERVICE ITEM : end -->
-
-				<!-- SERVICE ITEM : begin -->
-				<div class="lsvr-services__item lsvr-grid__col lsvr-services__item--has-thumbnail">
-					<article class="lsvr-beautyspot-services__post">
-						<div class="lsvr-services__post-bg" style="background-image: url( 'images/service_05.jpg' ); ">
-                    		<div class="lsvr-services__post-inner">
-
-                    			<!-- SERVICE ITEM HEADER : begin -->
-                				<header class="lsvr-services__post-header">
-                            		<div class="lsvr-services__post-header-inner">
-
-                            			<span class="lsvr-services__post-icon icon-lotus-flower" aria-hidden="true"></span>
-
-                            			<h3 class="lsvr-services__post-title">
-                            				<a href="service-single.html" class="lsvr-services__post-title-link">Body Treatments</a>
-                        				</h3>
-
-                                	</div>
-                        		</header>
-                        		<!-- SERVICE ITEM HEADER : end -->
-
-                        		<!-- SERVICE ITEM DESCRIPTION : begin -->
-                        		<div class="lsvr-services__post-description">
-                                	<div class="lsvr-services__post-description-inner">
-                                    	<p>A manicure is a cosmetic beauty treatment for the fingernails and hands performed at home or in a nail salon.</p>
-                                	</div>
-                            	</div>
-                            	<!-- SERVICE ITEM DESCRIPTION : end -->
-
-                                <a href="service-single.html" class="lsvr-services__post-overlay-link">
-                                    <span class="screen-reader-text">More Info</span>
-                                </a>
-
-                    		</div>
-                		</div>
-            		</article>
-    			</div>
-    			<!-- SERVICE ITEM : end -->
-
-				<!-- SERVICE ITEM : begin -->
-				<div class="lsvr-services__item lsvr-grid__col lsvr-services__item--has-thumbnail">
-					<article class="lsvr-beautyspot-services__post">
-						<div class="lsvr-services__post-bg" style="background-image: url( 'images/service_06.jpg' ); ">
-                    		<div class="lsvr-services__post-inner">
-
-                    			<!-- SERVICE ITEM HEADER : begin -->
-                				<header class="lsvr-services__post-header">
-                            		<div class="lsvr-services__post-header-inner">
-
-                            			<span class="lsvr-services__post-icon icon-essence-candle-1" aria-hidden="true"></span>
-
-                            			<h3 class="lsvr-services__post-title">
-                            				<a href="service-single.html" class="lsvr-services__post-title-link">Aromatherapy</a>
-                        				</h3>
-
-                                	</div>
-                        		</header>
-                        		<!-- SERVICE ITEM HEADER : end -->
-
-                        		<!-- SERVICE ITEM DESCRIPTION : begin -->
-                        		<div class="lsvr-services__post-description">
-                                	<div class="lsvr-services__post-description-inner">
-                                    	<p>Aromatherapy uses aromatic materials, including essential oils, and other aroma compounds, with claims for improving.</p>
-                                	</div>
-                            	</div>
-                            	<!-- SERVICE ITEM DESCRIPTION : end -->
-
-                                <a href="service-single.html" class="lsvr-services__post-overlay-link">
-                                    <span class="screen-reader-text">More Info</span>
-                                </a>
-
-                    		</div>
-                		</div>
-            		</article>
-    			</div>
-    			<!-- SERVICE ITEM : end -->
+				
 
 			</div>
 		</div>

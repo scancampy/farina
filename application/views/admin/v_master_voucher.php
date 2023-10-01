@@ -63,6 +63,9 @@
                        }   else if($value->voucher_type == 'produk') {
                         echo '<span class="badge bg-danger">'.$value->voucher_type.'</span>';
                        }
+                       else if($value->voucher_type == 'ongkir') {
+                        echo '<span class="badge bg-info">'.$value->voucher_type.'</span>';
+                       }
                         ?></td>                      
                       
                       <td><?php echo strftime("%d %B %Y",strtotime($value->exp_date)); ?></td>
@@ -139,6 +142,11 @@
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_brand" value="brand" >
                   <label class="form-check-label" for="voucher_type_brand">Brand</label>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="voucher_type" id="voucher_type_ongkir" value="ongkir" >
+                  <label class="form-check-label" for="voucher_type_ongkir">Diskon Ongkir</label>
                 </div>
               </div>
             </div>

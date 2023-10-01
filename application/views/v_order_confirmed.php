@@ -89,7 +89,7 @@
 									</div>
 									<div class="box-div">
 										<h5>Payment Information</h5>
-										<p>The total amount due for your order is <strong style="color:#ff007c;">Rp. <?php $tot = $trans['trans']->total_trans + $trans['trans']->shipping_cost - $trans['trans']->discount; 
+										<p>The total amount due for your order is <strong style="color:#ff007c;">Rp. <?php $tot = $trans['trans']->total_trans + $trans['trans']->shipping_cost - $trans['trans']->discount - $trans['trans']->discount_ongkir; 
 
 										echo number_format($tot,0,',','.'); 
 									?></strong>. Please make payment at your earliest convenience using the following details:</p>
@@ -98,10 +98,6 @@
 											echo '<strong>No. Rek: '.$setting->no_akun_bank1.'</strong><br/>';
 											echo '<strong>A/N: '.$setting->nama_akun_bank1.'</strong><br/><br/>';
 
-
-											echo '<strong>'.$setting->bank2.'</strong><br/>'; 
-											echo '<strong>No. Rek: '.$setting->no_akun_bank2.'</strong><br/>';
-											echo '<strong>A/N: '.$setting->nama_akun_bank2.'</strong><br/><br/>'; 
 										?>
 									</div>
 

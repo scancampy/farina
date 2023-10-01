@@ -97,9 +97,15 @@
         <td colspan="3">Shipping Cost</td>
         <td>Rp. <?php echo number_format($trans['trans']->shipping_cost,0,',','.'); ?> (<?php echo $trans['trans']->shipping_service; ?>)</td>
       </tr>
+    <?php if($trans['trans']->discount_ongkir >0) { ?>
+      <tr>
+        <td colspan="3">Discount Ongkir (Voucher: [<?php echo $trans['trans']->voucher_ongkir_code; ?>])</td>
+        <td>- Rp. <?php echo number_format($trans['trans']->discount_ongkir,0,',','.'); ?></td>
+      </tr>
+    <?php } ?> 
       <tr>
         <td colspan="3" class="total">Order Total</td>
-        <td>Rp. <?php echo number_format($trans['trans']->total_trans+$trans['trans']->shipping_cost-$trans['trans']->discount,0,',','.'); ?> </td>
+        <td>Rp. <?php echo number_format($trans['trans']->total_trans+$trans['trans']->shipping_cost-$trans['trans']->discount-$trans['trans']->discount_ongkir,0,',','.'); ?> </td>
       </tr>
     </tfoot>
   </table>

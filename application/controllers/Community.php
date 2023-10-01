@@ -25,7 +25,12 @@ class Community extends CI_Controller {
 		$data['likes'] = array();
 		foreach ($data['post'] as $key => $value) {
 			$data['photo'][] = $this->feed_model->getImagePost(null, $value->id);
-			$data['likes'][] = $this->feed_model->checkLike($value->id, $user->id);
+			if(empty($user)) {
+				$data['likes'][] = false;
+			} else {
+				$data['likes'][] = $this->feed_model->checkLike($value->id, $user->id);	
+			}
+			
 			$data['numlikes'][] =$this->feed_model->getLikes($value->id);
 		}
 

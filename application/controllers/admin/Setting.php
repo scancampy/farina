@@ -125,7 +125,7 @@ class Setting extends CI_Controller {
 			if($this->input->post('propinsi') != '-' && $this->input->post('kota') != '-' && $this->input->post('kecamatan') != '-') {
 				$this->admin_model->updateAddress($this->input->post('kodepos'), $this->input->post('alamat'), $this->input->post('propinsi'), $this->input->post('kota'), $this->input->post('kecamatan'));
 
-				$this->admin_model->updateKontak($this->input->post('whatsapp'), $this->input->post('default_whatsapp_message'));
+				$this->admin_model->updateKontak($this->input->post('whatsapp'), $this->input->post('default_whatsapp_message'),$this->input->post('ig_link'), $this->input->post('tiktok_link'), $this->input->post('lazada_link'), $this->input->post('shopee_link'));
 
 				$this->admin_model->updatePoin($this->input->post('kurs_poin'));
 
@@ -154,6 +154,10 @@ class Setting extends CI_Controller {
 			$data['address']['nama_akun_bank2'] = $hasil->nama_akun_bank2;
 			$data['address']['whatsapp'] = $hasil->whatsapp;
 			$data['address']['default_whatsapp_message'] = $hasil->default_whatsapp_message;
+			$data['address']['ig_link'] = $hasil->ig_link;
+			$data['address']['tiktok_link'] = $hasil->tiktok_link;
+			$data['address']['lazada_link'] = $hasil->lazada_link;
+			$data['address']['shopee_link'] = $hasil->shopee_link;
 			$data['address']['kurs_poin'] = $hasil->kurs_poin;
 		}
 

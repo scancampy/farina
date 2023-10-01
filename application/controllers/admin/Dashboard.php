@@ -14,6 +14,10 @@ class Dashboard extends CI_Controller {
 		$data['name'] = $this->session->userdata('user')->name;
 		$data['title'] = "Dashboard";
 
+		$data['trans'] = $this->trans_model->getTransWhere('trans.status="order_placed" AND trans.payment_confirmation_date IS NOT NULL AND trans.is_cancelled IS NULL');
+
+		//print_r($data['trans']);
+
 		$this->load->view('admin/v_header', $data);
 		$this->load->view('admin/v_dashboard', $data);
 		$this->load->view('admin/v_footer', $data);

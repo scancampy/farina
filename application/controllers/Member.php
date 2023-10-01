@@ -7,10 +7,17 @@ class Member extends CI_Controller {
 		if(empty($this->session->userdata('member'))) {
           	redirect('member/signin');
         }
+        $user = $this->session->userdata('member');
 
 		$data = array();
 		$data['setting'] = $this->admin_model->getSetting();
 		$data['title'] = 'Member Dashboard';
+		$data['orders'] = $this->trans_model->getTransWhere('trans.member_id = "'.$user->id.'" AND trans.is_cancelled IS NULL AND trans.status != "order_delivered"');
+		$data['vouchers'] = $this->voucher_model->getMemberVoucher($user->id);
+		//$data['messages'] = $this->messaging_model->getMessage(null,"member_id='".$user->id."' AND ")
+		//print_r($data['vouchers']);
+		//echo 'trans.member_id = "'.$user->id.'" AND trans.is_cancelled = 0 AND trans.status != "order_delivered"';
+		//print_r($data['orders']);
 
 		$this->load->view('v_header', $data);
 		$this->load->view('v_dashboard',$data);
@@ -35,8 +42,13 @@ class Member extends CI_Controller {
 		$data['js'] = "
 		$('body').on('click','.buttoncopy', function() {
 			var vc= $(this).attr('vouchercode');
-			navigator.clipboard.writeText(vc);
-			alert('Voucher code is copied');
+			navigator.clipboard
+		      .writeText(vc)
+		      .then(() => {
+		        alert('Voucher code is copied');
+		      });
+
+			
 		});
 		";
 
@@ -382,7 +394,7 @@ Thank you for choosing our online store. We can\'t wait to see you exploring the
 		$data['title'] = 'My Orders';
 		$user = $this->session->userdata('member');
 
-		$data['myorder'] = $this->trans_model->getTransWhere(array('member_id' => $user->id, 'id' => $id));
+		$data['myorder'] = $this->trans_model->getTransWhere(array('trans.member_id' => $user->id, 'trans.id' => $id));
 
 		if(empty($data['myorder'])) {
 			redirect('notfound');

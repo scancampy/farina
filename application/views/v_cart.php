@@ -356,11 +356,45 @@ if($voucher[0]->min_order <= $totalbrand) {  ?>
 	} 
 ?>
 
-<?php if(!isset($voucher)) { ?>
+<?php $diskonongkir = 0; ?>
+<?php if(isset($voucherongkir)) {
+		if($voucherongkir[0]->voucher_type == 'ongkir') { 
+			if($total < $voucherongkir[0]->min_order) { ?>
+				<div class="lsvr-alert-message lsvr-alert-message--warning">
+					<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+					<h3 class="lsvr-alert-message__title">Warning Message</h3>
+					<p>Voucher belum dapat dipakai karena total belanja belum memenuhi minimum order <strong>Rp. <?php  echo number_format($voucherongkir[0]->min_order, 0, ",","."); ?></strong></p>
+
+					<button type="submit" name="btnCancelVoucherOngkir" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+				</div>
+				<?php } else { ?>
+				<div class="lsvr-alert-message lsvr-alert-message--success">
+					<span class="lsvr-alert-message__icon" aria-hidden="true"></span>
+					<h3 class="lsvr-alert-message__title"><strong><?php echo $voucherongkir[0]->voucher_code; ?></strong> Voucher Applied</h3>
+					<p><strong><?php echo $voucherongkir[0]->title; ?></strong><br/>Anda mendapatkan potongan ongkir sebesar <?php
+					if($voucherongkir[0]->discount_value > 0) { echo 'Rp. '.number_format($voucherongkir[0]->discount_value, 0, ",","."); 
+						$diskonongkir = $voucherongkir[0]->discount_value;
+					} else { echo $voucherongkir[0]->discount_percentage.'%'; 
+						$diskonongkir = $total * ($voucherongkir[0]->discount_percentage/100); }
+					?></p>
+					<button type="submit" name="btnCancelVoucherOngkir" value="cancel" class="lsvr-button lsvr-button--type-2 lsvr-button--small" style="margin-top:20px;" >Cancel Voucher</button>
+				</div>
+		<?php	} 
+			} 
+		} ?>
+
+<?php 
+	$jumvoucher = 0; 
+	if(isset($voucher)) { $jumvoucher++; }
+	if(isset($voucherongkir)) { $jumvoucher++;  }		
+?>
+
+<?php if($jumvoucher < 2) { ?>
 
 <!-- CART COUPON : begin -->
 <p class="product-cart__coupon">
 	<input type="text" style="text-transform:uppercase" maxlength="20" class="product-cart__coupon-input" placeholder="Voucher Code" name="voucher_code">
+	<a href="<?php echo base_url('member/voucher'); ?>" target="_blank" class="lsvr-button lsvr-button--type-2 lsvr-button" id="searchvoucher"><i class="fas fa-ticket-alt"></i></a>
 	<button type="submit" value="apply" class="product-cart__coupon-btn lsvr-button lsvr-button--type-2" name="btnApply">Apply Voucher</button>
 </p>
 <!-- CART COUPON : end -->

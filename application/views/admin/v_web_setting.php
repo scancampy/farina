@@ -104,6 +104,23 @@
                         <label for="default_whatsapp_message">Pesan Default Whatsapp</label>
                         <textarea class="form-control" id="default_whatsapp_message" name="default_whatsapp_message" required ><?php echo @$address['default_whatsapp_message']; ?></textarea>
                       </div>
+                      <div class="form-group">
+                        <label for="ig_link">IG</label>
+                        <input type="text" class="form-control" value="<?php echo @$address['ig_link']; ?>" id="ig_link" name="ig_link"  >
+                      </div>
+                      <div class="form-group">
+                        <label for="tiktok_link">TikTok</label>
+                        <input type="text" class="form-control" value="<?php echo @$address['tiktok_link']; ?>" id="tiktok_link" name="tiktok_link"  >
+                      </div>
+                      <div class="form-group">
+                        <label for="lazada_link">Lazada</label>
+                        <input type="text" class="form-control" value="<?php echo @$address['lazada_link']; ?>" id="lazada_link" name="lazada_link"  >
+                      </div>
+
+                      <div class="form-group">
+                        <label for="shopee_link">Shopee</label>
+                        <input type="text" class="form-control" value="<?php echo @$address['shopee_link']; ?>" id="shopee_link" name="shopee_link"  >
+                      </div>
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
                        Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.

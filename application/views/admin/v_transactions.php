@@ -22,6 +22,41 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-12">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Filter</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <form method="get" action="<?php echo base_url('admin/trans'); ?>">
+                <div class="form-group">
+                  <label for="filterstatus">Status</label>
+                  <select id="filterstatus" name="filterstatus" class="form-control custom-select">
+                    <option value="all" <?php if($this->input->get('filterstatus') == 'all') { echo 'selected'; } ?>>All</option>
+                    <option value="order_placed" <?php if($this->input->get('filterstatus') == 'order_placed') { echo 'selected'; } ?>>Order Placed</option>
+                    <option value="payment_uploaded" <?php if($this->input->get('filterstatus') == 'payment_uploaded') { echo 'selected'; } ?>>Payment Uploaded</option>
+                    <option value="order_prepared" <?php if($this->input->get('filterstatus') == 'order_prepared') { echo 'selected'; } ?>>Order Prepared</option>
+                    <option value="order_in_transit" <?php if($this->input->get('filterstatus') == 'order_in_transit') { echo 'selected'; } ?>>Order In Transit</option>
+                    <option value="order_delivered" <?php if($this->input->get('filterstatus') == 'order_delivered') { echo 'selected'; } ?>>Order Delivered</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                  <input type="submit" value="Submit" class="btn btn-primary" name="btnfilter"/>
+                </div>
+              </form>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+          <div class="col-md-12">
+
             
             <div class="card">
               <div class="card-header d-flex p-0">
@@ -36,6 +71,8 @@
                   <thead>
                   <tr>
                     <th>ID</th>
+                    <th>Customer</th>
+                    <th>Delivered To</th>
                     <th>Order Date</th>
                     <th>Status</th>
                     <th>Nominal</th>
@@ -44,22 +81,32 @@
                   </thead>
                   <tbody>
                    <?php 
+                   //print_r($trans);
                    foreach ($trans as $key => $value) { ?>
                     <tr>
                       <td><?php echo $value->id; ?></td>
+                      <td><?php echo $value->memberfname.' '.$value->memberlname.'<br/>'.$value->email; ?></td>
+                      <td><?php echo $value->kecamatan.', '.$value->kota; ?></td>
                       <td><?php echo strftime("%d-%m-%Y %H:%M", strtotime($value->order_placed_date)); ?></td>   
                       <td><?php 
                     if($value->is_cancelled == 1) { 
                       echo '<span class="badge badge-danger">Order Cancelled</span>';
-                    } else if($value->status == 'order_placed') { echo '<span class="badge badge-warning">Order Placed</span>'; 
                     } else if($value->status == 'order_prepared') { 
                       echo '<span class="badge badge-info">Order Prepared</span>'; 
                     } else if($value->status == 'order_in_transit') { 
                       echo '<span class="badge badge-secondary">Order in Transit</span>'; 
                     } else if($value->status == 'order_delivered') { 
                       echo '<span class="badge badge-success">Order Delivered</span>'; 
-                    } ?></td>
-                      <td>Rp. <?php $tot = $value->total_trans+$value->shipping_cost-$value->discount; echo number_format($tot, 0, ',','.'); ?></td>
+                    } ?>
+                      <?php 
+                      if($value->status =='order_placed' && $value->payment_confirmation_date != null && $value->is_cancelled == 0) {  ?>
+                        <span class="badge badge-primary"><i class="fas fa-exclamation"></i> Payment Uploaded</span>
+                      <?php } else if($value->status == 'order_placed' && $value->is_cancelled == 0) { ?>
+                        <span class="badge badge-warning">Order Placed</span>
+                      <?php } ?>
+
+                    </td>
+                      <td>Rp. <?php $tot = $value->total_trans+$value->shipping_cost-$value->discount-$value->discount_ongkir; echo number_format($tot, 0, ',','.'); ?></td>
                           
                       <td class="d-flex justify-content-end">
                         <a href="#" transid="<?php echo $value->id; ?>" class="btn btn-xs btn-primary mr-1 transedit"><i class="nav-icon fas fa-cogs"></i> Manage</a></td>
@@ -70,6 +117,8 @@
                   <tfoot>
                   <tr>
                     <th>ID</th>
+                    <th>Customer</th>
+                    <th>Delivered To</th>
                     <th>Order Date</th>
                     <th>Status</th>
                     <th>Nominal</th>
@@ -169,6 +218,11 @@
                           <tr>
                             <td colspan="3" style="text-align:right;">Shipping Cost</td>
                             <td id="shippping">Rp. </td>
+                          </tr>
+
+                          <tr>
+                            <td colspan="3" id="discount_ongkir_info" style="text-align:right;">Discount Ongkir</td>
+                            <td id="discount_ongkir">Rp. </td>
                           </tr>
                           <tr>
                             <td colspan="3" style="text-align:right;"><strong>TOTAL</strong></td>

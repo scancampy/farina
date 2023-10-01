@@ -93,7 +93,13 @@ class Trans extends CI_Controller {
 
 		$data['name'] = $this->session->userdata('user')->name;
 		$data['title'] = "Transactions";
-		$data['trans'] = $this->trans_model->getTransWhere();
+		if($this->input->get('filterstatus') =='payment_uploaded') {
+			$data['trans'] = $this->trans_model->getTransWhere('trans.status="order_placed" AND trans.payment_confirmation_date IS NOT NULL AND trans.is_cancelled IS NULL');
+		} else if($this->input->get('filterstatus') != NULL) {
+			$data['trans'] = $this->trans_model->getTransWhere('trans.status="'.$this->input->get('filterstatus').'"');
+		} else {
+			$data['trans'] = $this->trans_model->getTransWhere();
+		}
 		$data['setting'] = $this->admin_model->getSetting();
 		
 
@@ -153,7 +159,16 @@ class Trans extends CI_Controller {
 
 				$("#shippping").html("Rp. " + numberWithCommas(obj.data.trans.shipping_cost));
 
-				var total = parseInt(obj.data.trans.total_trans) + parseInt(obj.data.trans.shipping_cost) - parseInt(obj.data.trans.discount);
+				if(obj.data.trans.discount_ongkir >0) {
+					$("#discount_ongkir_info").html("Discount Ongkir (Voucher: " + obj.data.trans.voucher_ongkir_code + ")");
+					
+					$("#discount_ongkir").html("-Rp. " + numberWithCommas(obj.data.trans.discount_ongkir));
+				} else {
+					$("#discount_ongkir_info").html("Discount Ongkir");
+					$("#discount_ongkir").html("Rp. 0");
+				}
+
+				var total = parseInt(obj.data.trans.total_trans) + parseInt(obj.data.trans.shipping_cost) - parseInt(obj.data.trans.discount) - (parseInt(obj.data.trans.discount_ongkir) || 0);
 
 				$("#total").html("<strong>Rp. " + numberWithCommas(total) + "</strong>");
 
