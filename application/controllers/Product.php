@@ -62,14 +62,14 @@ class Product extends CI_Controller {
 			$offset = (int) $this->input->get('o');
 		} 
 
-		$wherestr = '';
+		$wherestr = ' product.is_deleted=0 ';
 		if($this->input->get('category') != null) {
 			$str = '';
 			foreach ($newArray as $value) {
 			  $str .= "'" . $value . "', ";
 			}
 			$str = rtrim($str, ', ');
-			$wherestr = ' product.category_id IN ('.$str.') AND product.is_deleted = 0';
+			$wherestr .= ' AND product.category_id IN ('.$str.') ';
 		}
 
 		if($this->input->get('brand') != null) {

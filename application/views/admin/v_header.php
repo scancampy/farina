@@ -154,6 +154,7 @@
                   <p>Master Product</p>
                 </a>
               </li>
+               
               <li class="nav-item">
                 <a href="<?php echo base_url('admin/product/brand'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'brand' && $this->uri->segment(2) == 'product') { echo 'active';  } ?>">
                   <i class="far fa-circle nav-icon"></i>
@@ -165,8 +166,15 @@
                 <a href="<?php echo base_url('admin/category'); ?>" class="nav-link <?php if ($this->uri->segment(2) == 'category') { echo 'active';  } ?>">
                   <i class="nav-icon far fa-circle"></i>
                   <p>
-                    Category
+                    Master Category
                   </p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="<?php echo base_url('admin/product/variant'); ?>" class="nav-link <?php if ($this->uri->segment(3) == 'variant' && $this->uri->segment(2) == 'product') { echo 'active';  } ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Manage Variant Stock</p>
                 </a>
               </li>
 

@@ -41,6 +41,67 @@ class Product extends CI_Controller {
   	return $str;
   }
 
+  public function variant() {
+  	$data = array();
+  	$data['js'] = '';
+
+  	if(!$this->session->userdata('user')) {
+			redirect('admin/dashboard/login');
+		}
+
+		$data['title'] = "Manage Variant Stock";
+		$data['variants'] = $this->product_model->getVariantWithProduct();
+		$data['name'] = $this->session->userdata('user')->name;
+
+		if($this->input->post('btnApply')) {
+			$hiddenvariant = $this->input->post('hiddenidvariant');
+			$stok  = $this->input->post('stok');
+			$this->product_model->updateVariantStock($hiddenvariant,$stok);
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Variant stock succesfully updated'));
+			redirect('admin/product/variant');
+		}
+
+		// notif
+		if($this->session->flashdata('notif')) {
+			$notif = $this->session->flashdata('notif');
+			if($notif['type'] == 'success') {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "success",
+				        title: "'.$notif['msg'].'"
+				      });';
+			} else {
+				$data['js'] .= '
+				const Toast = Swal.mixin({
+				      toast: true,
+				      position: "top-end",
+				      showConfirmButton: false,
+				      timer: 3000
+				    });
+				    Toast.fire({
+				        icon: "error",
+				        title: "'.$notif['msg'].'"
+				      });';
+			}
+		}
+
+		// handle data table
+		$data['js'] .= ' $("#tablebrand").DataTable({
+      "responsive": true,
+      "autoWidth": false,
+    });';
+
+		$this->load->view('admin/v_header', $data);
+		$this->load->view('admin/v_manage_variant_stock', $data);
+		$this->load->view('admin/v_footer', $data);
+  }
+
   public function review() {
   	$data = array();
   	$data['js'] = '';
@@ -392,6 +453,25 @@ class Product extends CI_Controller {
 			}
 		});
 
+		$("body").on("click",".btndelimgvariant",function() {
+			if(confirm(\'Yakin hapus variant ini?\')) {
+				var id = $(this).attr("delid");
+				console.log(id);
+				$(this).closest("div").remove();
+
+				// del json 
+				$.post("'.base_url('admin/product/jsondelvariant').'", { sentid: id }, function(data) {
+					
+				});
+			}
+		});
+
+		function imgError(image) {
+		    image.onerror = "";
+		    image.src = "'.base_url('imgages/na.png').'";
+		    return true;
+		}
+
 		$("body").on("click", ".prodedit", function() {
 			var id = $(this).attr("prodid");
 
@@ -402,15 +482,25 @@ class Product extends CI_Controller {
 					var filename = obj.datafoto[i].filename;
 					console.log(obj.datafoto[i]);
 
-					$("#uploadedFoto").append("<div class=\"col-md-3 \"><img class=\"img-fluid rounded img-thumbnail \" style=\"object-fit: cover; height:200px;\" src=\"'.base_url('img/product/').'" + filename + "\"/><span class=\"btndelimg btn btn-warning\" delid=" + obj.datafoto[i].id + "  style=\"position: absolute; right: 10px; top: 5px;\"><i class=\"fa fa-trash\"></i></span></div>");
+					$("#uploadedFoto").append("<div class=\"col-md-3 \"><img class=\"img-fluid rounded img-thumbnail \" style=\"object-fit: cover; height:200px;\"   src=\"'.base_url('img/product/').'" + filename + "\"/><span class=\"btndelimg btn btn-warning\" delid=" + obj.datafoto[i].id + "  style=\"position: absolute; right: 10px; top: 5px;\"><i class=\"fa fa-trash\"></i></span></div>");
 				}
 
 				$("#variantContainer").html("");
 				for(var i=0; i < obj.datavariant.length; i++) {
 					var filename = obj.datavariant[i].filename;
+					var image = new Image(); 
+					var fileimage = "";
+					image.src = "'.base_url('img/variant/').'" + filename;
+					if (image.width == 0) {
+					  console.log("no image");
+					  fileimage = "'.base_url('images/na.png').'";
+					} else {
+					  fileimage = "'.base_url('img/variant/').'" + filename;
+					}
+
 					$("#variantContainer").append("<div class=\"col-md-3\">" + 
-					"<img style=\"width:100%;\" src=\"'.base_url('img/variant/').'" + filename + "\" />" + 
-					"<input type=\"text\" class=\"form-control\" name=\"currentvariant[]\" value=\"" + obj.datavariant[i].name + "\" /></div>");
+					"<img style=\"width:100%;\" src=\"" + fileimage + "\" />" + 
+					"<input type=\"text\" class=\"form-control\" name=\"currentvariant[]\" value=\"" + obj.datavariant[i].name + "\" /><span class=\"btndelimgvariant btn btn-warning\" delid=" + obj.datavariant[i].id + "  style=\"position: absolute; right: 10px; top: 5px;\"><i class=\"fa fa-trash\"></i></span></div>");
 				}
 
 				// populate category
@@ -602,6 +692,15 @@ class Product extends CI_Controller {
 		}
 	}
 
+	public function jsondelvariant() {
+		if($this->input->post('sentid')) {
+			$q = $this->product_model->delVariant($this->input->post('sentid'));
+			echo json_encode(array('result' => 'success', 'data' => $q));
+		} else {
+			echo json_encode(array('result' => 'failed'));
+		}
+	}
+
 
 	public function jsongetreview() {
 		if($this->input->post('sentid')) {
@@ -626,7 +725,7 @@ class Product extends CI_Controller {
 		if($this->input->post('sentid')) {
 			$q = $this->product_model->getProduct(null, $this->input->post('sentid'));
 			$f = $this->product_model->getImageProduct(null,  $this->input->post('sentid')); 
-			$v = $this->product_model->getVariant(null,$this->input->post('sentid'));
+			$v = $this->product_model->getVariant(array('is_deleted' => 0),$this->input->post('sentid'));
 			echo json_encode(array('result' => 'success', 'data' => $q, 'datafoto' => $f, 'datavariant' => $v));
 		} else {
 			echo json_encode(array('result' => 'failed'));

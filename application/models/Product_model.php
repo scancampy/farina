@@ -99,6 +99,12 @@ class Product_model extends CI_Model {
 		return true;
 	}
 
+	public function delVariant($id) {
+		$data = array('is_deleted' => 1);
+		$this->db->where('id', $id);
+		$this->db->update('variant', $data);
+	}
+
 	public function getVariant($where = null, $product_id=null, $id=null) {
 		if($product_id != null) {
 			$this->db->where('product_id', $product_id);
@@ -112,6 +118,34 @@ class Product_model extends CI_Model {
 			$this->db->where($where);
 		}
 
+		$q = $this->db->get('variant');
+		return $q->result();
+	}	
+
+	public function updateVariantStock($hiddenid, $stok) {
+		foreach ($hiddenid as $key => $value) {
+			$data = array('stok' => $stok[$key]);
+			$this->db->where('id', $value);
+			$this->db->update('variant', $data);
+		}
+	}
+
+	public function getVariantWithProduct($where = null, $product_id=null, $id=null) {
+		if($product_id != null) {
+			$this->db->where('variant.product_id', $product_id);
+		}
+
+		if($id != null) {
+			$this->db->where('variant.id', $id);
+		}
+
+		if($where != null) {
+			$this->db->where($where);
+		}
+
+		$this->db->join('product', 'product.id = variant.product_id', 'left');
+
+		$this->db->select('product.name as "prodname", variant.*');
 		$q = $this->db->get('variant');
 		return $q->result();
 	}	
