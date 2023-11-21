@@ -186,14 +186,16 @@
 												border-radius: 50%; background-size: cover;
 												background-repeat:no-repeat;
 												background-position: center center;
-												border:2px solid #ecf0f1; margin-right: 20px;" >
+												border:2px solid #ecf0f1; margin-right: 40px;" >
 												<?php if($value->filename != '') { ?>
 												<img src="<?php echo base_url('img/variant/'.$value->filename); ?>"  alt="<?php echo $value->name; ?>" >
 											<?php } else { ?>
 												<img src="<?php echo base_url('image_not_available.png'); ?>""  alt="<?php echo $value->name; ?>" >
 											<?php } ?>
 												</span>
-												<p style="text-align: center; font-size:10pt;"><?php echo $value->name; ?></p>
+												<p style="text-align: center; font-size:10pt;"><?php echo $value->name; ?>
+												<?php if($value->stok ==0) { echo '<br>(tidak tersedia)'; } ?>
+												</p>
 
 											</div>
 										<?php } ?>	

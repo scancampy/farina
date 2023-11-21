@@ -486,17 +486,14 @@ class Product extends CI_Controller {
 				}
 
 				$("#variantContainer").html("");
+				console.log(obj.datavariant);
 				for(var i=0; i < obj.datavariant.length; i++) {
 					var filename = obj.datavariant[i].filename;
 					var image = new Image(); 
 					var fileimage = "";
-					image.src = "'.base_url('img/variant/').'" + filename;
-					if (image.width == 0) {
-					  console.log("no image");
-					  fileimage = "'.base_url('images/na.png').'";
-					} else {
-					  fileimage = "'.base_url('img/variant/').'" + filename;
-					}
+					console.log(filename);
+					fileimage = "'.base_url('img/variant/').'" + filename;
+					
 
 					$("#variantContainer").append("<div class=\"col-md-3\">" + 
 					"<img style=\"width:100%;\" src=\"" + fileimage + "\" />" + 

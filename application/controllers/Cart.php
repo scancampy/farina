@@ -15,7 +15,16 @@ class Cart extends CI_Controller {
 		$this->load->helper('cookie');
 
 		if($this->input->post('btnsubmit')) {
-			
+			//die();
+			// cek dulu apakah variant ada stok
+			if($this->input->post('hidvariantchosen') != '') {
+				$var = $this->product_model->getVariantWithProduct(null, $this->input->post('hidprodid'), $this->input->post('hidvariantchosen')); 
+				$prod = $this->product_model->getProduct(null, $this->input->post('hidprodid'));
+				if(!$var[0]->stok) {
+					$this->session->set_flashdata('variant_no_stock', true);
+					redirect('product/detail/'.$this->input->post('hidprodid').'/'.url_title($prod[0]->name));
+				}				
+			}
 			// 
 			// bantal A 
 			// bantal B

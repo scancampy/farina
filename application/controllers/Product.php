@@ -190,6 +190,8 @@ class Product extends CI_Controller {
 		//delete_cookie('product');
 
 		if($this->input->post('btnsubmit')) {
+			
+
 			$this->load->helper('cookie');
 			// 
 			// bantal A 
@@ -272,6 +274,10 @@ class Product extends CI_Controller {
 						var x = $(this).attr('attrid');
 						$('#hidvariantchosen').val(x);
 					   });";
+
+		if($this->session->flashdata('variant_no_stock')) {
+			$data['js'] .= " alert('Variant tidak tersedia saat ini'); ";
+		}
 
 		$this->load->view('v_header', $data);
 		$this->load->view('v_product_detail',$data);

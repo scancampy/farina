@@ -230,6 +230,8 @@
                           </tr>
                         </tfoot>
                       </table>
+
+                      <a href="" id="aprint" target="_blank" class="btn btn-outline-primary"><i class="fas fa-print"></i> Print Invoice</a>
                     </div>
 
                     

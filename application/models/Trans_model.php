@@ -87,11 +87,19 @@ class Trans_model extends CI_Model {
 	}
 
 	public function getTransDetail($transid) {
-		$this->db->join('product', 'product.id=trans_detail.product_id');
+		$myquery = "SELECT `product`.*, (SELECT product_photo.filename FROM product_photo WHERE product_photo.product_id = `product`.`id` LIMIT 1), `trans_detail`.`qty`, `trans_detail`.`harga`, `variant`.`name` as `variantname`
+FROM `trans_detail`
+LEFT JOIN `product` ON `product`.`id` = `trans_detail`.`product_id`
+LEFT JOIN `variant` ON `variant`.`id`=`trans_detail`.`variant_id`
+WHERE `trans_detail`.`trans_id` = '".$transid."';";
+
+		/*$this->db->join('product', 'product.id=trans_detail.product_id','left');
 		$this->db->join('product_photo', 'product_photo.product_id = trans_detail.product_id', 'left');
 		$this->db->join('variant', 'variant.id=trans_detail.variant_id', 'left');
-		$this->db->select('product.*, product_photo.filename, trans_detail.qty, trans_detail.harga, variant.name as "variantname"');
-		$q = $this->db->get_where('trans_detail', array('trans_id' => $transid));
+		$this->db->select('product.*, product_photo.filename, trans_detail.qty, trans_detail.harga, variant.name as "variantname"');*/
+		$q = $this->db->query($myquery);
+
+		//echo $this->db->last_query();
 		return $q->result();
 	}
 

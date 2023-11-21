@@ -123,9 +123,11 @@ class Trans extends CI_Controller {
 
 			$.post("'.base_url('admin/trans/jsongettrans').'", { sentid: id}, function(data){ 
 				
+				console.log(data);
 				var obj = JSON.parse(data);
-				console.log(obj.data.trans);
+				console.log(obj.detil);
 				
+				$("#aprint").attr("href", "'.base_url('admin/trans/print/').'" + id);
 				$("#hiddenid").val(obj.data.trans.id);
 				$("#transid").val(obj.data.trans.id);
 				var d= obj.data.trans.order_placed_date.substring(8,10) + "/" + obj.data.trans.order_placed_date.substring(5,7) + "/" +obj.data.trans.order_placed_date.substring(0,4);
@@ -135,9 +137,15 @@ class Trans extends CI_Controller {
 
 				var tablestr = "";
 				for(var i =0; i < obj.detil.length; i++) {
+					var namestr = "";
+					if(obj.detil[i].variantname != "") {
+						namestr = obj.detil[i].name + " (variant: " + obj.detil[i].variantname + ")";
+					} else {
+						namestr = obj.detil[i].name;
+					}
 					var tot = (parseInt(obj.detil[i].price) *  parseInt(obj.detil[i].qty));
 					tablestr += "<tr>";
-					tablestr += "<td>" + obj.detil[i].name + "</td>";
+					tablestr += "<td>" + namestr + "</td>";
 					tablestr += "<td>" + obj.detil[i].qty + "</td>";
 					tablestr += "<td>" + numberWithCommas(obj.detil[i].price) + "</td>";
 					tablestr += "<td>" + numberWithCommas(tot) + "</td>";
@@ -233,6 +241,19 @@ class Trans extends CI_Controller {
 		$this->load->view('admin/v_header', $data);
 		$this->load->view('admin/v_transactions', $data);
 		$this->load->view('admin/v_footer', $data);
+	}
+
+	public function print($transid)
+	{
+		$data = array();
+		$data['trans'] = $this->trans_model->getTrans($transid);
+		
+		//print("<pre>".print_r($data['trans'],true)."</pre>");
+		//print_r($data['trans']['detil'][0]);
+		$data['detil'] = $this->trans_model->getTransDetail($transid); 
+		//print_r($data['detil']);
+		$data['member'] = $this->member_model->getMember(null, array('id' => $data['trans']['trans']->member_id));
+		$this->load->view('admin/v_print_invoice', $data);
 	}
 
 
