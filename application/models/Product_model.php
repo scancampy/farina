@@ -130,6 +130,12 @@ class Product_model extends CI_Model {
 		}
 	}
 
+	public function updateVariantStockById($id, $stok) {
+		$data = array('stok' => $stok);
+		$this->db->where('id', $id);
+		$this->db->update('variant', $data);
+	}
+
 	public function getVariantWithProduct($where = null, $product_id=null, $id=null) {
 		if($product_id != null) {
 			$this->db->where('variant.product_id', $product_id);

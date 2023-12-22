@@ -1,5 +1,4 @@
-﻿<!-- CORE : begin -->
-<div id="core" class="core--fullwidth">
+﻿<div id="core" class="core--fullwidth" style="margin-top:-30px;">
 	<div class="core__inner">
 
 		<!-- CORE COLUMNS : begin -->
@@ -29,7 +28,7 @@
 			                                				<div class="lsvr-slide-list__item-content-wrapper">
 			                                					<div class="lsvr-slide-list__item-content">
 			                                						<div class="lsvr-container">
-			                               								<div class="lsvr-slide-list__item-content-inner">
+<div class="lsvr-slide-list__item-content-inner" style="padding: 30px 30px 10px 2px; max-width: 300px;">
 
 			                                                            	<h2 class="lsvr-slide-list__item-title"><?php echo $value->title; ?></h2>
 
@@ -80,13 +79,17 @@
 								        	<div class="lsvr-services__header-wrapper">
 			                    				<div class="lsvr-container">
 			                    					<header class="lsvr-services__header">
+			                    						<?php //print_r($info); 
+foreach ($info as $key => $value) {
+	if($value->id==2) { ?>
+<h2 class="lsvr-services__title">
+		<a href="#" class="lsvr-services__title-link"><?php echo $value->title; ?></a>
+	</h2>
 
-			                    						<h2 class="lsvr-services__title">
-			                    							<a href="service-archive.html" class="lsvr-services__title-link">Featured Products</a>
-			                    						</h2>
-
-			                    						<h3 class="lsvr-services__subtitle">Max Femme menyediakan produk berkualitas dengan harga terjangkau</h3>
-
+	<h3 class="lsvr-services__subtitle"><?php echo $value->content; ?></h3>
+	<?php }
+}
+			                    						?>
 			                    					</header>
 			                    				</div>
 			                    			</div>
@@ -169,27 +172,14 @@
 					<!-- SERVICE ITEM : begin -->
 				<div class="lsvr-services__item lsvr-grid__col lsvr-services__item--has-thumbnail">
 					<article class="lsvr-beautyspot-services__post">
-						<div class="lsvr-services__post-bg" style="background-image: url( 'images/brand/<?php  echo $value->logo_filename; ?>' ); ">
-                    		<div class="lsvr-services__post-inner">
+						<div class="lsvr-services__post-bg" style="background-color:white !important;">
+                    		<div class="lsvr-services__post-inner" style="background-color:transparent;">
 
-                    			<!-- SERVICE ITEM HEADER : begin -->
-                				<header class="lsvr-services__post-header">
-                            		<div class="lsvr-services__post-header-inner">
+                                <a href="<?php echo base_url('product?brand='.$value->id) ?>" class="lsvr-services__post-overlay-link" style="display: flex; position: relative !important; height: auto !important;    ">
 
-                            			<span class="lsvr-services__post-icon <?php echo $arrayicon[$key]; ?>" aria-hidden="true"></span>
-
-                            			<h3 class="lsvr-services__post-title">
-                            				<a href="service-single.html" class="lsvr-services__post-title-link"><?php echo $value->name; ?></a>
-                        				</h3>
-
-                                	</div>
-                        		</header>
-                        		<!-- SERVICE ITEM HEADER : end -->
-
-                        		
-
-                                <a href="<?php echo base_url('product?brand='.$value->id) ?>" class="lsvr-services__post-overlay-link">
-                                    <span class="screen-reader-text">More Info</span>
+                                	<img style="display: block;
+    margin-left: auto;
+    margin-right: auto;" src="<?php echo base_url('images/brand/'.$value->logo_filename); ?>"/>
                                 </a>
 
                     		</div>
@@ -222,13 +212,14 @@
         	<div class="lsvr-posts__header-wrapper">
         		<div class="lsvr-container">
         			<header class="lsvr-posts__header">
-
+<?php foreach ($info as $key => $value) {
+	if($value->id==3) { ?>
         				<h2 class="lsvr-posts__title">
-        					<a href="<?php echo base_url('artilce'); ?>" class="lsvr-posts__title-link">Latest Beauty Article</a>
+        					<a href="<?php echo base_url('article'); ?>" class="lsvr-posts__title-link"><?php echo $value->title; ?></a>
         				</h2>
 
-        				<h3 class="lsvr-posts__subtitle">Temukan tips terbaik untuk makeup, hairdressing dan body treatments</h3>
-
+        				<h3 class="lsvr-posts__subtitle"><?php echo $value->content; ?></h3>
+<?php } } ?>
         			</header>
     			</div>
     		</div>
@@ -333,12 +324,14 @@
 								    			<div class="lsvr-container">
 			                    					<header class="lsvr-testimonials__header">
 
+<?php foreach ($info as $key => $value) {
+	if($value->id==4) { ?>
 							                            <h2 class="lsvr-testimonials__title">
-							                                <a href="<?php echo base_url('event'); ?>" class="lsvr-testimonials__title-link">Upcoming Event</a>
+							                                <a href="<?php echo base_url('event'); ?>" class="lsvr-testimonials__title-link"><?php echo $value->title; ?></a>
 							                            </h2>
 
-							                            <h3 class="lsvr-testimonials__subtitle">Ikuti event-event seru dari Max Femme</h3>
-
+							                            <h3 class="lsvr-testimonials__subtitle"><?php echo $value->content; ?></h3>
+<?php } } ?>
 							                        </header>
 							                    </div>
 						                    </div>
@@ -418,13 +411,14 @@
 								    <div class="lsvr-cta__inner">
 								        <div class="lsvr-container">
 								            <div class="lsvr-cta__content">
-
-								            	<h3 class="lsvr-cta__title">Max Femme</h3>
+<?php foreach ($info as $key => $value) {
+	if($value->id==5) { ?>
+								            	<h3 class="lsvr-cta__title"><?php echo $value->title; ?></h3>
 
 								            	<div class="lsvr-cta__text">
-								            		<p>Temukan produk menarik dan bermanfaat untuk anda</p>
+								            		<p><?php echo $value->content; ?></p>
 			                    				</div>
-
+<?php } } ?>
 			                    				<p class="lsvr-cta__button">
 			                        				<a href="<?php echo base_url('product'); ?>" class="lsvr-cta__button-link lsvr-button" target="_blank">Browse Product</a>
 			                        			</p>

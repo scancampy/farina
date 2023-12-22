@@ -61,6 +61,16 @@ class Product extends CI_Controller {
 			redirect('admin/product/variant');
 		}
 
+		if($this->input->post('btnApplyBulk')) {
+			$bulkchecks = $this->input->post('bulkqty');
+			$bulkqty = $this->input->post('bulkstok');
+			foreach ($bulkchecks as $key => $value) {
+				$this->product_model->updateVariantStockById($value, $bulkqty);
+			}
+			$this->session->set_flashdata('notif', array('type' => 'success', 'msg' => 'Variant stock succesfully updated'));
+			redirect('admin/product/variant');			
+		}
+
 		// notif
 		if($this->session->flashdata('notif')) {
 			$notif = $this->session->flashdata('notif');
@@ -95,6 +105,18 @@ class Product extends CI_Controller {
 		$data['js'] .= ' $("#tablebrand").DataTable({
       "responsive": true,
       "autoWidth": false,
+    });';
+
+    // handle check box
+    $data['js'] .= '
+    $("#checkall").change(function() {
+        if(this.checked) {
+            // Check all visible checkboxes in the current page
+            $("table#tablebrand tbody tr:visible input[type=\'checkbox\']").prop("checked", true);
+        } else {
+            // Uncheck all checkboxes
+            $("table#tablebrand tbody tr:visible input[type=\'checkbox\']").prop("checked", false);
+        }
     });';
 
 		$this->load->view('admin/v_header', $data);

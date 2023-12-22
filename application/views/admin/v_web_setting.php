@@ -34,7 +34,7 @@
                       <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Kontak</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#custom-tabs-three-messages" role="tab" aria-controls="custom-tabs-three-messages" aria-selected="false">Template Email</a>
+                      <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#custom-tabs-three-messages" role="tab" aria-controls="custom-tabs-three-messages" aria-selected="false">Identitas Website</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" id="custom-tabs-three-settings-tab" data-toggle="pill" href="#custom-tabs-three-settings" role="tab" aria-controls="custom-tabs-three-settings" aria-selected="false">Rekening Pembayaran</a>
@@ -123,7 +123,20 @@
                       </div>
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
-                       Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+                       <div class="form-group">
+                          <label for="website_name">Nama Website</label>
+                          <input type="text" class="form-control" id="website_name" name="website_name" value="<?php echo @$address['website_name']; ?>" required />
+                        </div>
+
+                        <div class="form-group">
+                          <label for="website_short_name">Nama Singkat Website</label>
+                          <input type="text" class="form-control" id="website_short_name" name="website_short_name" value="<?php echo @$address['website_short_name']; ?>" required />
+                        </div>
+
+                        <div class="form-group">
+                          <label for="about_website">Deskripsi Website</label>
+                          <textarea class="form-control" id="about_website" name="about_website"><?php echo @$address['about_website']; ?></textarea>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="custom-tabs-three-settings" role="tabpanel" aria-labelledby="custom-tabs-three-settings-tab">
                       <h5>Bank #1</h5>

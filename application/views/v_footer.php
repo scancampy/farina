@@ -28,7 +28,7 @@
 												<h3 class="widget__title">About <?php echo $setting->website_name; ?></h3>
 												<div class="widget__content">
 
-													<p>Discover beauty reimagined with FarinaFemme, your premier destination for a wide range of high-quality beauty products. From makeup essentials to skincare solutions, lipsticks to powders, we offer a curated selection to help you look and feel your best. Explore our collection and elevate your beauty routine with FarinaFemme.</p>
+													<p><?php echo $setting->about_website; ?></p>
 
 												</div>
 

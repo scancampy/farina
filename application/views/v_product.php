@@ -8,23 +8,57 @@
 				<div class="lsvr-container">
 					<h1 class="page-header__title"><a href="<?php echo base_url('product'); ?>" style="text-decoration: none;
     color: black;">Product</a></h1>
+    				<?php if($this->input->get('s') != null) { ?>
+    					Search keywords: <a><?php echo $this->input->get('s'); ?></a> <a href="<?php 
+    					
+    					$cat ='';
+						if($this->input->get('category') != null) {
+							$cat = '?category='.$this->input->get('category');
+						}
+
+						$brand = '';
+						if($this->input->get('brand') != null) {
+							if($cat=='') {
+								$brand = '?brand='.$this->input->get('brand');
+							} else {
+								$brand = '&brand='.$this->input->get('brand');
+							}							
+						}
+
+
+    					echo base_url('product'.$cat.$brand); ?>"><i class="fa fa-times"></i></a>
+    				<?php } ?>
 						
 					<?php 
 					$cat ='';
 					if($this->input->get('category') != null) {
 						$cat = '?category='.$this->input->get('category');
-					} ?>
+					}
+					$s ='';
+					if($this->input->get('s') != null) {
+						if($cat != '') {
+							$s = '&s='.$this->input->get('s');
+						} else {
+							$s = '?s='.$this->input->get('s');
+						}
+						
+					}
+					 ?>
 					<form method="get" action="<?php echo base_url('product'.$cat); ?>" id="formcategory">
 					<div class="page-header__content" style="display: flex; justify-content:space-between; align-items:flex-end;">
 
+						<?php if($this->input->get('s') != null) { ?>
+							<input type="hidden" name="s" value="<?php echo $this->input->get('s'); ?>" />
+						<?php } ?>
 						<?php if($this->input->get('category') != null) { ?>
 
 						<input type="hidden" name="category" value="<?php echo $current_cat[0]->id; ?>" />
 						<?php 
+
 							echo '<h3 class="page-header__title">';
 							for($k = count($breadcrumb)-1; $k >=0; $k--) { 
 							 echo '<a style="text-decoration: none;
-    color: black;" href="'.base_url('product?category='.$breadcrumb[$k]->id).'">'.$breadcrumb[$k]->name.'</a>';
+    color: black;" href="'.base_url('product?category='.$breadcrumb[$k]->id.$s).'">'.$breadcrumb[$k]->name.'</a>';
 							 if($k != 0) {
 							 	echo ' > ';
 							 } 
@@ -46,7 +80,7 @@
 					</div>
 					<div class="category-container">
 						<?php foreach ($category as $key => $value) { ?>
-							<button type="submit" name="category" class="btncategory" value="<?php echo $value->id.'-'.$value->name; ?>"><?php echo $value->name; ?></button>
+							<button type="submit" name="category" class="btncategory" style="margin-bottom: 5px;" value="<?php echo $value->id.'-'.$value->name; ?>"><?php echo $value->name; ?></button>
 						<?php } ?>
 					</div>
 					<?php if(!empty($this->input->get('brand') && $this->input->get('brand') != 'all')) { ?>
@@ -102,7 +136,7 @@
 										?>
 
 									<!-- POST ARCHIVE LIST : begin -->
-									<div class="post-archive__list lsvr-grid lsvr-grid--masonry lsvr-grid--4-cols lsvr-grid--xl-3-cols lsvr-grid--md-2-cols lsvr-grid--sm-1-cols">
+									<div class="post-archive__list lsvr-grid lsvr-grid--masonry lsvr-grid--4-cols lsvr-grid--xl-3-cols lsvr-grid--md-2-cols lsvr-grid--sm-2-cols">
 
 										<?php foreach ($product as $key => $value) { ?>
 											<!-- POST COLUMN : begin -->

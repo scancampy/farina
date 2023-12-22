@@ -193,36 +193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 						</nav>
 						<!-- HEADER MENU : end -->
 
-						<!-- HEADER SEARCH : begin -->
-						<div class="header-search">
-							<div class="header-search__form">
-
-								<!-- SEARCH FORM : begin -->
-								<form class="search-form" action="#" method="get" role="search">
-									<div class="search-form__inner">
-										<div class="search-form__input-holder">
-
-											<input class="search-form__input" type="text" name="s" placeholder="Search..." value="">
-
-											<button class="search-form__button" type="submit" title="Search">
-												<span class="search-form__button-icon" aria-hidden="true"></span>
-											</button>
-
-										</div>
-									</div>
-								</form>
-								<!-- SEARCH FORM : end -->
-
-							</div>
-
-
-							<button type="button" class="header-search__toggle"
-								title="Search">
-								<span class="header-search__toggle-icon" aria-hidden="true"></span>
-							</button>
-
-						</div>
-						<!-- HEADER SEARCH : end -->
+						
 
 						<!-- HEADER PANEL : begin -->
 						<div class="header-panel">
@@ -367,3 +338,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 			</header>
 			<!-- HEADER : end -->
+
+			<!-- HEADER SEARCH : begin -->
+						<div class="" style="margin:10px;">
+							<div class="">
+
+								<!-- SEARCH FORM : begin -->
+								<form class="search-form" action="<?php echo base_url('product'); ?>" method="get" role="search">
+									<div class="search-form__inner">
+										<div class="search-form__input-holder">
+
+											<input class="search-form__input" type="text" name="s" placeholder="Search..." value="<?php echo $this->input->get('s'); ?>">
+
+											<button class="search-form__button" type="submit" title="Search">
+												<span class="search-form__button-icon" aria-hidden="true"></span>
+											</button>
+
+										</div>
+									</div>
+								</form>
+								<!-- SEARCH FORM : end -->
+
+							</div>
+
+
+							<button type="button" class="header-search__toggle"
+								title="Search">
+								<span class="header-search__toggle-icon" aria-hidden="true"></span>
+							</button>
+
+						</div>
+						<!-- HEADER SEARCH : end -->

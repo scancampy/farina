@@ -41,6 +41,16 @@ class Admin_model extends CI_Model {
 		$this->db->update('setting', $data);
 	}
 
+	public function updateWebsiteInfo($website_name, $website_short_name, $about_website) {
+		$data = array(
+					  'website_name' 		=> $website_name,
+					  'website_short_name' 	=> $website_short_name,
+					  'about_website' 		=> $about_website
+					 );
+		$this->db->where('id', 1);
+		$this->db->update('setting', $data);
+	}
+
 	public function updateKontak($whatsapp, $default_whatsapp_message,$ig_link,$tiktok_link, $lazada_link, $shopee_link) {
 		$data = array(
 					  'whatsapp' 	=> $whatsapp,

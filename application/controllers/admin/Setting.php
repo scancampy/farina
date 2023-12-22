@@ -127,6 +127,8 @@ class Setting extends CI_Controller {
 
 				$this->admin_model->updateKontak($this->input->post('whatsapp'), $this->input->post('default_whatsapp_message'),$this->input->post('ig_link'), $this->input->post('tiktok_link'), $this->input->post('lazada_link'), $this->input->post('shopee_link'));
 
+				$this->admin_model->updateWebsiteInfo($this->input->post('website_name'), $this->input->post('website_short_name'), $this->input->post('about_website'));
+
 				$this->admin_model->updatePoin($this->input->post('kurs_poin'));
 
 				$this->admin_model->updateBank($this->input->post('bank1'), $this->input->post('bank2'), $this->input->post('no_akun_bank1'), $this->input->post('no_akun_bank2'), $this->input->post('nama_akun_bank1'), $this->input->post('nama_akun_bank2'));
@@ -158,7 +160,10 @@ class Setting extends CI_Controller {
 			$data['address']['tiktok_link'] = $hasil->tiktok_link;
 			$data['address']['lazada_link'] = $hasil->lazada_link;
 			$data['address']['shopee_link'] = $hasil->shopee_link;
-			$data['address']['kurs_poin'] = $hasil->kurs_poin;
+			$data['address']['kurs_poin'] = $hasil->kurs_poin;			
+			$data['address']['website_name'] = $hasil->website_name;	
+			$data['address']['website_short_name'] = $hasil->website_short_name;
+			$data['address']['about_website'] = $hasil->about_website;
 		}
 
 		if(!empty($data['address'])) {

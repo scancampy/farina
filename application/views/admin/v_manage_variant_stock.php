@@ -34,9 +34,23 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
+                <div class="callout callout-info">
+                  <h5>Bulk Update</h5>
+
+                  <p>Untuk melakukan update stok secara bersamaan. Silahkan beri tanda centang pada produk yang ingin diubah stoknya, lalu isikan jumlah stok di bawah ini. Validasi dengan menekan tombol "Bulk Update"</p>
+                  <div class="form-row">
+                    <div class="col-md-2">
+                      <input type="number"  class="form-control" id="bulkstok" name="bulkstok"  >
+                    </div>
+                    <div class="col">
+                      <button type="submit" value="Submit" name="btnApplyBulk" id="btnApplyBulk" class="btn btn-primary">Bulk Update</button>
+                    </div>
+                  </div>
+                </div>
                 <table id="tablebrand" class="table table-bordered table-striped">
                   <thead>
                   <tr>
+                    <th><input type='checkbox' id='checkall' /></th>
                     <th>No</th>
                     <th>Product Name</th>
                     <th>Variant</th>
@@ -49,6 +63,7 @@
                  // print_r($variants);
                    foreach ($variants as $key => $value) { ?>
                     <tr>
+                      <td><input type='checkbox' name="bulkqty[]" value="<?php echo $value->id; ?>" /></td>                      
                       <td><?php echo $key+1; ?></td>
                       <td><?php echo $value->prodname; ?></td>
                       <td><?php echo $value->name; ?></td>
@@ -61,6 +76,7 @@
                   <tfoot>
                   <tr>
                     <th>No</th>
+                    <th></th>
                     <th>Product Name</th>
                     <th>Variant</th>
                     <th>Stock</th>

@@ -24,6 +24,178 @@ class Member extends CI_Controller {
 		$this->load->view('v_footer', $data);
 	}
 
+	// Recover Password
+	public function resetpassword($sha1 = null) {
+		if(!empty($this->session->userdata('member'))) {
+          	redirect('member');
+        }
+
+		$data = array();
+		$data['js'] = '';
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Reset Password';
+		$data['sha1'] = $sha1;
+
+		if(!empty($this->input->post('token'))) {
+			if($this->_check_token($this->input->post('token'))) {
+				$this->session->set_flashdata('notif', array('type' => 'failed', 'msg' => 'You\'re likely a bot.'));
+
+				redirect('member/resetpassword/'.$sha1);
+			}
+		}
+
+		if($this->input->post('token')) {
+
+			if($this->input->post('password') == $this->input->post('repeat_password')) {
+				$this->member_model->resetPass($sha1, $this->input->post('password'));
+
+				$this->session->set_flashdata('notif', array('result' => 'success', 'msg' => 'Your password has been successfully updated. You can now sign in to your account using your new password.'));
+
+				redirect('member/signin');
+
+			} else {
+				$this->session->set_flashdata('notif', array('result' => 'failed', 'msg' => 'Pasword doesn\'t match'));
+
+				redirect('member/resetpassword/'.$sha1);
+			}
+		}
+
+		$result = $this->member_model->checkResetPassToken($sha1);
+
+		if($result) {
+			$data['result'] = $result;
+		} else {	
+			redirect('notfound');
+		}
+
+		// loading
+		$data['js'] .= "
+			$('#btnsubmit').on('click', function() {
+				$('.loading').show();
+			});
+		";
+
+		// recaptcha
+		$data['js'] .= '
+			$("#btnsubmit").on("click", function(e) {
+				e.preventDefault();
+				grecaptcha.ready(function() {
+		          grecaptcha.execute("6LdODPMlAAAAANqZ8s-N-ozy2Gz9dOFmni_1fPOl", {action: "submit"}).then(function(token) {
+		              // Add your logic to submit to your backend server here.
+		          		console.log(token);
+		          		$("#token").val(token);
+		          		$("#formsignin").submit();
+		          });
+		        });
+			}); 
+
+		';
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_reset_password',$data);
+		$this->load->view('v_footer', $data);
+	}
+
+	public function recover() {
+		if(!empty($this->session->userdata('member'))) {
+          	redirect('member');
+        }
+
+		$data = array();
+		$data['js'] = '';
+		$data['setting'] = $this->admin_model->getSetting();
+		$data['title'] = 'Recover Password';
+
+		if(!empty($this->input->post('token'))) {
+			if($this->_check_token($this->input->post('token'))) {
+				$this->session->set_flashdata('notif', array('type' => 'failed', 'msg' => 'You\'re likely a bot.'));
+
+				redirect('member/recover');
+			}
+		}
+
+
+		if($this->input->post('token')) {
+
+			// cek email apakah ada di db
+			$result  = $this->member_model->getMember($this->input->post('email'));
+
+			if($result) {
+				$sha1 = $this->member_model->triggerRecoverPass($this->input->post('email'));
+
+				//print_r($result);
+				//die();
+
+				$this->load->library('email');
+				$config['protocol'] = 'smtp';
+				$config['smtp_host'] = 'mail.farinafemme.com';
+				$config['smtp_port'] = 25;
+				$config['smtp_user'] = 'noreply@farinafemme.com';
+				$config['smtp_pass'] = 'p;B%GCo[?UCN';
+				$config['mailtype'] = 'html';
+
+				$this->email->initialize($config);
+
+				$this->email->from('noreply@farinafemme.com', 'Farina Femme');
+				$this->email->to($this->input->post('email'));
+
+				$this->email->subject('Recover Password - Farina Femme');
+				$this->email->message('Dear '.$result[0]->first_name.' '.$result[0]->last_name.',<br/><br/>
+Recently, a request was made to reset the password for your account. If you initiated this request, please follow the link below to reset your password:<br/><br/>
+
+<a href="'.base_url('member/resetpassword/'.$sha1).'">'.base_url('member/resetpassword/'.$sha1).'</a><br/><br/>
+
+If you did not request a password reset, please ignore this email. Your account security is important to us, and no changes will be made if you did not initiate this request.<br/><br/>
+
+Thank you for choosing our online store.<br/><br/>
+
+
+		Best regards,<br/>
+		Farina Femme
+				    ');
+
+					$this->email->send();
+	        		
+	        		$this->session->set_flashdata('notif', array('result' => 'success', 'msg' => 'We\'ve received your request to reset your password. Please check your email inbox for instructions on how to complete the password reset process. If you don\'t see the email in your inbox, be sure to check your spam or junk folder. Follow the provided steps to securely reset your password and regain access to your account.'));
+				redirect('member/recover');
+
+
+
+			} else {
+				// TODO: bikin notif error
+				$this->session->set_flashdata('notif', array('result' => 'failed', 'msg' => 'We\'re sorry, but the email address you entered couldn\'t be found in our records. Please make sure you\'ve entered the correct email associated with your account'));
+				redirect('member/recover');
+			}
+		}
+
+		// loading
+		$data['js'] .= "
+			$('#btnsubmit').on('click', function() {
+				$('.loading').show();
+			});
+		";
+
+		// recaptcha
+		$data['js'] .= '
+			$("#btnsubmit").on("click", function(e) {
+				e.preventDefault();
+				grecaptcha.ready(function() {
+		          grecaptcha.execute("6LdODPMlAAAAANqZ8s-N-ozy2Gz9dOFmni_1fPOl", {action: "submit"}).then(function(token) {
+		              // Add your logic to submit to your backend server here.
+		          		console.log(token);
+		          		$("#token").val(token);
+		          		$("#formsignin").submit();
+		          });
+		        });
+			}); 
+
+		';
+
+		$this->load->view('v_header', $data);
+		$this->load->view('v_recover',$data);
+		$this->load->view('v_footer', $data);
+	}
+
 	// Voucher
 	public function voucher() {
 		if(empty($this->session->userdata('member'))) {

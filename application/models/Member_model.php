@@ -49,6 +49,33 @@ class Member_model extends CI_Model {
 		}
 	}
 
+	public function triggerRecoverPass($email) {
+		$sha1 = sha1(strtotime(date('Y-m-d H:i:s')).$email);
+		$data = array('reset_pass_token' => $sha1);
+		$this->db->where('email', $email);
+		$this->db->update('member', $data);
+
+		return $sha1;
+	}
+
+	public function resetPass($sha1, $password) {
+		$this->db->where('reset_pass_token', $sha1);
+		$this->db->update('member', array('password' => password_hash($password, PASSWORD_DEFAULT)));
+
+		$this->db->where('reset_pass_token', $sha1);
+		$this->db->update('member', array('reset_pass_token' => null));
+
+	}
+
+	public function checkResetPassToken($sha1) {
+		$q = $this->db->get_where('member', array('reset_pass_token' => $sha1));
+		if($q->num_rows() > 0) {
+			return $q->row();
+		} else {
+			return false;
+		}
+	}
+
 	public function signup($first_name, $last_name, $password, $email, $parent_member_id=null, $sha1) {
 		$this->load->helper('string');
 		$id = password_hash(time(), PASSWORD_DEFAULT);

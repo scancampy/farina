@@ -62,6 +62,8 @@ class Product extends CI_Controller {
 			$offset = (int) $this->input->get('o');
 		} 
 
+
+
 		$wherestr = ' product.is_deleted=0 ';
 		if($this->input->get('category') != null) {
 			$str = '';
@@ -70,6 +72,13 @@ class Product extends CI_Controller {
 			}
 			$str = rtrim($str, ', ');
 			$wherestr .= ' AND product.category_id IN ('.$str.') ';
+		}
+
+
+
+		if($this->input->get('s') != null) {
+			$newstr = filter_var(trim($this->input->get('s')), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+			$wherestr .= ' AND product.name LIKE "%'.$newstr.'%" ';
 		}
 
 		if($this->input->get('brand') != null) {
@@ -117,6 +126,14 @@ class Product extends CI_Controller {
 			$caturl = 'category='.$this->input->get('category');
 			if($producturl != 'product') { $producturl .= '&'.$caturl; } else  { $producturl .= '?'.$caturl; }			
 		}
+
+		if($this->input->get('s') != null) {
+			if($producturl != 'product') {
+				$producturl .= '&s='.$this->input->get('s');
+			} else {
+				$producturl .= '?s='.$this->input->get('s');
+			}
+		}
 		
 		$config['base_url'] = base_url($producturl); //http://example.com/index.php/test/
 		
@@ -153,6 +170,8 @@ class Product extends CI_Controller {
 		$data['brand'] = $this->product_model->getBrand(array('is_deleted' => 0));
 
 		$data['js'] = "$('select#brand').on('change', function() {
+						//var action = $('#formcategory').attr('action');
+						//window.location.replace(action);
 						$('#formcategory').submit();
 					   });";
 

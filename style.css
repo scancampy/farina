@@ -682,3 +682,32 @@ table.table {
   text-decoration: none;
 }
 
+/* Mobile Styles */
+@media only screen and (max-width: 767px) {
+    /* Add styles specific to mobile */
+    .lsvr-slide-list__item-bg {
+      background-position: top;
+      background-size: contain;
+    }
+
+    .lsvr-slide-list__item-content-wrapper {
+      height: 90%;
+    }
+
+    .lsvr-slide-list {
+      padding-bottom: 20px;
+    }
+
+    /* Other mobile-specific styles go here */
+}
+
+@media only screen and (max-width: 767px) {
+  .lsvr-grid__col {
+    width: 50% !important;
+  }
+
+  .product-post {
+    border: none !important;
+  }
+}
+
