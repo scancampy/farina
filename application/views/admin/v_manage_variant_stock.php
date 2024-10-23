@@ -50,8 +50,8 @@
                 <table id="tablebrand" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th><input type='checkbox' id='checkall' /></th>
                     <th>No</th>
+                    <th><input type='checkbox' id='checkall' /></th>
                     <th>Product Name</th>
                     <th>Variant</th>
                     <th>Stock</th>
@@ -63,8 +63,8 @@
                  // print_r($variants);
                    foreach ($variants as $key => $value) { ?>
                     <tr>
-                      <td><input type='checkbox' name="bulkqty[]" value="<?php echo $value->id; ?>" /></td>                      
                       <td><?php echo $key+1; ?></td>
+                      <td><input type='checkbox' name="bulkqty[]" value="<?php echo $value->id; ?>" /></td>
                       <td><?php echo $value->prodname; ?></td>
                       <td><?php echo $value->name; ?></td>
                       <td><input type="number" min="0" value="<?php echo $value->stok; ?>" name="stok[]"/><input type="hidden" name="hiddenidvariant[]" value="<?php echo $value->id; ?>"></td>
